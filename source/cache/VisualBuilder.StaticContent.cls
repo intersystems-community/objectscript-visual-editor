@@ -1,4 +1,4 @@
-/// [ <!-- @echo pkg.printableName --> v<!-- @echo pkg.version --> ]
+/// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This class handles all the static data. Note that this class is generated automatically by
 /// performing build from the sources.
 Class VisualBuilder.StaticContent {

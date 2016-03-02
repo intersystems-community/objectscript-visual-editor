@@ -14,13 +14,15 @@ import htmlmin from "gulp-htmlmin";
 import cssnano from "gulp-cssnano";
 import uglify from "gulp-uglify";
 import pkg from "./package.json";
+import config from "./source/config.json";
 
 let dir = __dirname,
     dest = `${dir}/build`,
     source = `${dir}/source`,
     context = {
         context: {
-            pkg: pkg
+            package: pkg,
+            config: config
         }
     };
 

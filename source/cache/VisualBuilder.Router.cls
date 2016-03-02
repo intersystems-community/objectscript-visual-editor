@@ -1,4 +1,4 @@
-/// [ <!-- @echo pkg.printableName --> v<!-- @echo pkg.version --> ]
+/// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This is a REST WEB application entry point for Caché Visual Builder WEB application.
 Class VisualBuilder.Router extends %CSP.REST [ CompileAfter = StaticContent ] {
 

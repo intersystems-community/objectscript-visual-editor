@@ -1,7 +1,7 @@
 {
   "name": "cache-visual-builder",
-  "printableName": "Caché Visual Builder",
-  "version": "0.0.1",
+  "printableName": "Cache Visual Builder",
+  "version": "0.0.2",
   "description": "Visual class editor for InterSystems Caché",
   "main": "index.js",
   "scripts": {

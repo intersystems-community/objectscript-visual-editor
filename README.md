@@ -3,6 +3,19 @@
 A Web-based user interface for InterSystems Caché which allows to create and manage classes
 literally without touching any code.
 
+### Installation
+
+Find the latest release [nowhere for now] and import XML file into Caché by one of the next ways:
+
+1. Just drag XML file over Studio window;
+2. Go to the Management Portal -> System Explorer -> Classes -> Import and select the XML file;
+3. Execute `do $system.OBJ.Load("C:\path\to\file\FileToImport.xml","ck")` in terminal.
+
+Then check the installation output, it should say "Installation is complete!".
+
+After this, open the next web-application: `http://[host]/VisualBuilder/`
+(slash at the end is required).
+
 ### Development
 
 To participate in development of this application, you have [NodeJS](https://nodejs.org) and Caché 
