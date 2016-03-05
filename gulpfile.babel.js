@@ -7,16 +7,18 @@ import gulp from "gulp";
 import rimraf from "rimraf";
 import scss from "gulp-sass";
 import preprocess from "gulp-preprocess";
-import browserify from "gulp-browserify";
+import browserify from "browserify";
 import sourcemaps from "gulp-sourcemaps";
-import babel from "gulp-babel";
+import babelify from "babelify";
 import htmlmin from "gulp-htmlmin";
 import cssnano from "gulp-cssnano";
 import uglify from "gulp-uglify";
 import pkg from "./package.json";
 import config from "./source/config.json";
+import buffer from "vinyl-buffer";
+import sourceStream from "vinyl-source-stream";
 
-let dir = __dirname,
+var dir = __dirname,
     dest = `${dir}/build`,
     source = `${dir}/source`,
     context = {
@@ -31,17 +33,35 @@ gulp.task("prepare", (cb) => {
 });
 
 gulp.task("js", ["prepare"], () => {
-    return gulp.src([`${source}/client/js/index.js`])
-        .pipe(sourcemaps.init())
-        .pipe(preprocess(context))
-        .pipe(babel())
-        .pipe(browserify({
-            insertGlobals : false,
+    let bundler = browserify({
+            entries: `${source}/client/js/index.js`,
             debug: true
-        }))
+        });
+    bundler.transform(babelify);
+    return bundler.bundle()
+        .on("error", function (err) { console.error("An error occurred during bundling:", err); })
+        .pipe(sourceStream("index.js"))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(preprocess(context))
         .pipe(uglify())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(`${dest}/client/js`));
+    
+    /*return gulp.src([`${source}/client/js/index.js`])
+        .pipe(sourcemaps.init())
+        .pipe(preprocess(context))
+        .pipe(babel({
+            presets: ["es2015"]
+        }))
+        .pipe(browserify({
+            insertGlobals : false,
+            debug: true,
+            entries: `${source}/client/js/index.js`
+        }))
+        .pipe(uglify())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(`${dest}/client/js`));*/
 });
 
 gulp.task("html", ["prepare"], () => {

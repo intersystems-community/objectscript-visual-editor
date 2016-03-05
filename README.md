@@ -46,6 +46,6 @@ gulp
 
 And take your ready to import sources in `build/cache` folder.
 
-Note that all the sources are plaintext \*.cls files which currently may be imported
+Note that all the sources are plaintext \*.cls files which currently can be imported
 **only through Atelier** in Caché 2016.\* and higher. _If you have discovered a way to import \*.cls
 files into the studio except of using Atelier UI, please, create an issue and describe the method._

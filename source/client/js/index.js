@@ -1,3 +1,7 @@
+import AutoGrid from "./autoGrid/AutoGrid";
+
 window.addEventListener("load", () => {
-    console.log("Page loaded.");
+
+    new AutoGrid(document.querySelector("#classBuilder"));
+
 });
