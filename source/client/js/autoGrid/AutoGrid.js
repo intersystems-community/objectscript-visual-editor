@@ -32,24 +32,6 @@ export function AutoGrid (container) {
     };
     window.addEventListener("resize", this.windowResizeHandler);
 
-    if (!window.MutationObserver) {
-        this.observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type !== "childList") return;
-                mutation.addedNodes.forEach(() => this.childApplied);
-                mutation.addedNodes.forEach(() => this.childRemoved);
-            });
-        });
-        this.observer.observe(this.container, { childList: true });
-    } else { // old browsers support
-        this.container.addEventListener("DOMNodeInserted", this.nodeInsertListener = (ev) => {
-            this.childApplied(ev.target || ev.srcElement);
-        }, false);
-        this.container.addEventListener("DOMNodeRemoved", this.nodeRemoveListener = (ev) => {
-            this.childApplied(ev.target || ev.srcElement);
-        }, false);
-    }
-
 }
 
 function getColumnsNumber (width) {
@@ -66,35 +48,12 @@ AutoGrid.prototype.disable = function () {
     window.removeEventListener("resize", this.windowResizeHandler);
     this.windowResizeHandler = null;
     this.container = null;
-    if (this.observer) {
-        this.observer.disconnect();
-        this.observer = null;
-    } else if (this.nodeInsertListener && this.nodeRemoveListener) {
-        this.container.removeEventListener("DOMNodeInserted", this.nodeInsertListener);
-        this.container.removeEventListener("DOMNodeRemoved", this.nodeRemoveListener);
-    }
 
 };
 
 AutoGrid.prototype.childExists = function (element) {
 
     return !!this.children.filter((e) => element === e.element).length;
-
-};
-
-/**
- * Child applied to the DOM via "applyChild" native method.
- * @param element
- */
-AutoGrid.prototype.childApplied = function (element) {
-
-};
-
-/**
- * Child removed from the DOM via "removeChild" native method.
- * @param element
- */
-AutoGrid.prototype.childRemoved = function (element) {
 
 };
 
@@ -111,13 +70,12 @@ AutoGrid.prototype.applyChild = function (element) {
     });
 
     this.updateGrid();
-    if (this.width !== this.container.offsetWidth) this.updateSizes();
 
 };
 
 AutoGrid.prototype.updateGrid = function () {
 
-    let columnWidth = Math.floor(this.width/this.columns),
+    let i, columnWidth = Math.floor(this.width/this.columns),
         columnHeights = (() => {
             let arr = [], i;
             for (i = 0; i < this.columns; i++)
@@ -135,7 +93,8 @@ AutoGrid.prototype.updateGrid = function () {
         return minCol;
     }
 
-    this.children.forEach((block) => {
+    for (i = 0; i < this.children.length; i++) {
+        let block = this.children[i];
         console.log(this.container.offsetWidth);
         let colIndex = getNextColumnIndex(),
             left = colIndex * columnWidth + "px",
@@ -154,7 +113,15 @@ AutoGrid.prototype.updateGrid = function () {
                 block.container.style.width = columnWidth + "px";
         }
         columnHeights[colIndex] += block.container.offsetHeight;
-    });
+        // Adding/updating of nodes may cause scrollbar to appear. This changes the width of the
+        // container. To prevent inset containers from flowing we need to recalculate sizes as
+        // soon as we noticed size change. This won't take a lot of resources as not many cards
+        // needed to trigger scrollbar appear.
+        if (this.width !== this.container.offsetWidth) {
+            this.updateSizes();
+            return;
+        }
+    }
 
     this.container.style.height = columnHeights.reduce((a, b) => Math.max(a, b)) + "px";
 

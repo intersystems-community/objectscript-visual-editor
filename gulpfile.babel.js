@@ -73,6 +73,12 @@ gulp.task("html", ["prepare"], () => {
         .pipe(gulp.dest(`${dest}/client`));
 });
 
+// todo: images BASE64 export
+gulp.task("favicon", ["prepare"], () => {
+    return gulp.src([`${source}/client/favicon.png`])
+        .pipe(gulp.dest(`${dest}/client`));
+});
+
 gulp.task("css", ["prepare"], () => {
     return gulp.src([`${source}/client/scss/index.scss`])
         .pipe(scss())
@@ -80,7 +86,7 @@ gulp.task("css", ["prepare"], () => {
         .pipe(gulp.dest(`${dest}/client/css`));
 });
 
-gulp.task("pre-cls", ["js", "html", "css"], () => {
+gulp.task("pre-cls", ["js", "html", "css", "favicon"], () => {
     return gulp.src([`${source}/cache/*.cls`])
         .pipe(gulp.dest(`${dest}/cache`));
 });
