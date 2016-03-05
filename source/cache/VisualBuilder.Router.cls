@@ -9,6 +9,7 @@ XData UrlMap
    <Route Url="/index" Method="GET" Call="Index"/>
    <Route Url="/css/index.css" Method="GET" Call="Css"/>
    <Route Url="/js/index.js" Method="GET" Call="Js"/>
+   <Map Prefix="/Informer" Forward="VisualBuilder.REST.Informer"/>
 </Routes>
 }
 
