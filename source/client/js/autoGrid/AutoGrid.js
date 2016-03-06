@@ -1,6 +1,6 @@
 /**
  * AutoGrid - responsive, adaptive automatic layout that just works for you. Everything you have to
- * do is to create AutoGrid instance with argument of container element, and AutoGrid will do
+ * do is to create AutoGrid instance with argument of container element, and AutoGrid will align
  * the best layout for you.
  * NOTE. AutoGrid will turn container's position to relative and overflow to auto.
  * @author Nikita Savchenko aka ZitRo (zitros.lab@gmail.com)
@@ -95,7 +95,6 @@ AutoGrid.prototype.updateGrid = function () {
 
     for (i = 0; i < this.children.length; i++) {
         let block = this.children[i];
-        console.log(this.container.offsetWidth);
         let colIndex = getNextColumnIndex(),
             left = colIndex * columnWidth + "px",
             top = columnHeights[colIndex] + "px";
@@ -129,19 +128,10 @@ AutoGrid.prototype.updateGrid = function () {
 
 AutoGrid.prototype.updateSizes = function () {
 
-    console.log("Size update");
-
     if (this.width === this.container.offsetWidth) return;
 
-    let newWidth = this.container.offsetWidth,
-        newCols = getColumnsNumber(newWidth);
-
-    this.width = newWidth;
-
-    //if (newCols === this.columns) return;
-    console.log("OK");
-
-    this.columns = newCols;
+    this.width = this.container.offsetWidth;
+    this.columns = getColumnsNumber(this.width);
 
     this.updateGrid();
 

@@ -11,7 +11,7 @@ XData UrlMap
 
 ClassMethod List() As %Status
 {
-    set basePath = $case(%request.Get("path"), "":"", :%request.Get("path") _ ".")
+    set basePath = $case(%request.Get("level"), "":"", :%request.Get("path") _ ".")
     set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:Summary")
     do classes.Execute()
     #dim folders as %Numeric

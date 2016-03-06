@@ -47,21 +47,6 @@ gulp.task("js", ["prepare"], () => {
         .pipe(uglify())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(`${dest}/client/js`));
-    
-    /*return gulp.src([`${source}/client/js/index.js`])
-        .pipe(sourcemaps.init())
-        .pipe(preprocess(context))
-        .pipe(babel({
-            presets: ["es2015"]
-        }))
-        .pipe(browserify({
-            insertGlobals : false,
-            debug: true,
-            entries: `${source}/client/js/index.js`
-        }))
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(`${dest}/client/js`));*/
 });
 
 gulp.task("html", ["prepare"], () => {

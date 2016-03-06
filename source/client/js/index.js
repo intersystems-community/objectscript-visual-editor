@@ -1,4 +1,5 @@
 import { AutoGrid } from "./autoGrid/AutoGrid";
+import { getList } from "./server";
 
 window.addEventListener("load", () => {
 
@@ -17,5 +18,9 @@ window.addEventListener("load", () => {
             })();
         grid.applyChild(div);
     }
+
+    getList("SAMPLES", "", (data) => {
+        console.log(data);
+    });
 
 });
