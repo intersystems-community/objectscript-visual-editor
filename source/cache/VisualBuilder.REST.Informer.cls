@@ -11,16 +11,42 @@ XData UrlMap
 
 ClassMethod List() As %Status
 {
-    set basePath = %request.Get("path")
-
+    set basePath = $case(%request.Get("path"), "":"", :%request.Get("path") _ ".")
     set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:Summary")
     do classes.Execute()
+    #dim folders as %Numeric
+    set data = ##class(%ZEN.proxyObject).%New()
     while (classes.Next()) {
-        if (($FIND(classes.Data("Name"), basePath) '= $LENGTH(basePath) + 1) || ()) { continue }
-        // todo: filter sub-packages: [basePath].ClassName or [basePath].Package.ClassName
+        set clsName = classes.Data("Name")
+        // skip if doesn't match basePath
+        if ($FIND(clsName, basePath) '= ($LENGTH(basePath) + 1)) { continue }
+        // turn to folder and skip if exists
+        if ($LENGTH(clsName, ".") > $LENGTH(basePath, ".")) {
+            set folderName = $PIECE(clsName, ".", $LENGTH(basePath, "."))
+            if ($data(folders(folderName))) { continue }
+            set folders(folderName) = 1
+            set oFolder = ##class(%ZEN.proxyObject).%New()
+            set $PROPERTY(oFolder, "_type") = "package"
+            set $PROPERTY(data, folderName) = oFolder
+        } elseif ($LENGTH(clsName, ".") = $LENGTH(basePath, ".")) {
+            set className = $PIECE(clsName, ".", $LENGTH(basePath, "."))
+            set oClass = ##class(%ZEN.proxyObject).%New()
+            set $PROPERTY(oClass, "_type") = "class"
+            set $PROPERTY(data, className) = oClass
+        } else {
+            continue
+        }
     }
+    do data.%ToJSON(, "o")
 
-    write "test list"
+    return $$$OK
+}
+
+/// This method is a handler that is executed before each request.
+ClassMethod OnPreDispatch() As %Status
+{
+	set %response.CharSet = "utf-8"
+	set %response.ContentType="application/json"
     return $$$OK
 }
 
