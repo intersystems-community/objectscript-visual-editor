@@ -62,6 +62,7 @@ AutoGrid.prototype.applyChild = function (element) {
     if (this.childExists(element)) return;
 
     let container = document.createElement("div");
+    container.className = "AutoGrid-container";
     container.style.position = "absolute";
     container.appendChild(element);
     this.children.push({

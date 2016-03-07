@@ -17,6 +17,9 @@ import pkg from "./package.json";
 import config from "./source/config.json";
 import buffer from "vinyl-buffer";
 import sourceStream from "vinyl-source-stream";
+import gCallback from "gulp-callback";
+import gForeach from "gulp-foreach";
+import mime from "mime";
 
 var dir = __dirname,
     dest = `${dir}/build`,
@@ -24,12 +27,31 @@ var dir = __dirname,
     context = {
         context: {
             package: pkg,
-            config: config
+            config: config,
+            staticFiles: [],
+            getStaticFilesXDatas: () => {
+                return context.context.staticFiles.map(({cleanName, contents, type}) => {
+                    return `XData ${ cleanName } [ MimeType=${ type } ]\n{\n${
+                            contents.match(/.{1,32000}/g).join("\n")
+                        }\n}`;
+                }).join("\n\n");
+            }
         }
     };
 
-gulp.task("prepare", (cb) => {
-    return rimraf(dest, cb);
+gulp.task("prepare", () => {
+    rimraf.sync(dest);
+    return gulp.src(`${source}/client/**/*.png`)
+        .pipe(gForeach((stream, file) => {
+            let name = file.relative.replace(/\\/g, "/");
+            context.context.staticFiles.push({
+                fileName: name,
+                cleanName: name.replace(/\/|\./g, ""),
+                contents: file._contents.toString("base64"),
+                type: mime.lookup(file.history[0])
+            });
+            return stream;
+        }));
 });
 
 gulp.task("js", ["prepare"], () => {

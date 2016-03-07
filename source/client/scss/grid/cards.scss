@@ -1,6 +1,13 @@
+@import "../mixins";
+
 .card {
     background: #fff;
     margin: .3em;
     padding: .2em;
     border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+}
+
+.AutoGrid-container {
+    @include transition(left .3s ease, top .3s ease);
 }
