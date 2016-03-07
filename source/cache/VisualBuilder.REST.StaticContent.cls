@@ -1,7 +1,7 @@
 /// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This class handles all the static data. Note that this class is generated automatically by
 /// performing build from the sources.
-Class VisualBuilder.StaticContent extends VisualBuilder.REST.Content {
+Class VisualBuilder.REST.StaticContent extends VisualBuilder.REST.Content {
 
 /// This block handles HTML markup.
 XData HTML [ MimeType = text/html ]

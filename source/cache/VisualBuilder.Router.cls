@@ -23,7 +23,11 @@ ClassMethod PrintData(DataName as %String = "") As %Status [ Private ]
         set %response.Status = "304 Not Modified"
         return $$$OK
     } else {
-        return ##class(StaticContent).PrintContent(DataName)
+        if ($$$ISERR(##class(VisualBuilder.REST.StaticContent).PrintContent(DataName))) {
+            return ..ReportHttpStatusCode(404)
+        } else {
+            return $$$OK
+        }
     }
 }
 

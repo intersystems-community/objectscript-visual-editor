@@ -6,26 +6,19 @@ Class VisualBuilder.REST.Content {
 Parameter CompileTime = {"""" _ $zd($h, 11) _ ", "_ $zdt($NOW(0), 2,1) _ " GMT"""};
 
 /// This method outputs content from the class XData blocks.
-ClassMethod PrintContent(XDataName As %String = "", asBase64 As %Boolean = 0) As %Status
+ClassMethod PrintContent(XDataName As %String = "") As %Status
 {
 	set xdata = ##class(%Dictionary.CompiledXData).%OpenId($ClassName()_"||"_XDataName)
-	set pos = 0, end = 0
+	set pos = 13 // Read the first part "<d><![CDATA[".length = 13
 	if (xdata = "") {
 	    return $$$ERROR("No "_XDataName_" XData")
-	} elseif ('asBase64) {
-	    set pos = 13 // Read the first part "<d><![CDATA[".length = 13
-	    set end = 8 // The last part "]]></d>".length + 1 = 8
+	} else {
 	    do xdata.Data.MoveTo(pos)
 	}
-	while (xdata.Data.SizeGet() - pos > end) { // "]]></d>\n".length = 8
-		set toRead = xdata.Data.SizeGet() - pos - end
-		if (toRead > 32000) { set toRead = 32000 }
+	while (xdata.Data.SizeGet() - pos > 8) { // "]]></d>\n".length = 8
+		set toRead = xdata.Data.SizeGet() - pos - 8
 		set pos = pos + toRead
-		if (asBase64) {
-            write $System.Encryption.Base64Decode(xdata.Data.Read(toRead))
-		} else {
-		    write xdata.Data.Read(toRead)
-		}
+		write xdata.Data.Read(toRead)
 	}
 	return $$$OK
 }
