@@ -16,10 +16,11 @@ XData UrlMap
 
 ClassMethod PrintData(DataName as %String = "") As %Status [ Private ]
 {
+    set cTime = ##class(VisualBuilder.REST.StaticContent).#CompileTime
 	set %response.CharSet = "utf-8"
-	set %response.ContentType = ##class(StaticContent).GetMimeType(DataName)
-	do %response.SetHeader("Last-Modified", ##class(StaticContent).#CompileTime)
-	if (%request.GetCgiEnv("HTTP_IF_MODIFIED_SINCE") = ##class(StaticContent).#CompileTime) {
+	set %response.ContentType = ##class(VisualBuilder.REST.StaticContent).GetMimeType(DataName)
+	do %response.SetHeader("Last-Modified", cTime)
+	if (%request.GetCgiEnv("HTTP_IF_MODIFIED_SINCE") = cTime) {
         set %response.Status = "304 Not Modified"
         return $$$OK
     } else {

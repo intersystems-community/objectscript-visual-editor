@@ -27,11 +27,15 @@ ClassMethod List() As %Status
             set folders(folderName) = 1
             set oFolder = ##class(%ZEN.proxyObject).%New()
             set $PROPERTY(oFolder, "_type") = "package"
+            set $PROPERTY(oFolder, "fullName") = clsName
+            set $PROPERTY(oFolder, "name") = folderName
             set $PROPERTY(data, folderName) = oFolder
         } elseif ($LENGTH(clsName, ".") = $LENGTH(basePath, ".")) {
             set className = $PIECE(clsName, ".", $LENGTH(basePath, "."))
             set oClass = ##class(%ZEN.proxyObject).%New()
             set $PROPERTY(oClass, "_type") = "class"
+            set $PROPERTY(oClass, "fullName") = clsName
+            set $PROPERTY(oFolder, "name") = className
             set $PROPERTY(data, className) = oClass
         } else {
             continue

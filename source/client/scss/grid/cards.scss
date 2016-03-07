@@ -1,8 +1,9 @@
 @import "../mixins";
+@import "../const";
 
 .card {
     background: #fff;
-    margin: .3em;
+    margin: $defaultMargin/2;
     padding: .2em;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .4);

@@ -1,0 +1,72 @@
+@import "../const";
+
+$headerIconWidth: 32px;
+
+.card {
+
+    &.folder {
+        background: #ffb;
+    }
+
+    > .head {
+
+        overflow: hidden;
+
+        > .icon {
+
+            position: relative;
+            float: left;
+            width: $headerIconWidth;
+            height: $headerIconWidth;
+            margin-right: $defaultMargin;
+            background: #d8d; /* default - package */
+            border-radius: $headerIconWidth/2;
+
+            &:before {
+                position: absolute;
+                left: 0;
+                top: 0;
+                line-height: $headerIconWidth;
+                width: $headerIconWidth;
+                text-align: center;
+                font-size: $headerIconWidth/1.5;
+                content: "[]"
+            }
+
+            &.registered {
+                background: #08f;
+                &:before {
+                    content: "R"
+                }
+            }
+
+            &.persistent {
+                background: #f90;
+                &:before {
+                    content: "P"
+                }
+            }
+
+            &.serial {
+                background: #df0;
+                &:before {
+                    content: "S"
+                }
+            }
+
+        }
+
+        > .header {
+
+            margin-left: $defaultMargin + $headerIconWidth;
+            font-size: 24px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+        }
+
+    }
+
+}

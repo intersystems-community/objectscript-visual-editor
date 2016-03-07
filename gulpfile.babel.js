@@ -44,10 +44,12 @@ gulp.task("js", ["prepare"], () => {
         .on("error", function (err) { console.error("An error occurred during bundling:", err); })
         .pipe(sourceStream("index.js"))
         .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
+        //.pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(preprocess(context))
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
+        .pipe(uglify({
+            max_line_len: 16000
+        }))
+        //.pipe(sourcemaps.write())
         .pipe(gulp.dest(`${dest}/client/js`));
 });
 
