@@ -11,31 +11,31 @@ XData UrlMap
 
 ClassMethod List() As %Status
 {
-    set basePath = $case(%request.Get("level"), "":"", :%request.Get("path") _ ".")
+    set baseLevel = $case(%request.Get("level"), "":"", :%request.Get("level") _ ".")
     set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:Summary")
     do classes.Execute()
     #dim folders as %Numeric
     set data = ##class(%ZEN.proxyObject).%New()
     while (classes.Next()) {
         set clsName = classes.Data("Name")
-        // skip if doesn't match basePath
-        if ($FIND(clsName, basePath) '= ($LENGTH(basePath) + 1)) { continue }
+        // skip if doesn't match baseLevel
+        if ($FIND(clsName, baseLevel) '= ($LENGTH(baseLevel) + 1)) { continue }
         // turn to folder and skip if exists
-        if ($LENGTH(clsName, ".") > $LENGTH(basePath, ".")) {
-            set folderName = $PIECE(clsName, ".", $LENGTH(basePath, "."))
+        if ($LENGTH(clsName, ".") > $LENGTH(baseLevel, ".")) {
+            set folderName = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             if ($data(folders(folderName))) { continue }
             set folders(folderName) = 1
             set oFolder = ##class(%ZEN.proxyObject).%New()
             set $PROPERTY(oFolder, "_type") = "package"
-            set $PROPERTY(oFolder, "fullName") = clsName
+            set $PROPERTY(oFolder, "fullName") = baseLevel _ folderName
             set $PROPERTY(oFolder, "name") = folderName
             set $PROPERTY(data, folderName) = oFolder
-        } elseif ($LENGTH(clsName, ".") = $LENGTH(basePath, ".")) {
-            set className = $PIECE(clsName, ".", $LENGTH(basePath, "."))
+        } elseif ($LENGTH(clsName, ".") = $LENGTH(baseLevel, ".")) {
+            set className = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             set oClass = ##class(%ZEN.proxyObject).%New()
             set $PROPERTY(oClass, "_type") = "class"
             set $PROPERTY(oClass, "fullName") = clsName
-            set $PROPERTY(oFolder, "name") = className
+            set $PROPERTY(oClass, "name") = className
             set $PROPERTY(data, className) = oClass
         } else {
             continue

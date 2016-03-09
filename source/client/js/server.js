@@ -40,9 +40,9 @@ function getParams (...params) {
     let url = "",
         first = true;
     params.forEach((p, i, a) => {
-        if (i % 2 === 0 || !p || !a[i+1]) return;
+        if (i % 2 !== 0 || !p || !a[i+1]) return;
         if (first) { first = false; url += "?" } else { url += "&" }
-        url += encodeURIComponent(`${p}=${a[i+1]}`);
+        url += `${ encodeURIComponent(p) }=${ encodeURIComponent(a[i+1]) }`;
     });
     return url;
 }

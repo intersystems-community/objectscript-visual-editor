@@ -9,14 +9,22 @@ var PATH = "";
  */
 let grid = null;
 
-export function init () {
+export function loadLevel (level) {
 
-    grid = new AutoGrid(document.querySelector("#classBuilderBody"));
-
+    PATH = level;
+    grid.clear();
     getList("SAMPLES", PATH, (data) => {
         for (let obj in data) {
             grid.applyChild(getCardElement(data[obj]));
         }
     });
+
+}
+
+export function init () {
+
+    grid = new AutoGrid(document.querySelector("#classBuilderBody"));
+
+    loadLevel(PATH);
 
 }

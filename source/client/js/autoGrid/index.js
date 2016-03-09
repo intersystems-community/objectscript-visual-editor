@@ -39,6 +39,17 @@ function getColumnsNumber (width) {
 }
 
 /**
+ * Removes all children.
+ */
+AutoGrid.prototype.clear = function () {
+    this.children = this.children.filter(({ container }) => {
+        if (container.parentNode)
+            container.parentNode.removeChild(container);
+        return false;
+    });
+};
+
+/**
  * This function disables AutoGrid.
  */
 AutoGrid.prototype.disable = function () {

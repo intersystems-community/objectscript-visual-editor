@@ -1,11 +1,31 @@
 @import "../const";
+@import "../mixins";
 
 $headerIconWidth: 32px;
 
 .card {
 
-    &.folder {
-        background: #ffb;
+    position: relative;
+    @include transition(all .3s ease);
+
+    &.package {
+
+        background: #f4efff;
+        cursor: pointer;
+
+        &:hover {
+            background: #e4ccff;
+            left: -2px;
+            top: -2px;
+            padding: $defaultPadding + 2px;
+        }
+
+        > .head {
+            > .icon {
+                border: 1px solid black;
+            }
+        }
+
     }
 
     > .head {
@@ -19,7 +39,7 @@ $headerIconWidth: 32px;
             width: $headerIconWidth;
             height: $headerIconWidth;
             margin-right: $defaultMargin;
-            background: #d8d; /* default - package */
+            box-sizing: border-box;
             border-radius: $headerIconWidth/2;
 
             &:before {
@@ -30,7 +50,7 @@ $headerIconWidth: 32px;
                 width: $headerIconWidth;
                 text-align: center;
                 font-size: $headerIconWidth/1.5;
-                content: "[]"
+                content: ""
             }
 
             &.registered {

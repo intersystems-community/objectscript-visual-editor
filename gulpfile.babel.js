@@ -17,8 +17,6 @@ import pkg from "./package.json";
 import config from "./source/config.json";
 import buffer from "vinyl-buffer";
 import sourceStream from "vinyl-source-stream";
-import gCallback from "gulp-callback";
-import gForeach from "gulp-foreach";
 
 var dir = __dirname,
     dest = `${dir}/build`,
