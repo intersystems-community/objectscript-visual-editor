@@ -1,4 +1,4 @@
-import { init } from "./classBuilder";
+import { init } from "./classEditor";
 
 window.addEventListener("load", () => {
 

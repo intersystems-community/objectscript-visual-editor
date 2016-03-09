@@ -2,12 +2,12 @@
 /// This class installs and removes <!-- @echo package.printableName -->. Once the class is
 /// compiled, the application will be installed into Caché system. Then open the web-application
 /// [host]/<!-- @echo config.webApplicationName -->/ (slash at the end is required).
-Class VisualBuilder.Installer Extends %Projection.AbstractProjection [ CompileAfter = (Router, StaticContent) ]
+Class VisualEditor.Installer Extends %Projection.AbstractProjection [ CompileAfter = (VisualEditor.Router, VisualEditor.REST.StaticContent, VisualEditor.REST.Informer, VisualEditor.REST.Content) ]
 {
 
 Projection Reference As Installer;
 
-Parameter DispatchClass = "VisualBuilder.Router";
+Parameter DispatchClass = "VisualEditor.Router";
 
 Parameter RESTAppName = "/<!-- @echo config.webApplicationName -->";
 

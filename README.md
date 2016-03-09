@@ -1,4 +1,4 @@
-# Caché Visual Builder
+# Caché Visual Editor
 
 A Web-based user interface for InterSystems Caché which allows to create and manage classes
 literally without touching any code.
@@ -13,7 +13,7 @@ Find the latest release [nowhere for now] and import XML file into Caché by one
 
 Then check the installation output, it should say "Installation is complete!".
 
-After this, open the next web-application: `http://[host]/VisualBuilder/`
+After this, open the next web-application: `http://[host]/VisualEditor/`
 (slash at the end is required).
 
 ### Development

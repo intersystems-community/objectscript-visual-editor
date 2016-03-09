@@ -1,11 +1,12 @@
 {
-  "name": "cache-visual-builder",
-  "printableName": "Cache Visual Builder",
+  "name": "cache-visual-editor",
+  "printableName": "Cache Visual Editor",
   "version": "0.1.0",
   "description": "Visual class editor for InterSystems Caché",
   "main": "index.js",
   "keywords": [
     "visual",
+    "editor",
     "builder",
     "cache",
     "intersystems"

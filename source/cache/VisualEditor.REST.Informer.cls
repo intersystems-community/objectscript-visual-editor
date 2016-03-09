@@ -1,6 +1,6 @@
 /// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This is a REST WEB application that serves different information for the client.
-Class VisualBuilder.REST.Informer extends %CSP.REST {
+Class VisualEditor.REST.Informer extends %CSP.REST {
 
 XData UrlMap
 {

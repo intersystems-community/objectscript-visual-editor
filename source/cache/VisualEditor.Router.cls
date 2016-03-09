@@ -1,6 +1,6 @@
 /// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
-/// This is a REST WEB application entry point for Caché Visual Builder WEB application.
-Class VisualBuilder.Router extends %CSP.REST [ CompileAfter = StaticContent ] {
+/// This is a REST WEB application entry point for <!-- @echo package.printableName --> WEB application.
+Class VisualEditor.Router extends %CSP.REST [ CompileAfter = VisualEditor.REST.StaticContent ] {
 
 XData UrlMap
 {
@@ -9,22 +9,22 @@ XData UrlMap
    <Route Url="/index" Method="GET" Call="Index"/>
    <Route Url="/css/index.css" Method="GET" Call="Css"/>
    <Route Url="/js/index.js" Method="GET" Call="Js"/>
-   <Map Prefix="/Informer" Forward="VisualBuilder.REST.Informer"/>
-   <Map Prefix="/Resources" Forward="VisualBuilder.REST.Resources"/>
+   <Map Prefix="/Informer" Forward="VisualEditor.REST.Informer"/>
+   <Map Prefix="/Resources" Forward="VisualEditor.REST.Resources"/>
 </Routes>
 }
 
 ClassMethod PrintData(DataName as %String = "") As %Status [ Private ]
 {
-    set cTime = ##class(VisualBuilder.REST.StaticContent).#CompileTime
+    set cTime = ##class(VisualEditor.REST.StaticContent).#CompileTime
 	set %response.CharSet = "utf-8"
-	set %response.ContentType = ##class(VisualBuilder.REST.StaticContent).GetMimeType(DataName)
+	set %response.ContentType = ##class(VisualEditor.REST.StaticContent).GetMimeType(DataName)
 	do %response.SetHeader("Last-Modified", cTime)
 	if (%request.GetCgiEnv("HTTP_IF_MODIFIED_SINCE") = cTime) {
         set %response.Status = "304 Not Modified"
         return $$$OK
     } else {
-        if ($$$ISERR(##class(VisualBuilder.REST.StaticContent).PrintContent(DataName))) {
+        if ($$$ISERR(##class(VisualEditor.REST.StaticContent).PrintContent(DataName))) {
             return ..ReportHttpStatusCode(404)
         } else {
             return $$$OK

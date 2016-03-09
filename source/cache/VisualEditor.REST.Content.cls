@@ -1,6 +1,6 @@
 /// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This class is a base class for classes that serve resources.
-Class VisualBuilder.REST.Content {
+Class VisualEditor.REST.Content {
 
 /// Identifies the compilation time, which is used to form "Last-Modified" HTTP header.
 Parameter CompileTime = {"""" _ $zd($h, 11) _ ", "_ $zdt($NOW(0), 2,1) _ " GMT"""};
