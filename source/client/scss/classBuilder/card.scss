@@ -21,7 +21,7 @@ $headerIconWidth: 32px;
         }
 
         > .head {
-            > .icon {
+            > .cardIcon {
                 border: 1px solid black;
             }
         }
@@ -32,7 +32,7 @@ $headerIconWidth: 32px;
 
         overflow: hidden;
 
-        > .icon {
+        > .cardIcon {
 
             position: relative;
             float: left;
@@ -74,6 +74,34 @@ $headerIconWidth: 32px;
                 }
             }
 
+            &.view {
+                background: #e6f;
+                &:before {
+                    content: "V"
+                }
+            }
+
+            &.datatype {
+                background: #7cf;
+                &:before {
+                    content: "T"
+                }
+            }
+
+            &.stream {
+                background: #0f8;
+                &:before {
+                    content: "s"
+                }
+            }
+
+            &.donotuse {
+                background: #f00;
+                &:before {
+                    content: "X"
+                }
+            }
+
         }
 
         > .header {
@@ -84,6 +112,27 @@ $headerIconWidth: 32px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+        }
+
+    }
+
+    > .section {
+
+        position: relative;
+
+        > .header {
+            font-size: 18px;
+            color: gray;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        > .body {
+
+            > .item {
+
+            }
 
         }
 

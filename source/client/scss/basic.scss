@@ -1,5 +1,12 @@
+@import "const";
+
 html, body {
+    margin: 0;
     background: #eee;
     font-family: Verdana, Geneva, sans-serif;
     font-size: 18px;
+}
+
+body {
+    margin: $defaultMargin;
 }
