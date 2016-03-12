@@ -18,7 +18,7 @@ ClassMethod RegisterWebApplication(name As %String, spec) As %Status
     set $Namespace = "%SYS"
     set st = $$$OK
     if ('##class(Security.Applications).Exists(name)) {
-        write !,"Creating WEB application """_name_"""..."
+        write !, "Creating WEB application """_name_"""..."
         set st = ##class(Security.Applications).Create(name, .spec)
         if ($$$ISOK(st)) {
             write !, "WEB application """_name_""" is created."
@@ -84,7 +84,7 @@ ClassMethod RemoveProjection(cls As %String, ByRef params, recompile As %Boolean
 
     do ..DeleteWebApplication(..#RESTAppName)
 
-    write !, "Uninstallation is complete!"
+    write !, "Uninstalling is complete!"
 
     return $$$OK
 }
