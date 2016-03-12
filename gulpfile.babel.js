@@ -17,6 +17,7 @@ import pkg from "./package.json";
 import config from "./source/config.json";
 import buffer from "vinyl-buffer";
 import sourceStream from "vinyl-source-stream";
+import fs from "fs";
 
 var dir = __dirname,
     dest = `${dir}/build`,
@@ -24,11 +25,15 @@ var dir = __dirname,
     context = {
         context: {
             package: pkg,
-            config: config
+            config: config,
+            compileAfter: ""
         }
     };
 
 gulp.task("prepare", (cb) => {
+    context.context.compileAfter = fs.readdirSync(`${ source }/cache`).filter(
+        name => name !== "README.md" && name !== "VisualEditor.Installer"
+    ).map(name => name.replace(/\.cls$/, "")).join(", ");
     return rimraf(dest, cb);
 });
 
