@@ -7,7 +7,7 @@ literally without touching any code.
 
 ![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/13725979/c9e3a45e-e8bb-11e5-874f-28cff147f2e1.png)
 
-![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/13725996/18c163cc-e8bc-11e5-88a0-5030e934162d.png)
+![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/13726020/3a87df26-e8bd-11e5-92f8-eecf743c5e6e.png)
 
 ### Installation
 
