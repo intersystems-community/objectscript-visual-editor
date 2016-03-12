@@ -62,6 +62,14 @@ export function getList (namespace, level, callback) {
 }
 
 /**
+ * Retrieves the basic configuration.
+ * @param {server~dataCallback} callback
+ */
+export function init (callback) {
+    load(`${ BASE_URL }/Informer/init`, null, callback);
+}
+
+/**
  * @callback server~dataCallback
  * @param {*} data - Object that contains server data.
  */

@@ -1,11 +1,18 @@
-# Caché Visual Editor
+# Caché Visual Editor (alpha)
 
 A Web-based user interface for InterSystems Caché which allows to create and manage classes
 literally without touching any code.
 
+### Preview
+
+![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/13725979/c9e3a45e-e8bb-11e5-874f-28cff147f2e1.png)
+
+![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/13725996/18c163cc-e8bc-11e5-88a0-5030e934162d.png)
+
 ### Installation
 
-Find the latest release [nowhere for now] and import XML file into Caché by one of the next ways:
+Find the latest release [here](https://github.com/ZitRos/cache-visual-editor/releases) and import
+XML file into Caché by one of the next ways:
 
 1. Just drag XML file over Studio window;
 2. Go to the Management Portal -> System Explorer -> Classes -> Import and select the XML file;

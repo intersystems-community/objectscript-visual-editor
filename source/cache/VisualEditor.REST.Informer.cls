@@ -6,9 +6,19 @@ XData UrlMap
 {
 <Routes>
    <Route Url="/list" Method="GET" Call="List"/>
+   <Route Url="/init" Method="GET" Call="Init"/>
 </Routes>
 }
 
+ClassMethod Init() As %Status
+{
+    set data = ##class(%ZEN.proxyObject).%New()
+    set data.namespace = $Namespace
+    do data.%ToJSON(, "o")
+    quit $$$OK
+}
+
+/// This method returns all available data about the class.
 ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
 {
     set class = ##class(%Dictionary.ClassDefinition).%OpenId(className)
@@ -119,6 +129,7 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
     return oClass
 }
 
+/// This method lists all the classes on the current level.
 ClassMethod List() As %Status
 {
     set baseLevel = $case(%request.Get("level"), "":"", :%request.Get("level") _ ".")

@@ -1,7 +1,8 @@
 import { init } from "./classEditor";
+import { init as serverInit } from "./server";
 
 window.addEventListener("load", () => {
 
-    init();
+    serverInit(data => init(data));
 
 });

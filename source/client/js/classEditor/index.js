@@ -3,7 +3,8 @@ import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
 
 var PATH = "",
-    INITIALIZED = false;
+    INITIALIZED = false,
+    NAMESPACE = "";
 
 let initCallbacks = [];
 
@@ -42,6 +43,10 @@ function orderData (data) {
     return sorted;
 }
 
+function setTitle (text) {
+    document.querySelector("#topTitle").textContent = text;
+}
+
 export function loadLevel (level) {
 
     PATH = level;
@@ -49,8 +54,10 @@ export function loadLevel (level) {
 
     if (PATH === "")
         backButton.style.display = "none";
+    setTitle(`${ NAMESPACE }${ PATH ? "." : "" }${ PATH }`);
 
     getList("SAMPLES", PATH, (data) => {
+        grid.clear();
         if (PATH !== "")
             backButton.style.display = "";
         data = orderData(data);
@@ -70,8 +77,9 @@ export function onInit (callback) {
     return "Duck";
 }
 
-export function init () {
+export function init (data) {
 
+    NAMESPACE = data["namespace"] || "";
     INITIALIZED = true;
     initCallbacks.forEach(cb => cb());
     initCallbacks = [];
