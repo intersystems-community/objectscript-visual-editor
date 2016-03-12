@@ -6,14 +6,33 @@ function block (className, element = "div") {
     return el;
 }
 
-function getContainer (prop) {
+function getPropertyBlock (prop) {
     let item = block(`item`),
         icon = block(`icon public`),
-        text = block(`label`, `span`);
+        text = block(`label`, `span`),
+        type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "";
     item.appendChild(icon);
-    text.textContent = `${ prop["Name"] }: ${ prop["Type"] }`;
+    text.textContent = `${ prop["Name"] }${ type ? ": " + type : "" }`;
     item.appendChild(text);
     return item;
+}
+
+function getBlock (key, data) {
+
+    let section = block(`section`), body, header;
+    for (let prop in data[key]) {
+        header = block(`header`);
+        header.textContent = key;
+        body = block(`body`);
+        section.appendChild(header);
+        section.appendChild(body);
+        break;
+    }
+    for (let prop in data[key]) {
+        section.appendChild(getPropertyBlock(data[key][prop]));
+    }
+    return section;
+
 }
 
 /**
@@ -32,20 +51,12 @@ export function getCardElement (data) {
     head.appendChild(header);
     card.appendChild(head);
 
-    let section, body;
-    for (let prop in data["Properties"]) {
-        section = block(`section`);
-        header = block(`header`);
-        header.textContent = "Properties";
-        body = block(`body`);
-        section.appendChild(header);
-        section.appendChild(body);
-        card.appendChild(section);
-        break;
-    }
-    for (let prop in data["Properties"]) {
-        section.appendChild(getContainer(data["Properties"][prop]));
-    }
+    card.appendChild(getBlock("Parameters", data));
+    card.appendChild(getBlock("Properties", data));
+    card.appendChild(getBlock("Indices", data));
+    card.appendChild(getBlock("Methods", data));
+    card.appendChild(getBlock("Queries", data));
+    card.appendChild(getBlock("XDatas", data));
 
     if (data["_type"] === "package") {
         card.addEventListener("click", () => {
