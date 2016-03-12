@@ -3,10 +3,11 @@
 
 .card {
     background: #fff;
-    margin: $defaultMargin/2;
+    box-sizing: border-box;
+    margin: $defaultMargin;
     padding: $defaultPadding;
     border-radius: 3px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+    box-shadow: $defaultShadow;
 }
 
 .AutoGrid-container {

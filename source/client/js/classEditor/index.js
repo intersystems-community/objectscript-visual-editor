@@ -2,12 +2,27 @@ import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
 
-var PATH = "";
+var PATH = "",
+    INITIALIZED = false;
+
+let initCallbacks = [];
 
 /**
  * @type {AutoGrid}
  */
-let grid = null;
+let grid = onInit(() => grid = new AutoGrid(document.querySelector("#classBuilderBody")));
+/**
+ * @type {HTMLElement}
+ */
+let backButton = onInit(() => {
+
+    backButton = document.querySelector("#backButton");
+    backButton.addEventListener("click", () => {
+        if (PATH === "") return;
+        loadLevel(PATH.replace(/\.?[^\.]+$/, ""));
+    });
+
+});
 
 function orderData (data) {
     var sortable = [],
@@ -28,9 +43,16 @@ function orderData (data) {
 }
 
 export function loadLevel (level) {
+
     PATH = level;
     grid.clear();
+
+    if (PATH === "")
+        backButton.style.display = "none";
+
     getList("SAMPLES", PATH, (data) => {
+        if (PATH !== "")
+            backButton.style.display = "";
         data = orderData(data);
         for (let obj in data) {
             grid.applyChild(getCardElement(data[obj]));
@@ -39,9 +61,20 @@ export function loadLevel (level) {
 
 }
 
+export function onInit (callback) {
+    if (typeof callback !== "function") throw new Error(`onInit requires function`);
+    if (INITIALIZED)
+        callback();
+    else
+        initCallbacks.push(callback);
+    return "Duck";
+}
+
 export function init () {
 
-    grid = new AutoGrid(document.querySelector("#classBuilderBody"));
+    INITIALIZED = true;
+    initCallbacks.forEach(cb => cb());
+    initCallbacks = [];
 
     loadLevel(PATH);
 

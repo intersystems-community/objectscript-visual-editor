@@ -2,11 +2,52 @@
 
 html, body {
     margin: 0;
+    padding: 0;
     background: #eee;
     font-family: Verdana, Geneva, sans-serif;
     font-size: 18px;
 }
 
-body {
-    margin: $defaultMargin;
+.page {
+
+    > .header {
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: $big;
+        background: white;
+        box-shadow: $defaultShadow;
+        padding: $defaultPadding;
+        box-sizing: border-box;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .icon {
+
+            margin: 0 $defaultMargin 0 0;
+            cursor: pointer;
+
+            &:hover {
+                background-position: 50%;
+                background-size: 80% 80%;
+            }
+
+        }
+
+        > .title {
+            font-size: 24px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+    }
+
+    > .body {
+        margin: $defaultMargin+$big $defaultMargin $defaultMargin $defaultMargin;
+    }
+
 }

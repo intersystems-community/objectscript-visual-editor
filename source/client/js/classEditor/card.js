@@ -8,7 +8,7 @@ function block (className, element = "div") {
 
 function getPropertyBlock (prop) {
     let item = block(`item`),
-        icon = block(`icon public`),
+        icon = block(`icon ${ prop["Private"] ? "private" : "public" }`),
         text = block(`label`, `span`),
         type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "";
     item.appendChild(icon);
