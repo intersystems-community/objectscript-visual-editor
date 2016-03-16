@@ -6,15 +6,15 @@ $headerIconWidth: 32px;
 .card {
 
     position: relative;
-    @include transition(all .3s ease);
+    @include transition($defaultTransition);
 
     &.package {
 
-        background: #f4efff;
+        background: #fff;
         cursor: pointer;
 
         &:hover {
-            background: #e4ccff;
+            background: $colorP1;
             left: -2px;
             top: -2px;
             padding: $defaultPadding + 2px;
@@ -23,6 +23,7 @@ $headerIconWidth: 32px;
         > .head {
             > .cardIcon {
                 border: 1px solid black;
+                background: $colorP1;
             }
         }
 
@@ -54,49 +55,49 @@ $headerIconWidth: 32px;
             }
 
             &.registered {
-                background: #08f;
+                background: #7DC3FF;
                 &:before {
                     content: "R"
                 }
             }
 
             &.persistent {
-                background: #f90;
+                background: #FFB85F;
                 &:before {
                     content: "P"
                 }
             }
 
             &.serial {
-                background: #df0;
+                background: #EFEC2E;
                 &:before {
                     content: "S"
                 }
             }
 
             &.view {
-                background: #e6f;
+                background: #ED99FF;
                 &:before {
                     content: "V"
                 }
             }
 
             &.datatype {
-                background: #7cf;
+                background: #96E4E2;
                 &:before {
                     content: "T"
                 }
             }
 
             &.stream {
-                background: #0f8;
+                background: #74E8B2;
                 &:before {
                     content: "s"
                 }
             }
 
             &.donotuse {
-                background: #f00;
+                background: $colorP2;
                 &:before {
                     content: "X"
                 }
@@ -131,6 +132,34 @@ $headerIconWidth: 32px;
         > .body {
 
             > .item {
+
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
+                cursor: pointer;
+                @include transition($defaultTransition);
+
+                &:hover {
+
+                    padding-left: 4px;
+                    background: $colorP1;
+                    border-radius: 3px;
+
+                    .name {
+                        text-decoration: underline;
+                    }
+
+                }
+
+                .type {
+
+                    @include transition($defaultTransition);
+
+                    &:hover {
+                        color: $colorP2;
+                    }
+
+                }
 
             }
 

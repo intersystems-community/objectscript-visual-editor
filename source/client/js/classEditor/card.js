@@ -10,9 +10,19 @@ function getPropertyBlock (prop) {
     let item = block(`item`),
         icon = block(`icon ${ prop["Private"] ? "private" : "public" }`),
         text = block(`label`, `span`),
-        type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "";
+        pName = block(`name`, `span`),
+        type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "",
+        pTypeText = type ? block("", "span") : null,
+        pType = type ? block(`type`, `span`) : null;
     item.appendChild(icon);
-    text.textContent = `${ prop["Name"] }${ type ? ": " + type : "" }`;
+    pName.textContent = prop["Name"];
+    text.appendChild(pName);
+    if (type) {
+        pTypeText.textContent = ": ";
+        text.appendChild(pTypeText);
+        pType.textContent = type;
+        text.appendChild(pType);
+    }
     item.appendChild(text);
     return item;
 }
@@ -29,7 +39,7 @@ function getBlock (key, data) {
         break;
     }
     for (let prop in data[key]) {
-        section.appendChild(getPropertyBlock(data[key][prop]));
+        body.appendChild(getPropertyBlock(data[key][prop]));
     }
     return section;
 
