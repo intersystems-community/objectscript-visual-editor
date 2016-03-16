@@ -133,12 +133,14 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
 ClassMethod List() As %Status
 {
     set baseLevel = $case(%request.Get("level"), "":"", :%request.Get("level") _ ".")
-    set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:Summary")
+    set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:ClassIndex")
     do classes.Execute()
     #dim folders as %Numeric
     set data = ##class(%ZEN.proxyObject).%New()
+    set skipSystem = $case($Namespace = "%SYS", 1: "", :"%")
     while (classes.Next()) {
-        set clsName = classes.Data("Name")
+        set clsName = classes.Data("ClassName")
+        if ($EXTRACT(clsName, 1) = skipSystem) { continue }
         // skip if doesn't match baseLevel
         if ($FIND(clsName, baseLevel) '= ($LENGTH(baseLevel) + 1)) { continue }
         // turn to folder and skip if exists
