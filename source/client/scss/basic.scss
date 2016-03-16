@@ -45,17 +45,15 @@ html, body {
             font-weight: bold;
             vertical-align: middle;
 
-            #topNamespace {
+            .topNamespace {
 
                 background: none;
                 border: none;
                 font: inherit;
-                outline: none;
+                outline: 0;
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
-                text-indent: 1px;
-                text-overflow: '';
                 cursor: pointer;
                 @include transition($defaultTransition);
 

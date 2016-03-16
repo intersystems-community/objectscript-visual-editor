@@ -34,11 +34,29 @@ let backButton = onInit(() => {
             if (ns === data["namespace"]) c.setAttribute("selected", "true");
             topNamespace.appendChild(c);
         }
+        updateHeaderNamespaceWidth(NAMESPACE);
         topNamespace.addEventListener("change", (e) => {
             NAMESPACE = (e.target || e.srcElement).value;
+            updateHeaderNamespaceWidth(NAMESPACE);
             loadLevel("");
         });
     });
+
+/**
+ * This function uses a bit of trick to compute the width of the namespace element in header, but it
+ * does its job.
+ * @param {string} namespace
+ */
+function updateHeaderNamespaceWidth (namespace) {
+    let temp = block("select", "topNamespace"),
+        t2 = block("option");
+    t2.setAttribute("selected", "true");
+    t2.textContent = namespace;
+    temp.appendChild(t2);
+    topNamespace.parentNode.appendChild(temp);
+    topNamespace.style.width = temp.offsetWidth + "px";
+    topNamespace.parentNode.removeChild(temp);
+}
 
 function orderData (data) {
     var sortable = [],
