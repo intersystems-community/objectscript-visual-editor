@@ -14,6 +14,10 @@ let initCallbacks = [];
  */
 let grid = onInit(() => grid = new AutoGrid(document.querySelector("#classBuilderBody")));
 
+export function updateGrid () {
+    grid.updateGrid();
+}
+
 /**
  * @type {HTMLElement}
  */

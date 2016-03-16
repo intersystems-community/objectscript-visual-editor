@@ -1,8 +1,9 @@
 import { loadLevel } from "./index";
 import { block } from "../utils";
+import { enableItem } from "./card/item";
 
 function getPropertyBlock (prop) {
-    let item = block(`div`, `item`),
+    let item = block(`div`, `header`),
         icon = block(`div`, `icon ${ prop["Private"] ? "private" : "public" }`),
         text = block(`span`, `label`),
         pName = block(`span`, `name`),
@@ -19,6 +20,7 @@ function getPropertyBlock (prop) {
         text.appendChild(pType);
     }
     item.appendChild(text);
+    enableItem(item, prop);
     return item;
 }
 
@@ -34,7 +36,9 @@ function getBlock (key, data) {
         break;
     }
     for (let prop in data[key]) {
-        body.appendChild(getPropertyBlock(data[key][prop]));
+        let div = block(`div`, `item`);
+        div.appendChild(getPropertyBlock(data[key][prop]));
+        body.appendChild(div);
     }
     return section;
 

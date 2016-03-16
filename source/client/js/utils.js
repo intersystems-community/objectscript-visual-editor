@@ -11,3 +11,14 @@ export function block (element = "div", className,  textContent) {
     if (textContent) el.textContent = textContent;
     return el;
 }
+
+export function insertAfter (elem, refElem) {
+    return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
+}
+
+export function clearSelection () {
+    if (window.getSelection)
+        window.getSelection().removeAllRanges();
+    else if (document.selection)
+        document.selection.empty();
+}

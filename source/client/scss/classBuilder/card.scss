@@ -138,32 +138,45 @@ $headerIconWidth: 32px;
 
         > .body {
 
-            > .item {
+            .item {
 
-                overflow: hidden;
-                white-space: pre;
-                text-overflow: ellipsis;
-                cursor: pointer;
-                @include transition($defaultTransition);
+                .header {
 
-                &:hover {
+                    overflow: hidden;
+                    white-space: pre;
+                    text-overflow: ellipsis;
+                    cursor: pointer;
+                    @include transition($defaultTransition);
 
-                    padding-left: $defaultTransitionPadding;
-                    background: $colorP1;
-                    border-radius: 3px;
+                    &:hover {
 
-                    .name {
-                        text-decoration: underline;
+                        padding-left: $defaultTransitionPadding;
+                        background: $colorP1;
+                        border-radius: 3px;
+
+                        .name {
+                            text-decoration: underline;
+                        }
+
+                    }
+
+                    .type {
+
+                        @include transition($defaultTransition);
+
+                        &:hover {
+                            color: $colorP2;
+                        }
+
                     }
 
                 }
 
-                .type {
+                .detailed {
 
-                    @include transition($defaultTransition);
-
-                    &:hover {
-                        color: $colorP2;
+                    .comment {
+                        color: gray;
+                        font-size: x-small;
                     }
 
                 }
