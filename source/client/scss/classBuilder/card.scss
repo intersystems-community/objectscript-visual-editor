@@ -13,18 +13,25 @@ $headerIconWidth: 32px;
         background: #fff;
         cursor: pointer;
 
-        &:hover {
-            background: $colorP1;
-            left: -2px;
-            top: -2px;
-            padding: $defaultPadding + 2px;
-        }
-
         > .head {
             > .cardIcon {
                 border: 1px solid black;
                 background: $colorP1;
+                @include transition($defaultTransition);
             }
+        }
+
+        &:hover {
+
+            background: $colorP1;
+            padding-left: $defaultPadding + $defaultTransitionPadding;
+
+            > .head {
+                > .cardIcon {
+                    background: white;
+                }
+            }
+
         }
 
     }
@@ -141,7 +148,7 @@ $headerIconWidth: 32px;
 
                 &:hover {
 
-                    padding-left: 4px;
+                    padding-left: $defaultTransitionPadding;
                     background: $colorP1;
                     border-radius: 3px;
 

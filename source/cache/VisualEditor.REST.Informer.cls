@@ -10,10 +10,27 @@ XData UrlMap
 </Routes>
 }
 
+/// Returns all available namespaces for the current instance.
+ClassMethod getAllNamespacesList() As %ZEN.proxyObject
+{
+    set namespaces = ##class(%ZEN.proxyObject).%New()
+    set result = ##class(%ResultSet).%New("%SYS.Namespace:List")
+    do result.Execute()
+    while (result.Next()) {
+        set ns = ##class(%ZEN.proxyObject).%New()
+        set ns.remote = result.Get("Remote")
+        set ns.status = result.Get("Status")
+        do namespaces.%DispatchSetProperty(result.Get("Nsp"), ns)
+    }
+    return namespaces
+}
+
+///
 ClassMethod Init() As %Status
 {
     set data = ##class(%ZEN.proxyObject).%New()
     set data.namespace = $Namespace
+    set data.namespaces = ..getAllNamespacesList()
     do data.%ToJSON(, "o")
     quit $$$OK
 }
@@ -132,6 +149,10 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
 /// This method lists all the classes on the current level.
 ClassMethod List() As %Status
 {
+    set ns = %request.Get("ns")
+    if (##class(%SYS.Namespace).Exists(ns)) {
+        znspace ns
+    }
     set baseLevel = $case(%request.Get("level"), "":"", :%request.Get("level") _ ".")
     set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:ClassIndex")
     do classes.Execute()

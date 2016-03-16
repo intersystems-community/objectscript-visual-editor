@@ -1,19 +1,14 @@
 import { loadLevel } from "./index";
-
-function block (className, element = "div") {
-    let el = document.createElement(element);
-    el.className = className;
-    return el;
-}
+import { block } from "../utils";
 
 function getPropertyBlock (prop) {
-    let item = block(`item`),
-        icon = block(`icon ${ prop["Private"] ? "private" : "public" }`),
-        text = block(`label`, `span`),
-        pName = block(`name`, `span`),
+    let item = block(`div`, `item`),
+        icon = block(`div`, `icon ${ prop["Private"] ? "private" : "public" }`),
+        text = block(`span`, `label`),
+        pName = block(`span`, `name`),
         type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "",
-        pTypeText = type ? block("", "span") : null,
-        pType = type ? block(`type`, `span`) : null;
+        pTypeText = type ? block(`span`) : null,
+        pType = type ? block(`span`, `type`) : null;
     item.appendChild(icon);
     pName.textContent = prop["Name"];
     text.appendChild(pName);
@@ -29,11 +24,11 @@ function getPropertyBlock (prop) {
 
 function getBlock (key, data) {
 
-    let section = block(`section`), body, header;
+    let section = block(`div`, `section`), body, header;
     for (let prop in data[key]) {
-        header = block(`header`);
+        header = block(`div`, `header`);
         header.textContent = key;
-        body = block(`body`);
+        body = block(`div`, `body`);
         section.appendChild(header);
         section.appendChild(body);
         break;
@@ -51,10 +46,10 @@ function getBlock (key, data) {
  * @returns {HTMLElement}
  */
 export function getCardElement (data) {
-    let card = block(`card ${ data["_type"] }`),
-        head = block(`head`),
-        headIcon = block(`cardIcon ${ data["ClassType"] || "" }`),
-        header = block(`header`);
+    let card = block(`div`, `card ${ data["_type"] }`),
+        head = block(`div`, `head`),
+        headIcon = block(`div`, `cardIcon ${ data["ClassType"] || "" }`),
+        header = block(`div`, `header`);
 
     header.textContent = data["name"];
     head.appendChild(headIcon);

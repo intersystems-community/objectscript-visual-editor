@@ -1,7 +1,7 @@
 {
   "name": "cache-visual-editor",
   "printableName": "Cache Visual Editor",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Visual class editor for InterSystems Caché",
   "main": "index.js",
   "keywords": [
@@ -27,5 +27,8 @@
     "rimraf": "^2.5.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "gulp": "gulp"
   }
 }

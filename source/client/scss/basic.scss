@@ -1,4 +1,5 @@
 @import "const";
+@import "mixins";
 
 html, body {
     margin: 0;
@@ -39,9 +40,35 @@ html, body {
         }
 
         > .title {
+
             font-size: 24px;
             font-weight: bold;
             vertical-align: middle;
+
+            #topNamespace {
+
+                background: none;
+                border: none;
+                font: inherit;
+                outline: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                text-indent: 1px;
+                text-overflow: '';
+                cursor: pointer;
+                @include transition($defaultTransition);
+
+                &::-ms-expand {
+                    display: none;
+                }
+
+                &:hover {
+                    color: $colorP2;
+                }
+
+            }
+
         }
 
     }

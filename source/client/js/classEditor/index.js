@@ -1,6 +1,7 @@
 import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
+import { block } from "../utils";
 
 var PATH = "",
     INITIALIZED = false,
@@ -12,18 +13,32 @@ let initCallbacks = [];
  * @type {AutoGrid}
  */
 let grid = onInit(() => grid = new AutoGrid(document.querySelector("#classBuilderBody")));
+
 /**
  * @type {HTMLElement}
  */
 let backButton = onInit(() => {
-
-    backButton = document.querySelector("#backButton");
-    backButton.addEventListener("click", () => {
-        if (PATH === "") return;
-        loadLevel(PATH.replace(/\.?[^\.]+$/, ""));
+        backButton = document.querySelector("#backButton");
+        backButton.addEventListener("click", () => {
+            if (PATH === "") return;
+            loadLevel(PATH.replace(/\.?[^\.]+$/, ""));
+        });
+    }),
+    topNamespace = onInit((data) => {
+        topNamespace = document.querySelector("#topNamespace");
+        while (topNamespace.firstChild)
+            topNamespace.removeChild(topNamespace.firstChild);
+        for (let ns in data["namespaces"]) {
+            let c = block("option", "", ns);
+            c.setAttribute("value", ns);
+            if (ns === data["namespace"]) c.setAttribute("selected", "true");
+            topNamespace.appendChild(c);
+        }
+        topNamespace.addEventListener("change", (e) => {
+            NAMESPACE = (e.target || e.srcElement).value;
+            loadLevel("");
+        });
     });
-
-});
 
 function orderData (data) {
     var sortable = [],
@@ -47,6 +62,13 @@ function setTitle (text) {
     document.querySelector("#topTitle").textContent = text;
 }
 
+/**
+ * This namespace should be trusted - setting wrong namespace will result as "no data".
+ */
+function setNamespace (namespace) {
+    topNamespace.textContent = namespace;
+}
+
 export function loadLevel (level) {
 
     PATH = level;
@@ -54,9 +76,9 @@ export function loadLevel (level) {
 
     if (PATH === "")
         backButton.style.display = "none";
-    setTitle(`${ NAMESPACE }${ PATH ? "." : "" }${ PATH }`);
+    setTitle(`${ PATH ? "." : "" }${ PATH }`);
 
-    getList("SAMPLES", PATH, (data) => {
+    getList(NAMESPACE, PATH, (data) => {
         grid.clear();
         if (PATH !== "")
             backButton.style.display = "";
@@ -79,9 +101,9 @@ export function onInit (callback) {
 
 export function init (data) {
 
-    NAMESPACE = data["namespace"] || "";
     INITIALIZED = true;
-    initCallbacks.forEach(cb => cb());
+    NAMESPACE = data["namespace"];
+    initCallbacks.forEach(cb => cb(data));
     initCallbacks = [];
 
     loadLevel(PATH);
