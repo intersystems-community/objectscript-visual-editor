@@ -1,13 +1,13 @@
-# Caché Visual Editor (alpha)
+# Caché Visual Editor (pre-alpha)
 
 A Web-based user interface for InterSystems Caché which allows to create and manage classes
 literally without touching any code.
 
 ### Preview
 
-![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/13725979/c9e3a45e-e8bb-11e5-874f-28cff147f2e1.png)
+![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/13891951/f52ed7e6-ed5c-11e5-9636-6a9aac876325.png)
 
-![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/13726020/3a87df26-e8bd-11e5-92f8-eecf743c5e6e.png)
+![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/13891950/f52d5574-ed5c-11e5-8377-e9ca1940cd52.png)
 
 ### Installation
 

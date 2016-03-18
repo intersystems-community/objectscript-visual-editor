@@ -1,9 +1,10 @@
 import { loadLevel } from "./index";
-import { block } from "../utils";
+import { block } from "../domUtils";
 import { enableItem } from "./card/item";
 
-function getPropertyBlock (prop) {
-    let item = block(`div`, `header`),
+function getPropertyBlock (classData, classBlockName, classBlockPropName) {
+    let prop = classData[classBlockName][classBlockPropName],
+        item = block(`div`, `header`),
         icon = block(`div`, `icon ${ prop["Private"] ? "private" : "public" }`),
         text = block(`span`, `label`),
         pName = block(`span`, `name`),
@@ -20,24 +21,30 @@ function getPropertyBlock (prop) {
         text.appendChild(pType);
     }
     item.appendChild(text);
-    enableItem(item, prop);
+    enableItem(item, classData, classBlockName, classBlockPropName);
     return item;
 }
 
-function getBlock (key, data) {
+/**
+ * Applies block markup according to class metadata.
+ * @param {"Parameters"|"Properties"|"Methods"|"Queries"|"XDatas"|"Indices"} classBlockName
+ * @param {*} classData - Class metadata.
+ * @returns {Element}
+ */
+function getBlock (classBlockName, classData) {
 
     let section = block(`div`, `section`), body, header;
-    for (let prop in data[key]) {
+    for (let classBlockPropName in classData[classBlockName]) {
         header = block(`div`, `header`);
-        header.textContent = key;
+        header.textContent = classBlockName;
         body = block(`div`, `body`);
         section.appendChild(header);
         section.appendChild(body);
         break;
     }
-    for (let prop in data[key]) {
+    for (let classBlockPropName in classData[classBlockName]) {
         let div = block(`div`, `item`);
-        div.appendChild(getPropertyBlock(data[key][prop]));
+        div.appendChild(getPropertyBlock(classData, classBlockName, classBlockPropName));
         body.appendChild(div);
     }
     return section;

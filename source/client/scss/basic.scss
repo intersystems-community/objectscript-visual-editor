@@ -23,48 +23,58 @@ html, body {
         box-shadow: $defaultShadow;
         padding: $defaultPadding;
         box-sizing: border-box;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
 
-        .icon {
+        .panel {
 
-            margin: 0 $defaultMargin 0 0;
-            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
-            &:hover {
-                background-position: 50%;
-                background-size: 80% 80%;
-            }
+            .icon {
 
-        }
-
-        > .title {
-
-            font-size: 24px;
-            font-weight: bold;
-            vertical-align: middle;
-
-            .topNamespace {
-
-                background: none;
-                border: none;
-                font: inherit;
-                outline: 0;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
+                margin: 0 $defaultMargin 0 0;
                 cursor: pointer;
-                @include transition($defaultTransition);
-
-                &::-ms-expand {
-                    display: none;
-                }
 
                 &:hover {
-                    color: $colorP2;
+                    background-position: 50%;
+                    background-size: 80% 80%;
                 }
 
+            }
+
+            .title {
+
+                font-size: 24px;
+                font-weight: bold;
+                vertical-align: middle;
+
+                .topNamespace {
+
+                    background: none;
+                    border: none;
+                    font: inherit;
+                    outline: 0;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    cursor: pointer;
+                    @include transition($defaultTransition);
+
+                    &::-ms-expand {
+                        display: none;
+                    }
+
+                    &:hover {
+                        color: $colorP2;
+                    }
+
+                }
+
+            }
+
+            #saveIndicator {
+                float: right;
             }
 
         }

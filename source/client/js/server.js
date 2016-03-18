@@ -62,6 +62,20 @@ export function getList (namespace, level, callback) {
 }
 
 /**
+ * Saves
+ * @param {string} namespace
+ * @param {*} data - Data like { "Pack.Class": { "properties": { "Pr": { "Description": "Test" }}}}
+ * @param {server~dataCallback} callback
+ */
+export function save (namespace, data, callback) {
+    load(
+        `${ BASE_URL }/Editor/save${ getParams("ns", namespace) }`,
+        data,
+        callback
+    )
+}
+
+/**
  * Retrieves the basic configuration.
  * @param {server~dataCallback} callback
  */

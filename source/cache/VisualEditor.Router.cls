@@ -11,6 +11,7 @@ XData UrlMap
    <Route Url="/js/index.js" Method="GET" Call="Js"/>
    <Map Prefix="/Informer" Forward="VisualEditor.REST.Informer"/>
    <Map Prefix="/Resources" Forward="VisualEditor.REST.Resources"/>
+   <Map Prefix="/Editor" Forward="VisualEditor.REST.Editor"/>
 </Routes>
 }
 

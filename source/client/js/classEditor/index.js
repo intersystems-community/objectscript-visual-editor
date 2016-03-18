@@ -1,7 +1,8 @@
 import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
-import { block } from "../utils";
+import { block } from "../domUtils";
+import { saveChanges } from "./changes";
 
 var PATH = "",
     INITIALIZED = false,
@@ -14,11 +15,15 @@ let initCallbacks = [];
  */
 let grid = onInit(() => grid = new AutoGrid(document.querySelector("#classBuilderBody")));
 
+/**
+ * Function which updates current grid.
+ */
 export function updateGrid () {
     grid.updateGrid();
 }
 
 /**
+ * Behaviors for elements on page.
  * @type {HTMLElement}
  */
 let backButton = onInit(() => {
@@ -44,12 +49,28 @@ let backButton = onInit(() => {
             updateHeaderNamespaceWidth(NAMESPACE);
             loadLevel("");
         });
+    }),
+    saveButton = onInit(() => {
+        saveButton = document.querySelector("#saveIndicator");
+        saveButton.style.opacity = 0;
+        saveButton.addEventListener("click", () => {
+            saveChanges(NAMESPACE, (res) => {
+                if (!res["error"]) saveButton.style.opacity = 0;
+            });
+        });
     });
 
 /**
- * This function uses a bit of trick to compute the width of the namespace element in header, but it
- * does its job.
- * @param {string} namespace
+ * This function applies visual effects regarding to changes were made and
+ * indicates that changes are needed to be saved.
+ */
+export function changeIsMade () {
+    saveButton.style.opacity = 1;
+}
+
+/**
+ * This function uses a bit of trick to compute the width of the namespace element in header.
+ * @param {string} namespace - Currently selected namespace.
  */
 function updateHeaderNamespaceWidth (namespace) {
     let temp = block("select", "topNamespace"),
@@ -85,12 +106,9 @@ function setTitle (text) {
 }
 
 /**
- * This namespace should be trusted - setting wrong namespace will result as "no data".
+ * Displays the classes and packages located on the current level.
+ * @param {string} level - Class part.
  */
-function setNamespace (namespace) {
-    topNamespace.textContent = namespace;
-}
-
 export function loadLevel (level) {
 
     PATH = level;
@@ -118,9 +136,13 @@ export function onInit (callback) {
         callback();
     else
         initCallbacks.push(callback);
-    return "Duck";
+    return "Duck"; // Property has to be redefined in onInit callback.
 }
 
+/**
+ * Application entry point.
+ * @param {*} data - Server response to the /Informer/init request.
+ */
 export function init (data) {
 
     INITIALIZED = true;
