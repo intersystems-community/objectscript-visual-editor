@@ -25,8 +25,8 @@ After this, open the next web-application: `http://[host]/VisualEditor/`
 
 ### Development
 
-To participate in development of this application, you have [NodeJS](https://nodejs.org) and Caché 
-2016.2+ to be installed (due to UDL import). Or, of course, you can copy & paste sources into
+To participate in development of this application, you have [NodeJS](https://nodejs.org) and **Caché 
+2016.2+** to be installed (due to UDL import support). Or, of course, you can copy & paste sources into
 Studio, but this would take a lot of time.
 
 The development process of this application **lies completely outside Caché**. It includes
