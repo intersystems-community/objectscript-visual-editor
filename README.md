@@ -26,20 +26,15 @@ After this, open the next web-application: `http://[host]/VisualEditor/`
 ### Development
 
 To participate in development of this application, you have [NodeJS](https://nodejs.org) and Caché 
-2016.\* to be installed.
+2016.2+ to be installed (due to UDL import). Or, of course, you can copy & paste sources into
+Studio, but this would take a lot of time.
 
 The development process of this application **lies completely outside Caché**. It includes
 structured file tree under `source` directory, and each of that files can be edited in your
 favorite source editor.
 
-When the source is ready, you need global gulp module to perform builds. Open the command prompt and
-install it with one command:
-
-```bash
-npm install -g gulp
-```
-
-Then you have to install all project dependencies by running this command from the project's root:
+When the source is ready you have to install all project dependencies by running this command from
+the project's root:
 
 ```bash
 npm install
@@ -48,11 +43,11 @@ npm install
 And now you are ready to build the project from the sources! This time and each next run this:
 
 ```bash
-gulp
+npm run gulp
 ```
 
 Take your ready to import sources in `build/cache` folder.
 
-To simplify development on Windows (scripts for other platforms are welcome),
+**To simplify** development on Windows (scripts for other platforms are welcome),
 make the copy of `import.bat` file and edit the path to your Caché instance there.
 Then you can just use one command `import` (etc) to deploy the project from source to Caché.
