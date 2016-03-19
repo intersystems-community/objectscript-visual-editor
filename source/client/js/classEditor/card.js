@@ -66,6 +66,7 @@ export function getCardElement (data) {
     head.appendChild(headIcon);
     head.appendChild(header);
     card.appendChild(head);
+    //enableItem(head, data);
 
     card.appendChild(getBlock("Parameters", data));
     card.appendChild(getBlock("Properties", data));

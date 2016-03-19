@@ -4,14 +4,15 @@ import { addChange } from "../changes";
 
 /**
  * Creates and returns interactive class block property editor.
- * @param data
  * @param classData
  * @param classBlockName
  * @param classBlockPropName
  * @returns {Element}
  */
-function createView (data, classData, classBlockName, classBlockPropName) {
-    let container = block(`div`, `detailed`),
+function createView (classData, classBlockName, classBlockPropName) {
+    let isClass = !classBlockName,
+        data = isClass ? classData : classData[classBlockName][classBlockPropName],
+        container = block(`div`, `detailed`),
         comment = block(`div`, `comment`);
     container.appendChild(comment);
     comment.setAttribute("contenteditable", "true");
@@ -30,17 +31,20 @@ function createView (data, classData, classBlockName, classBlockPropName) {
  * Enables block item interactivity.
  * @param {HTMLElement} element
  * @param {*} classData
- * @param classBlockName
- * @param classBlockPropName
+ * @param [classBlockName]
+ * @param [classBlockPropName]
  */
 export function enableItem (element, classData, classBlockName, classBlockPropName) {
 
-    let data = classData[classBlockName][classBlockPropName],
+    let isClass = !classBlockName,
         opened = false,
         container;
 
     element.addEventListener("click", () => {
-        if (!container) container = createView(data, classData, classBlockName, classBlockPropName);
+        if (!container)
+            container = isClass
+                ? createView(classData)
+                : createView(classData, classBlockName, classBlockPropName);
         if (opened = !opened) {
             insertAfter(container, element);
         } else if (container.parentNode) {

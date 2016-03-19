@@ -21,6 +21,9 @@ ClassMethod Save() As %Status
         znspace ns
     }
 
+    set propDefs =
+        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.PropertyDefinition").Properties
+
     do %request.Content.%CopyToArray(.classes)
     set response = ##class(%ZEN.proxyObject).%New()
     set response.error = ""
@@ -29,8 +32,12 @@ ClassMethod Save() As %Status
     while (className '= "") {
 
         set errorLog = ""
+        set changes = 0
 
-        do classes(className).Properties.%CopyToArray(.properties)
+        set properties = ""
+        if ($ClassName(classes(className).Properties) = "%ZEN.proxyObject") {
+            do classes(className).Properties.%CopyToArray(.properties)
+        }
         set propertyName = $order(properties(""))
         while (propertyName '= "") {
             set pDef = ##class(%Dictionary.PropertyDefinition).%OpenId(className_"||"_propertyName)
@@ -41,30 +48,42 @@ ClassMethod Save() As %Status
                 continue
             }
 
-            set pDef.Description = properties(propertyName).Description
+            // iterate over properties defined
+            set props = properties(propertyName)
+            for j=1:1:propDefs.Count() {
+                set pname = propDefs.GetAt(j).Name
+                if ($data(props.%data(pname))) {
+                    set $PROPERTY(pDef, pname) = $PROPERTY(props, pname)
+                }
+            }
+
             set error = $System.Status.GetErrorText(pDef.%Save())
             if (error '= "") {
                 set errorLog = errorLog _ error _ $Char(10)
             } else {
-                set response.modified = response.modified + 1
+                set changes = changes + 1
             }
 
             set propertyName = $order(properties(propertyName))
         }
 
-        set className = $order(classes(className))
-
         if (errorLog '= "") {
             set response.error = response.error _ errorLog
+            set className = $order(classes(className))
             continue
         }
 
-        set st = $system.OBJ.Compile(className, , .errorLog)
+        set st = $system.OBJ.Compile(className, "cuk-d", .errorLog)
 
-        if (errorLog '= "") {
+        if (errorLog '= 0) {
             set response.error = response.error _ $CHAR(10) _ errorLog
+            set className = $order(classes(className))
             continue
         }
+
+        set response.modified = response.modified + changes
+
+        set className = $order(classes(className))
 
     }
 
