@@ -40,12 +40,12 @@ let backButton = onInit(() => {
         for (let ns in data["namespaces"]) {
             let c = block("option", "", ns);
             c.setAttribute("value", ns);
-            if (ns === data["namespace"]) c.setAttribute("selected", "true");
+            if (ns === NAMESPACE) c.setAttribute("selected", "true");
             topNamespace.appendChild(c);
         }
         updateHeaderNamespaceWidth(NAMESPACE);
         topNamespace.addEventListener("change", (e) => {
-            NAMESPACE = (e.target || e.srcElement).value;
+            setNamespace((e.target || e.srcElement).value);
             updateHeaderNamespaceWidth(NAMESPACE);
             loadLevel("");
         });
@@ -59,6 +59,51 @@ let backButton = onInit(() => {
             });
         });
     });
+
+/**
+ * Get the location hash parameter value.
+ * @param {string} name - Parameter name.
+ * @returns {string|undefined}
+ */
+export function getURLHashParameter (name) {
+    let eName = encodeURIComponent(name),
+        arr = location.hash.substr(1).split("&").filter(keyVal => keyVal.split("=")[0] === eName);
+    if (!arr.length) return undefined;
+    return decodeURIComponent(arr[0].split("=")[1] || "");
+}
+
+/**
+ * Set the location hash parameter value.
+ * @param {string} name - Parameter name.
+ * @param {string|undefined} [value] - If no value provided, then URL parameter will be removed.
+ */
+export function setURLHashParameter (name, value) {
+    let eName = encodeURIComponent(name);
+    if (getURLHashParameter(name) === undefined) {
+        if (typeof value === "undefined") return;
+        location.hash += `${ location.hash.length > 1 ? "&" : "" }${
+                encodeURIComponent(name)
+            }${ value ? `=${ encodeURIComponent(value) }` : `` }`;
+    } else {
+        location.hash = "#" + location.hash.substr(1).split("&").map((keyVal) => {
+                let kv = keyVal.split("=");
+                return (kv[0] === eName)
+                    ? typeof value === "undefined"
+                        ? ""
+                        : `${ kv[0] }=${ encodeURIComponent(value) }`
+                    : keyVal;
+            }).filter(e => e !== "").join("&");
+    }
+}
+
+/**
+ * This function sets the namespace. Note that namespace should be a valid namespace that exists.
+ * @param {string} namespace
+ */
+export function setNamespace (namespace) {
+    NAMESPACE = namespace;
+    setURLHashParameter("namespace", NAMESPACE);
+}
 
 /**
  * This function applies visual effects regarding to changes were made and
@@ -118,6 +163,8 @@ export function loadLevel (level) {
         backButton.style.display = "none";
     setTitle(`${ PATH ? "." : "" }${ PATH }`);
 
+    setURLHashParameter("level", PATH || undefined);
+
     getList(NAMESPACE, PATH, (data) => {
         grid.clear();
         if (PATH !== "")
@@ -131,7 +178,7 @@ export function loadLevel (level) {
 }
 
 export function onInit (callback) {
-    if (typeof callback !== "function") throw new Error(`onInit requires function`);
+    if (typeof callback !== "function") throw new Error(`onInit requires a function`);
     if (INITIALIZED)
         callback();
     else
@@ -146,10 +193,10 @@ export function onInit (callback) {
 export function init (data) {
 
     INITIALIZED = true;
-    NAMESPACE = data["namespace"];
+    setNamespace(getURLHashParameter("namespace") || data["namespace"]);
     initCallbacks.forEach(cb => cb(data));
     initCallbacks = [];
 
-    loadLevel(PATH);
+    loadLevel(getURLHashParameter("level") || "");
 
 }

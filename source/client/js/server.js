@@ -1,4 +1,4 @@
-let BASE_URL = location.href.replace(/\/$/, ""); // = "http://[host]/VisualBuilder" (no slash)
+let BASE_URL = location.pathname.replace(/\/$/, ""); // = "http://[host]/VisualBuilder" (no slash)
 
 /**
  * @param {string} url
