@@ -8,7 +8,6 @@ import rimraf from "rimraf";
 import scss from "gulp-sass";
 import preprocess from "gulp-preprocess";
 import browserify from "browserify";
-import sourcemaps from "gulp-sourcemaps";
 import babelify from "babelify";
 import htmlmin from "gulp-htmlmin";
 import cssnano from "gulp-cssnano";
