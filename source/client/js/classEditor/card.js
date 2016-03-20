@@ -5,13 +5,15 @@ import { enableItem } from "./card/item";
 function getPropertyBlock (classData, classBlockName, classBlockPropName) {
     let prop = classData[classBlockName][classBlockPropName],
         item = block(`div`, `header`),
+        iconBlock = block(`div`, `icons`),
         icon = block(`div`, `icon ${ prop["Private"] ? "private" : "public" }`),
         text = block(`span`, `label`),
         pName = block(`span`, `name`),
         type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "",
         pTypeText = type ? block(`span`) : null,
         pType = type ? block(`span`, `type`) : null;
-    item.appendChild(icon);
+    iconBlock.appendChild(icon);
+    item.appendChild(iconBlock);
     pName.textContent = prop["Name"];
     text.appendChild(pName);
     if (type) {
@@ -21,7 +23,7 @@ function getPropertyBlock (classData, classBlockName, classBlockPropName) {
         text.appendChild(pType);
     }
     item.appendChild(text);
-    enableItem(item, classData, classBlockName, classBlockPropName);
+    enableItem({headerElement: item, classData, classBlockName, classBlockPropName});
     return item;
 }
 

@@ -76,7 +76,7 @@ ClassMethod Save() As %Status
         set st = $system.OBJ.Compile(className, "cuk-d", .errorLog)
 
         if (errorLog '= 0) {
-            set response.error = response.error _ $CHAR(10) _ errorLog
+            set response.error = response.error _ errorLog(1) _ $CHAR(10)
             set className = $order(classes(className))
             continue
         }

@@ -138,21 +138,59 @@ $headerIconWidth: 32px;
 
         > .body {
 
-            .item {
+            > .item {
 
-                .header {
+                > .header {
 
+                    position: relative;
                     overflow: hidden;
                     white-space: pre;
                     text-overflow: ellipsis;
                     cursor: pointer;
                     @include transition($defaultTransition);
 
+                    > .icons {
+                        display: inline-block;
+                    }
+
+                    > .controls {
+
+                        float: right;
+                        display: inline-block;
+
+                        > .icon {
+
+                            margin: 0 2px 0 0;
+                            vertical-align: top;
+
+                        }
+
+                        > .icon.add {
+
+                            background-color: transparent;
+                            padding-top: $normal;
+                            border: none;
+                            font: inherit;
+                            outline: 0;
+                            -webkit-appearance: none;
+                            -moz-appearance: none;
+                            appearance: none;
+                            cursor: pointer;
+                            @include transition($defaultTransition);
+
+                            &::-ms-expand {
+                                display: none;
+                            }
+
+                        }
+
+                    }
+
                     &:hover {
 
                         padding-left: $defaultTransitionPadding;
                         background: $colorP1;
-                        border-radius: 3px;
+                        border-radius: $defaultPadding/2;
 
                         .name {
                             text-decoration: underline;
@@ -172,11 +210,64 @@ $headerIconWidth: 32px;
 
                 }
 
-                .detailed {
+                > .detailed {
 
                     .comment {
                         color: gray;
                         font-size: x-small;
+                    }
+
+                    .property-block {
+
+                        position: relative;
+                        font-size: $fontLittle;
+                        cursor: default;
+                        border-radius: $defaultPadding/2;
+                        @include transition($defaultTransition);
+
+                        &:hover {
+                            background-color: $colorP1;
+                        }
+
+                        .name-block {
+
+                            box-sizing: border-box;
+                            padding-left: $defaultPadding/2;
+                            float: left;
+                            width: 50%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            &.required {
+                                text-decoration: underline;
+                            }
+
+                        }
+
+                        .value-block {
+
+                            position: relative;
+                            margin-left: 50%;
+                            width: 50%;
+                            text-align: right;
+
+                            input {
+
+                                vertical-align: middle;
+                                background: none;
+                                margin: 0 auto;
+                                box-sizing: border-box;
+                                font: inherit;
+                                border: none;
+
+                                &[type=text] {
+                                    width: 100%;
+                                }
+
+                            }
+
+                        }
+
                     }
 
                 }

@@ -16,6 +16,14 @@ export function insertAfter (elem, refElem) {
     return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
 }
 
+export function prepend (element, container) {
+    if (container.firstChild) {
+        container.insertBefore(element, container.firstChild);
+    } else {
+        container.appendChild(element);
+    }
+}
+
 export function clearSelection () {
     if (window.getSelection)
         window.getSelection().removeAllRanges();
