@@ -48,16 +48,23 @@ ClassMethod Save() As %Status
                 continue
             }
 
-            // iterate over properties defined
             set props = properties(propertyName)
-            for j=1:1:propDefs.Count() {
-                set pname = propDefs.GetAt(j).Name
-                if ($data(props.%data(pname))) {
-                    set $PROPERTY(pDef, pname) = $PROPERTY(props, pname)
+            set deleted = 0
+            if ($data(props.%data("$delete"))) {
+                set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
+                set deleted = 1
+            } else { // iterate over properties defined
+                for j=1:1:propDefs.Count() {
+                    set pname = propDefs.GetAt(j).Name
+                    if ($data(props.%data(pname))) {
+                        set $PROPERTY(pDef, pname) = $PROPERTY(props, pname)
+                    }
                 }
             }
 
-            set error = $System.Status.GetErrorText(pDef.%Save())
+            if ('deleted) {
+                set error = $System.Status.GetErrorText(pDef.%Save())
+            }
             if (error '= "") {
                 set errorLog = errorLog _ error _ $Char(10)
             } else {

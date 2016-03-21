@@ -12,6 +12,15 @@ export function block (element = "div", className,  textContent) {
     return el;
 }
 
+/**
+ * Safely detach element from the DOM.
+ * @param {HTMLElement} element
+ */
+export function detach (element) {
+    if (element.parentNode)
+        element.parentNode.removeChild(element);
+}
+
 export function insertAfter (elem, refElem) {
     return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
 }

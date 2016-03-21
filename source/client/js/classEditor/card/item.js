@@ -1,6 +1,7 @@
-import { block, insertAfter, clearSelection, prepend } from "../../domUtils";
+import { block, insertAfter, clearSelection, prepend, detach } from "../../domUtils";
 import { updateGrid } from "../index";
 import { addChange } from "../changes";
+import { Toast } from "../../toast";
 
 let MANIFEST = {
     Class: {
@@ -310,7 +311,10 @@ export function enableItem ({headerElement, classData, classBlockName, classBloc
     
     let isClass = !classBlockName,
         opened = false,
-        container, controls;
+        container, controls,
+        savePath = isClass
+            ? [classData["Name"]]
+            : [classData["Name"], classBlockName, classBlockPropName];
 
     headerElement.addEventListener(`click`, () => {
         if (!container) {
@@ -322,6 +326,7 @@ export function enableItem ({headerElement, classData, classBlockName, classBloc
                 del = block(`div`, `interactive normal icon delete`);
             controls.appendChild(add);
             controls.appendChild(del);
+
             add.addEventListener(`mousedown`, () => { // form the list of not present properties
                 while (add.firstChild)
                     add.removeChild(add.firstChild);
@@ -348,10 +353,21 @@ export function enableItem ({headerElement, classData, classBlockName, classBloc
                     propManifest: propManifest,
                     propName: propName,
                     propData: propManifest.default || "",
-                    savePath: isClass
-                        ? [classData["Name"]]
-                        : [classData["Name"], classBlockName, classBlockPropName]
+                    savePath: savePath
                 }))
+            });
+
+            let lastTimeDelClicked = 0;
+            del.addEventListener(`click`, e => e.stopPropagation());
+            del.addEventListener(`click`, () => {
+                let delta = (-lastTimeDelClicked + (lastTimeDelClicked = (new Date()).getTime()));
+                if (delta > 5000) { // > 5 sec - show message "click again to delete"
+                    new Toast(Toast.TYPE_INFO, `Click again to delete`);
+                } else { // delete
+                    addChange(savePath.concat(`$delete`), true);
+                    detach(headerElement);
+                    detach(container);
+                }
             });
         }
         if (opened = !opened) {
