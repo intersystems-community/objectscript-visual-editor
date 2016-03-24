@@ -12,6 +12,12 @@ export function block (element = "div", className,  textContent) {
     return el;
 }
 
+export function getDummyForm () {
+    let el = block(`form`);
+    el.addEventListener(`submit`, e => e.preventDefault());
+    return el;
+}
+
 /**
  * Safely detach element from the DOM.
  * @param {HTMLElement} element

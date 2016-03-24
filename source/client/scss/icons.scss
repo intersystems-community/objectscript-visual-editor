@@ -28,6 +28,10 @@
     height: $big;
 }
 
+.icon.interactive {
+    cursor: pointer;
+}
+
 .icon.interactive:hover {
     background-position: 50%;
     background-size: 80% 80%;

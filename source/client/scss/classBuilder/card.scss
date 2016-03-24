@@ -123,6 +123,44 @@ $headerIconWidth: 32px;
 
         }
 
+        > .controls {
+
+            float: right;
+            display: inline-block;
+            opacity: 0;
+            @include transition($defaultTransition);
+
+            > .icon {
+
+                margin: 0 2px 0 0;
+                vertical-align: top;
+
+            }
+
+            /*> .icon.delete {
+
+                background-color: transparent;
+                padding-top: $normal;
+                border: none;
+                font: inherit;
+                outline: 0;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                @include transition($defaultTransition);
+
+                &::-ms-expand {
+                    display: none;
+                }
+
+            }*/
+
+        }
+
+        &:hover > .controls {
+            opacity: 1;
+        }
+
     }
 
     > .section {
@@ -130,10 +168,53 @@ $headerIconWidth: 32px;
         position: relative;
 
         > .header {
+
             font-size: 18px;
             color: gray;
             font-weight: bold;
             text-decoration: underline;
+            @include transition($defaultTransition);
+
+            > .controls {
+
+                float: right;
+                display: inline-block;
+                opacity: 0;
+                @include transition($defaultTransition);
+
+                > .icon {
+
+                    margin: 0 2px 0 0;
+                    vertical-align: top;
+
+                }
+
+                > form {
+
+                    display: inline-block;
+                    vertical-align: top;
+
+                    > input {
+                        vertical-align: top;
+                        @include transition($defaultTransition);
+                    }
+
+                }
+
+            }
+
+            &:hover {
+
+                padding-left: $defaultTransitionPadding;
+                background: $colorP1;
+                border-radius: $defaultPadding/2;
+
+                > .controls {
+                    opacity: 1;
+                }
+
+            }
+
         }
 
         > .body {
@@ -175,7 +256,6 @@ $headerIconWidth: 32px;
                             -webkit-appearance: none;
                             -moz-appearance: none;
                             appearance: none;
-                            cursor: pointer;
                             @include transition($defaultTransition);
 
                             &::-ms-expand {

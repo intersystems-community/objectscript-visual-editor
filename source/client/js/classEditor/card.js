@@ -1,9 +1,12 @@
-import { loadLevel } from "./index";
-import { block } from "../domUtils";
+import { loadLevel, updateGrid } from "./index";
+import { block, getDummyForm, detach } from "../domUtils";
 import { enableItem } from "./card/item";
+import { addChange } from "./changes";
+import { Toast } from "../toast/index";
 
 function getPropertyBlock (classData, classBlockName, classBlockPropName) {
-    let prop = classData[classBlockName][classBlockPropName],
+    let div = block(`div`, `item`),
+        prop = classData[classBlockName][classBlockPropName],
         item = block(`div`, `header`),
         iconBlock = block(`div`, `icons`),
         icon = block(`div`, `icon ${ prop["Private"] ? "private" : "public" }`),
@@ -24,7 +27,37 @@ function getPropertyBlock (classData, classBlockName, classBlockPropName) {
     }
     item.appendChild(text);
     enableItem({headerElement: item, classData, classBlockName, classBlockPropName});
-    return item;
+    div.appendChild(item);
+    return div;
+}
+
+function getControls (body, classData, classBlockName) {
+    let controls = block(`div`, `controls`),
+        add = block(`div`, `interactive normal icon add`),
+        nameInput = block(`input`);
+    nameInput.type = "text";
+    controls.appendChild(add);
+    add.addEventListener(`click`, () => {
+        let form = getDummyForm();
+        nameInput.style.width = "0";
+        nameInput.value = "TestProperty";
+        form.appendChild(nameInput);
+        setTimeout(() => nameInput.style.width = "150px", 1);
+        controls.removeChild(add);
+        controls.appendChild(form);
+        form.addEventListener(`submit`, () => {
+            let newProp = nameInput.value,
+                path = [classData[`Name`], classBlockName, newProp];
+            addChange(path.concat(`$add`), true);
+            addChange(path.concat(`Name`), newProp);
+            classData[classBlockName][newProp] = { Name: newProp };
+            body.appendChild(getPropertyBlock(classData, classBlockName, newProp));
+            detach(form);
+            controls.appendChild(add);
+        });
+    });
+
+    return controls;
 }
 
 /**
@@ -35,19 +68,20 @@ function getPropertyBlock (classData, classBlockName, classBlockPropName) {
  */
 function getBlock (classBlockName, classData) {
 
-    let section = block(`div`, `section`), body, header;
+    let section = block(`div`, `section`), body;
+    //for (let classBlockPropName in classData[classBlockName]) {
+    let header = block(`div`, `header`),
+        span = block(`span`, `title`);
+    body = block(`div`, `body`);
+    header.appendChild(getControls(body, classData, classBlockName));
+    header.appendChild(span);
+    span.textContent = classBlockName;
+    section.appendChild(header);
+    section.appendChild(body);
+        //break;
+    //}
     for (let classBlockPropName in classData[classBlockName]) {
-        header = block(`div`, `header`);
-        header.textContent = classBlockName;
-        body = block(`div`, `body`);
-        section.appendChild(header);
-        section.appendChild(body);
-        break;
-    }
-    for (let classBlockPropName in classData[classBlockName]) {
-        let div = block(`div`, `item`);
-        div.appendChild(getPropertyBlock(classData, classBlockName, classBlockPropName));
-        body.appendChild(div);
+        body.appendChild(getPropertyBlock(classData, classBlockName, classBlockPropName));
     }
     return section;
 
@@ -59,30 +93,48 @@ function getBlock (classBlockName, classData) {
  * @returns {HTMLElement}
  */
 export function getCardElement (data) {
-    let card = block(`div`, `card ${ data["_type"] }`),
+    let type = data["_type"],
+        card = block(`div`, `card ${ type }`),
         head = block(`div`, `head`),
+        controls = block(`div`, `controls`),
+        del = block(`div`, `interactive medium icon delete`),
         headIcon = block(`div`, `cardIcon ${ data["ClassType"] || "" }`),
         header = block(`div`, `header`);
 
     header.textContent = data["name"];
+    controls.appendChild(del);
+    if (type === "class")
+        head.appendChild(controls);
     head.appendChild(headIcon);
     head.appendChild(header);
     card.appendChild(head);
-    //enableItem(head, data);
 
-    card.appendChild(getBlock("Parameters", data));
-    card.appendChild(getBlock("Properties", data));
-    card.appendChild(getBlock("Indices", data));
-    card.appendChild(getBlock("Methods", data));
-    card.appendChild(getBlock("Queries", data));
-    card.appendChild(getBlock("XDatas", data));
-
-    if (data["_type"] === "package") {
+    if (type === "class") {
+        card.appendChild(getBlock("Parameters", data));
+        card.appendChild(getBlock("Properties", data));
+        card.appendChild(getBlock("Indices", data));
+        card.appendChild(getBlock("Methods", data));
+        card.appendChild(getBlock("Queries", data));
+        card.appendChild(getBlock("XDatas", data));
+    } else if (type === "package") {
         card.addEventListener("click", () => {
             loadLevel(data["fullName"]);
         });
         return card;
     }
+
+    let lastTimeDelClicked = 0;
+    del.addEventListener(`click`, e => e.stopPropagation());
+    del.addEventListener(`click`, () => {
+        let delta = (-lastTimeDelClicked + (lastTimeDelClicked = (new Date()).getTime()));
+        if (delta > 5000) { // > 5 sec - show message "click again to delete"
+            new Toast(Toast.TYPE_INFO, `Click again to delete`);
+        } else { // delete
+            addChange([data["Name"]].concat(`$delete`), true);
+            detach(card);
+            updateGrid();
+        }
+    });
 
     return card;
 }

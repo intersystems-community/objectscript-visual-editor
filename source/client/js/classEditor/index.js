@@ -3,6 +3,8 @@ import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
 import { block } from "../domUtils";
 import { saveChanges } from "./changes";
+import { Toast } from "../toast";
+import { addChange } from "./changes";
 
 var PATH = "",
     INITIALIZED = false,
@@ -55,8 +57,41 @@ let backButton = onInit(() => {
         saveButton.style.opacity = 0;
         saveButton.addEventListener("click", () => {
             saveChanges(NAMESPACE, (res) => {
-                if (!res["error"]) saveButton.style.opacity = 0;
+                if (!res["error"]) {
+                    saveButton.style.opacity = 0;
+                    new Toast(Toast.TYPE_DONE, `Saved!`);
+                } else {
+                    new Toast(Toast.TYPE_ERROR, res["error"]);
+                }
             });
+        });
+    }),
+    addClass = onInit(() => {
+        addClass = document.querySelector("#addClass");
+        addClass.addEventListener(`click`, () => {
+            let type = PATH ? "class" : "package",
+                name = prompt(
+                    `Enter a ${ type } name`,
+                    `New ${ type }`
+                ),
+                fullName = `${ PATH ? PATH + "." : "" }${ name }`;
+            let setup = {
+                _type: type,
+                name: name,
+                Name: fullName,
+                Properties: {},
+                Methods: {},
+                Queries: {},
+                Parameters: {},
+                Indices: {}
+            };
+            if (type === "class") {
+                setup["ClassType"] = "registered";
+            } else {
+                setup["fullName"] = fullName;
+            }
+            grid.applyChild(getCardElement(setup));
+            addChange([fullName, "$add"], true);
         });
     });
 

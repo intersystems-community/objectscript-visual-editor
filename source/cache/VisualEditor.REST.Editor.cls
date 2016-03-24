@@ -28,27 +28,58 @@ ClassMethod Save() As %Status
     set response = ##class(%ZEN.proxyObject).%New()
     set response.error = ""
     set response.modified = 0
+
+    #define nextClass set className = $order(classes(className)) continue
+
     set className = $order(classes(""))
     while (className '= "") {
+
+        set classData = classes(className)
+
+        if ($data(classData.%data("$add"))) {
+            set classDef = ##class(%Dictionary.ClassDefinition).%New()
+            set classDef.Name = className
+        } else {
+            set classDef = ##class(%Dictionary.ClassDefinition).%OpenId(className)
+        }
+        if (classDef = "") {
+            set response.error = response.error _ "Class " _ className _ " does not exists." _ $Char(10)
+            $$$nextClass
+        }
+
+        if ($data(classData.%data("$delete"))) {
+            set error = $System.Status.GetErrorText(classDef.%Delete(classDef.%Oid()))
+            if (error '= "") { set response.error = response.error _ error _ $CHAR(10) }
+            set response.modified = response.modified + 1
+            $$$nextClass
+        }
 
         set errorLog = ""
         set changes = 0
 
         set properties = ""
-        if ($ClassName(classes(className).Properties) = "%ZEN.proxyObject") {
+        if ($ClassName(classData.Properties) = "%ZEN.proxyObject") {
             do classes(className).Properties.%CopyToArray(.properties)
         }
+
+        #define nextProperty set propertyName = $order(properties(propertyName)) continue
+
         set propertyName = $order(properties(""))
         while (propertyName '= "") {
-            set pDef = ##class(%Dictionary.PropertyDefinition).%OpenId(className_"||"_propertyName)
+            set props = properties(propertyName)
+
+            if ($data(props.%data("$add"))) {
+                set pDef = ##class(%Dictionary.PropertyDefinition).%New()
+                set pDef.parent = classDef
+            } else {
+                set pDef = ##class(%Dictionary.PropertyDefinition).%OpenId(className_"||"_propertyName)
+            }
             if (pDef = "") {
                 set errorLog = errorLog _ "Property " _ propertyName _ " not found in "
                     _ className _ $Char(10)
-                set propertyName = $order(properties(propertyName))
-                continue
+                $$$nextProperty
             }
 
-            set props = properties(propertyName)
             set deleted = 0
             if ($data(props.%data("$delete"))) {
                 set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
@@ -71,27 +102,24 @@ ClassMethod Save() As %Status
                 set changes = changes + 1
             }
 
-            set propertyName = $order(properties(propertyName))
+            $$$nextProperty
         }
 
         if (errorLog '= "") {
             set response.error = response.error _ errorLog
-            set className = $order(classes(className))
-            continue
+            $$$nextClass
         }
 
         set st = $system.OBJ.Compile(className, "cuk-d", .errorLog)
 
         if (errorLog '= 0) {
             set response.error = response.error _ errorLog(1) _ $CHAR(10)
-            set className = $order(classes(className))
-            continue
+            $$$nextClass
         }
 
         set response.modified = response.modified + changes
 
-        set className = $order(classes(className))
-
+        $$$nextClass
     }
 
     do response.%ToJSON(, "o")
