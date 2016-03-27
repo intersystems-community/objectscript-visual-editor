@@ -91,7 +91,8 @@ let backButton = onInit(() => {
                 setup["fullName"] = fullName;
             }
             grid.applyChild(getCardElement(setup));
-            addChange([fullName, "$add"], true);
+            if (type !== "package")
+                addChange([fullName, "$add"], true);
         });
     });
 

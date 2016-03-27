@@ -30,6 +30,7 @@ ClassMethod Save() As %Status
     set response.modified = 0
 
     #define nextClass set className = $order(classes(className)) continue
+    #define logError(%e) if (%e '= "") { set response.error = response.error _ %e _ $Char(10) }
 
     set className = $order(classes(""))
     while (className '= "") {
@@ -43,15 +44,16 @@ ClassMethod Save() As %Status
             set classDef = ##class(%Dictionary.ClassDefinition).%OpenId(className)
         }
         if (classDef = "") {
-            set response.error = response.error _ "Class " _ className _ " does not exists." _ $Char(10)
+            $$$logError("Class " _ className _ " does not exists.")
             $$$nextClass
         }
 
         if ($data(classData.%data("$delete"))) {
-            set error = $System.Status.GetErrorText(classDef.%Delete(classDef.%Oid()))
-            if (error '= "") { set response.error = response.error _ error _ $CHAR(10) }
+            $$$logError($System.Status.GetErrorText(classDef.%Delete(classDef.%Oid())))
             set response.modified = response.modified + 1
             $$$nextClass
+        } else {
+            $$$logError($System.Status.GetErrorText(classDef.%Save()))
         }
 
         set errorLog = ""
@@ -106,14 +108,14 @@ ClassMethod Save() As %Status
         }
 
         if (errorLog '= "") {
-            set response.error = response.error _ errorLog
+            $$$logError(errorLog)
             $$$nextClass
         }
 
         set st = $system.OBJ.Compile(className, "cuk-d", .errorLog)
 
         if (errorLog '= 0) {
-            set response.error = response.error _ errorLog(1) _ $CHAR(10)
+            $$$logError(errorLog(1))
             $$$nextClass
         }
 
