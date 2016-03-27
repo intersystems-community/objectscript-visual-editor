@@ -15,15 +15,25 @@ function load (url, data, callback) {
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
+            let data = {};
             try {
-                return callback(JSON.parse(xhr.responseText) || {});
+                data = JSON.parse(xhr.responseText);
             } catch (e) {
                 console.error(e, url, "Unable to parse:", { data: xhr.responseText });
-                return callback({});
             }
+            return callback(data);
         } else if (xhr.readyState === 4) {
             console.error(url, xhr.responseText + ", " + xhr.status + ": " + xhr.statusText);
-            return callback({});
+            let errs = {};
+            try {
+                errs = JSON.parse(xhr.responseText);
+                errs = (errs[`errors`] || [])[0] || { error: xhr.responseText }; // ought to be rare
+            } catch (e) {
+                errs = {
+                    error: xhr.responseText || `Error ${ xhr.status }`
+                };
+            }
+            return callback(errs);
         }
     };
 
@@ -51,7 +61,7 @@ function getParams (...params) {
  * Returns the list of packages and classes on the current level.
  * @param {string} namespace - Namespace to list
  * @param {string} level - Base package name like "Cinema". In this case returns all cinema classes.
- * @param {server~dataCallback} callback
+ * @param {dataCallback} callback
  */
 export function getList (namespace, level, callback) {
     load(
@@ -65,7 +75,7 @@ export function getList (namespace, level, callback) {
  * Saves
  * @param {string} namespace
  * @param {*} data - Data like { "Pack.Class": { "properties": { "Pr": { "Description": "Test" }}}}
- * @param {server~dataCallback} callback
+ * @param {dataCallback} callback
  */
 export function save (namespace, data, callback) {
     load(
@@ -77,13 +87,13 @@ export function save (namespace, data, callback) {
 
 /**
  * Retrieves the basic configuration.
- * @param {server~dataCallback} callback
+ * @param {dataCallback} callback
  */
 export function init (callback) {
     load(`${ BASE_URL }/Informer/init`, null, callback);
 }
 
 /**
- * @callback server~dataCallback
+ * @callback dataCallback
  * @param {*} data - Object that contains server data.
  */

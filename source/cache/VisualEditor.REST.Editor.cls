@@ -10,6 +10,62 @@ XData UrlMap
 </Routes>
 }
 
+/// Saves properties of class properties.
+ClassMethod SaveProperties(classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String
+{
+    set errors = ""
+
+    if ($ClassName(prps) = "%ZEN.proxyObject") {
+        do prps.%CopyToArray(.properties)
+    } else {
+        return ""
+    }
+
+    #define nextProperty set propertyName = $order(properties(propertyName)) continue
+    #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
+    #define hasErrors errors '= ""
+    set propDefs =
+        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.PropertyDefinition").Properties
+
+    set propertyName = $order(properties(""))
+    while (propertyName '= "") {
+
+        set props = properties(propertyName)
+
+        if ($data(props.%data("$add"))) {
+            set pDef = ##class(%Dictionary.PropertyDefinition).%New()
+            set pDef.parent = classDef
+        } else {
+            set pDef = ##class(%Dictionary.PropertyDefinition).%OpenId(classDef.Name_"||"_propertyName)
+        }
+        if (pDef = "") {
+            $$$logError("Property " _ propertyName _ " not found in " _ className)
+            $$$nextProperty
+        }
+
+        if ($data(props.%data("$delete"))) {
+            set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
+        } else { // iterate over properties defined in props and save
+            set pName = $order(props.%data(""))
+            while (pName '= "") {
+                if (pName = "$add") { set pName = $order(props.%data(pName)) continue }
+                if (propDefs.FindObjectId("%Dictionary.PropertyDefinition||"_pName) > 0) {
+                    set $PROPERTY(pDef, pName) = $PROPERTY(props, pName)
+                } else {
+                    $$$logError("Unable to set """_pName_""" property of """_propertyName_""" in class "_classDef.Name)
+                }
+                set pName = $order(props.%data(pName))
+            }
+            $$$logError($System.Status.GetErrorText(pDef.%Save()))
+        }
+
+        $$$nextProperty
+
+    }
+
+    return errors
+}
+
 /// GET parameter "ns" get parameter - namespace to modify classes in.
 /// POST JSON body is like
 /// { "TestPack.TestClass": { "properties": { "TestInt": { "Description": "Test desc!" } } } }
@@ -21,20 +77,19 @@ ClassMethod Save() As %Status
         znspace ns
     }
 
-    set propDefs =
-        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.PropertyDefinition").Properties
-
     do %request.Content.%CopyToArray(.classes)
     set response = ##class(%ZEN.proxyObject).%New()
     set response.error = ""
     set response.modified = 0
 
-    #define nextClass set className = $order(classes(className)) continue
-    #define logError(%e) if (%e '= "") { set response.error = response.error _ %e _ $Char(10) }
+    #define nextClass set className = $order(classes(className)) if (errors '= "") { set response.error = response.error _ errors } continue
+    #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
+    #define hasErrors errors '= ""
 
     set className = $order(classes(""))
     while (className '= "") {
 
+        set errors = ""
         set classData = classes(className)
 
         if ($data(classData.%data("$add"))) {
@@ -54,63 +109,12 @@ ClassMethod Save() As %Status
             $$$nextClass
         } else {
             $$$logError($System.Status.GetErrorText(classDef.%Save()))
+            if ($$$hasErrors) { $$$nextClass }
         }
 
-        set errorLog = ""
-        set changes = 0
+        $$$logError(..SaveProperties(classDef, classData.Properties))
 
-        set properties = ""
-        if ($ClassName(classData.Properties) = "%ZEN.proxyObject") {
-            do classes(className).Properties.%CopyToArray(.properties)
-        }
-
-        #define nextProperty set propertyName = $order(properties(propertyName)) continue
-
-        set propertyName = $order(properties(""))
-        while (propertyName '= "") {
-            set props = properties(propertyName)
-
-            if ($data(props.%data("$add"))) {
-                set pDef = ##class(%Dictionary.PropertyDefinition).%New()
-                set pDef.parent = classDef
-            } else {
-                set pDef = ##class(%Dictionary.PropertyDefinition).%OpenId(className_"||"_propertyName)
-            }
-            if (pDef = "") {
-                set errorLog = errorLog _ "Property " _ propertyName _ " not found in "
-                    _ className _ $Char(10)
-                $$$nextProperty
-            }
-
-            set deleted = 0
-            if ($data(props.%data("$delete"))) {
-                set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
-                set deleted = 1
-            } else { // iterate over properties defined
-                for j=1:1:propDefs.Count() {
-                    set pname = propDefs.GetAt(j).Name
-                    if ($data(props.%data(pname))) {
-                        set $PROPERTY(pDef, pname) = $PROPERTY(props, pname)
-                    }
-                }
-            }
-
-            if ('deleted) {
-                set error = $System.Status.GetErrorText(pDef.%Save())
-            }
-            if (error '= "") {
-                set errorLog = errorLog _ error _ $Char(10)
-            } else {
-                set changes = changes + 1
-            }
-
-            $$$nextProperty
-        }
-
-        if (errorLog '= "") {
-            $$$logError(errorLog)
-            $$$nextClass
-        }
+        if ($$$hasErrors) { $$$nextClass }
 
         set st = $system.OBJ.Compile(className, "cuk-d", .errorLog)
 
@@ -119,9 +123,10 @@ ClassMethod Save() As %Status
             $$$nextClass
         }
 
-        set response.modified = response.modified + changes
+        set response.modified = response.modified + 1
 
         $$$nextClass
+
     }
 
     do response.%ToJSON(, "o")

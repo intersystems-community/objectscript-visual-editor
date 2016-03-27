@@ -1,6 +1,6 @@
 /// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This class installs and removes <!-- @echo package.printableName -->. Once the class is
-/// compiled, the application will be installed into Caché system. Then open the web-application
+/// compiled, the application will be installed into Cache system. Then open the web-application
 /// [host]/<!-- @echo config.webApplicationName -->/ (slash at the end is required).
 Class VisualEditor.Installer Extends %Projection.AbstractProjection [ Not ProcedureBlock, CompileAfter = (<!-- @echo compileAfter -->) ]
 {
