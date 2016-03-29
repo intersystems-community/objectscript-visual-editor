@@ -147,7 +147,7 @@ ClassMethod OnPreDispatch() As %Status
     set content = $ZCVT(content, "I", "UTF8")
     set st = ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(content, , .obj, 1)
     return:$$$ISERR(st) st
-    return:'$IsObject(obj) $$$ERROR("Unable to parse request body")
+    return:'$IsObject(obj) $$$ERROR($$$GeneralError, "Unable to parse request body")
     set %request.Content = obj
 
     return $$$OK
