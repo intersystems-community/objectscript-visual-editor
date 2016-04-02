@@ -16,23 +16,22 @@ import pkg from "./package.json";
 import config from "./source/config.json";
 import buffer from "vinyl-buffer";
 import sourceStream from "vinyl-source-stream";
-import fs from "fs";
+import rename from "gulp-rename";
 
-var dir = __dirname,
+let INSTALLER_CLASS_NAME = `${ pkg["packageName"] }.Installer`;
+
+let dir = __dirname,
     dest = `${dir}/build`,
     source = `${dir}/source`,
     context = {
         context: {
             package: pkg,
             config: config,
-            compileAfter: ""
+            compileAfter: "" // is filled during "pre-cls" task.
         }
     };
 
 gulp.task("prepare", (cb) => {
-    context.context.compileAfter = fs.readdirSync(`${ source }/cache`).filter(
-        name => name !== "README.md" && name !== "VisualEditor.Installer"
-    ).map(name => name.replace(/\.cls$/, "")).join(", ");
     return rimraf(dest, cb);
 });
 
@@ -78,12 +77,21 @@ gulp.task("css", ["prepare"], () => {
 });
 
 gulp.task("pre-cls", ["js", "html", "css", "favicon"], () => {
-    return gulp.src([`${source}/cache/*.cls`])
+    return gulp.src([`${source}/cache/**/*.cls`])
+        .pipe(rename((f) => {
+            f.basename = `${ pkg["packageName"] }.${ f.dirname === "." ? "" : f.dirname + "." }${
+                f.basename
+            }`;
+            f.dirname = ".";
+            if (f.basename !== INSTALLER_CLASS_NAME)
+                context.context.compileAfter +=
+                    (context.context.compileAfter ? "," : "") + f.basename;
+        }))
         .pipe(gulp.dest(`${dest}/cache`));
 });
 
 gulp.task("cls", ["pre-cls"], () => {
-    return gulp.src([`${dest}/cache/*.cls`])
+    return gulp.src([`${dest}/cache/**/*.cls`])
         .pipe(preprocess(context))
         .pipe(gulp.dest(`${dest}/cache`));
 });
