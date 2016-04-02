@@ -137,24 +137,6 @@ $headerIconWidth: 32px;
 
             }
 
-            /*> .icon.delete {
-
-                background-color: transparent;
-                padding-top: $normal;
-                border: none;
-                font: inherit;
-                outline: 0;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-                @include transition($defaultTransition);
-
-                &::-ms-expand {
-                    display: none;
-                }
-
-            }*/
-
         }
 
         &:hover > .controls {
@@ -248,19 +230,7 @@ $headerIconWidth: 32px;
 
                         > .icon.add {
 
-                            background-color: transparent;
                             padding-top: $normal;
-                            border: none;
-                            font: inherit;
-                            outline: 0;
-                            -webkit-appearance: none;
-                            -moz-appearance: none;
-                            appearance: none;
-                            @include transition($defaultTransition);
-
-                            &::-ms-expand {
-                                display: none;
-                            }
 
                         }
 

@@ -66,10 +66,10 @@ let backButton = onInit(() => {
             });
         });
     }),
-    addClass = onInit(() => {
-        addClass = document.querySelector("#addClass");
-        addClass.addEventListener(`click`, () => {
-            let type = PATH ? "class" : "package",
+    addClassPackageButton = onInit(() => {
+        addClassPackageButton = document.querySelector("#addClass");
+        addClassPackageButton.addEventListener(`change`, () => {
+            let type = addClassPackageButton["value"], // "class" || "package"
                 name = prompt(
                     `Enter a ${ type } name`,
                     `New ${ type }`

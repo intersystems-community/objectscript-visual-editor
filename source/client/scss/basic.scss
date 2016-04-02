@@ -60,6 +60,27 @@ input[type=checkbox].toggle {
 
 }
 
+.hidden-select {
+
+    background-color: transparent;
+    border: none;
+    padding-top: $medium;
+    font: inherit;
+    outline: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &::-ms-expand {
+        display: none;
+    }
+
+    > option {
+        color: black;
+    }
+
+}
+
 .page {
 
     > .header {

@@ -322,7 +322,7 @@ export function enableItem ({headerElement, classData, classBlockName, classBloc
                 ? createView(classData)
                 : createView(classData, classBlockName, classBlockPropName);
             controls = block(`div`, `controls`);
-            let add = block(`select`, `interactive normal icon add`),
+            let add = block(`select`, `interactive normal icon add hidden-select`),
                 del = block(`div`, `interactive normal icon delete`);
             controls.appendChild(add);
             controls.appendChild(del);
