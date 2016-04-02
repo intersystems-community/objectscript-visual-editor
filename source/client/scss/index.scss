@@ -3,8 +3,9 @@
  * forget to include the file you have added to this file below.
  */
 
+@import "domUtils";
 @import "basic";
 @import "grid/cards";
 @import "classBuilder/card";
 @import "icons";
-@import "./toast/toast";
+@import "toast/toast";

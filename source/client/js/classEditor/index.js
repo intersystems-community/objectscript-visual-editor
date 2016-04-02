@@ -1,7 +1,7 @@
 import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
-import { block } from "../domUtils";
+import { block, awaitInlineInput, freeSelect } from "../domUtils";
 import { saveChanges } from "./changes";
 import { Toast } from "../toast";
 import { addChange } from "./changes";
@@ -68,8 +68,41 @@ let backButton = onInit(() => {
     }),
     addClassPackageButton = onInit(() => {
         addClassPackageButton = document.querySelector("#addClass");
+        freeSelect(addClassPackageButton);
         addClassPackageButton.addEventListener(`change`, () => {
-            let type = addClassPackageButton["value"], // "class" || "package"
+            
+            let type = addClassPackageButton["value"]; // "class" || "package"
+            
+            awaitInlineInput(addClassPackageButton, {
+                placeholder: `Enter ${ type } name...`
+            }, (name) => {
+                
+                let fullName = `${ PATH ? PATH + "." : "" }${ name }`,
+                    setup = {
+                        _type: type,
+                        name: name,
+                        Name: fullName,
+                        Properties: {},
+                        Methods: {},
+                        Queries: {},
+                        Parameters: {},
+                        Indices: {}
+                    };
+                
+                if (type === "class") {
+                    setup["ClassType"] = "registered";
+                } else {
+                    setup["fullName"] = fullName;
+                }
+                
+                grid.applyChild(getCardElement(setup));
+                
+                if (type !== "package")
+                    addChange([fullName, "$add"], true);
+                
+            });
+            
+            /*
                 name = prompt(
                     `Enter a ${ type } name`,
                     `New ${ type }`
@@ -92,7 +125,7 @@ let backButton = onInit(() => {
             }
             grid.applyChild(getCardElement(setup));
             if (type !== "package")
-                addChange([fullName, "$add"], true);
+                addChange([fullName, "$add"], true);*/
         });
     });
 

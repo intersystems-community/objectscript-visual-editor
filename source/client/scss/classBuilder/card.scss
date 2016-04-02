@@ -276,7 +276,7 @@ $headerIconWidth: 32px;
                         @include transition($defaultTransition);
 
                         &:hover {
-                            background-color: $colorP1;
+                            //background-color: $colorP1;
                         }
 
                         .name-block {
@@ -308,7 +308,6 @@ $headerIconWidth: 32px;
                                 margin: 0 auto;
                                 box-sizing: border-box;
                                 font: inherit;
-                                border: none;
 
                                 &[type=text] {
                                     width: 100%;

@@ -60,6 +60,25 @@ input[type=checkbox].toggle {
 
 }
 
+input[type=text] {
+
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid lightgray;
+    @include transition($defaultTransition);
+
+    &:hover {
+        box-shadow: inset 0px -6px 5px -4px rgba($colorP3, .7);
+    }
+
+    &:focus {
+        box-shadow: none !important;
+    }
+
+}
+
 .hidden-select {
 
     background-color: transparent;
@@ -79,6 +98,15 @@ input[type=checkbox].toggle {
         color: black;
     }
 
+}
+
+.inline {
+    vertical-align: top;
+    display: inline-block;
+}
+
+.float-right {
+    float: right;
 }
 
 .page {
@@ -141,10 +169,6 @@ input[type=checkbox].toggle {
             }
 
             #saveIndicator {
-                float: right;
-            }
-
-            #addClass {
                 float: right;
             }
 

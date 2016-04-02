@@ -1,0 +1,6 @@
+@import "mixins";
+@import "const";
+
+.inline-input {
+    @include transition($defaultTransition);
+}
