@@ -1,7 +1,7 @@
 import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
 import { getCardElement } from "./card";
-import { block, awaitInlineInput, freeSelect } from "../domUtils";
+import { block, awaitInlineInput, freeSelect, waitApplyProperty } from "../domUtils";
 import { saveChanges } from "./changes";
 import { Toast } from "../toast";
 import { addChange } from "./changes";
@@ -54,11 +54,10 @@ let backButton = onInit(() => {
     }),
     saveButton = onInit(() => {
         saveButton = document.querySelector("#saveIndicator");
-        saveButton.style.opacity = 0;
         saveButton.addEventListener("click", () => {
             saveChanges(NAMESPACE, (res) => {
                 if (!res["error"]) {
-                    saveButton.style.opacity = 0;
+                    changeIsMade(false);
                     new Toast(Toast.TYPE_DONE, `Saved!`);
                 } else {
                     new Toast(Toast.TYPE_ERROR, res["error"]);
@@ -101,31 +100,6 @@ let backButton = onInit(() => {
                     addChange([fullName, "$add"], true);
                 
             });
-            
-            /*
-                name = prompt(
-                    `Enter a ${ type } name`,
-                    `New ${ type }`
-                ),
-                fullName = `${ PATH ? PATH + "." : "" }${ name }`;
-            let setup = {
-                _type: type,
-                name: name,
-                Name: fullName,
-                Properties: {},
-                Methods: {},
-                Queries: {},
-                Parameters: {},
-                Indices: {}
-            };
-            if (type === "class") {
-                setup["ClassType"] = "registered";
-            } else {
-                setup["fullName"] = fullName;
-            }
-            grid.applyChild(getCardElement(setup));
-            if (type !== "package")
-                addChange([fullName, "$add"], true);*/
         });
     });
 
@@ -177,9 +151,17 @@ export function setNamespace (namespace) {
 /**
  * This function applies visual effects regarding to changes were made and
  * indicates that changes are needed to be saved.
+ * @param {boolean} update
  */
-export function changeIsMade () {
-    saveButton.style.opacity = 1;
+export function changeIsMade (update) {
+    if (update) {
+        saveButton.style.opacity = 0;
+        saveButton.style.display = "inline-block";
+        setTimeout(() => saveButton.style.opacity = 1, 1);
+    } else {
+        saveButton.style.opacity = 0;
+        setTimeout(() => saveButton.style.display = "none", 300);
+    }
 }
 
 /**

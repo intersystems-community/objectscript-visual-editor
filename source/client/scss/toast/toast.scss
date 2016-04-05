@@ -1,4 +1,5 @@
 @import "../mixins";
+@import "../const";
 
 .toast {
 
@@ -41,7 +42,7 @@
         }
 
         &.done {
-            background: #c4ffc4;
+            background: $colorP3;
         }
 
     }

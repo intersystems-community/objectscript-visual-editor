@@ -1,5 +1,5 @@
 import { loadLevel, updateGrid } from "./index";
-import { block, getDummyForm, detach } from "../domUtils";
+import { block, detach, awaitInlineInput } from "../domUtils";
 import { enableItem } from "./card/item";
 import { addChange } from "./changes";
 import { Toast } from "../toast/index";
@@ -32,31 +32,21 @@ function getPropertyBlock (classData, classBlockName, classBlockPropName) {
 }
 
 function getControls (body, classData, classBlockName) {
+    
     let controls = block(`div`, `controls`),
-        add = block(`div`, `interactive normal icon add`),
-        nameInput = block(`input`);
-    nameInput.type = "text";
+        add = block(`div`, `interactive normal icon add`);
+    
     controls.appendChild(add);
     add.addEventListener(`click`, () => {
-        let form = getDummyForm();
-        nameInput.style.width = "0";
-        nameInput.value = "TestProperty";
-        form.appendChild(nameInput);
-        setTimeout(() => nameInput.style.width = "150px", 1);
-        controls.removeChild(add);
-        controls.appendChild(form);
-        form.addEventListener(`submit`, () => {
-            let newProp = nameInput.value,
-                path = [classData[`Name`], classBlockName, newProp];
+        awaitInlineInput(add, { placeholder: classBlockName }, (propName) => {
+            let path = [classData[`Name`], classBlockName, propName];
             addChange(path.concat(`$add`), true);
-            addChange(path.concat(`Name`), newProp);
-            classData[classBlockName][newProp] = { Name: newProp };
-            body.appendChild(getPropertyBlock(classData, classBlockName, newProp));
-            detach(form);
-            controls.appendChild(add);
+            addChange(path.concat(`Name`), propName);
+            classData[classBlockName][propName] = { Name: propName };
+            body.appendChild(getPropertyBlock(classData, classBlockName, propName));
         });
     });
-
+    
     return controls;
 }
 

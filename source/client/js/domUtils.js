@@ -12,12 +12,6 @@ export function block (element = "div", className,  textContent) {
     return el;
 }
 
-export function getDummyForm () {
-    let el = block(`form`);
-    el.addEventListener(`submit`, e => e.preventDefault());
-    return el;
-}
-
 /**
  * Safely detach element from the DOM.
  * @param {HTMLElement} element
@@ -78,7 +72,7 @@ export function freeSelect (selectElement) {
  * @param {string} placeholder
  * @param {boolean} required - If it is required for input not to be empty.
  * @param {number} inputWidth
- * @param {function} handler - Function that handles
+ * @param {function} handler - Function that handler
  */
 export function awaitInlineInput (anchorElement, {
     placeholder, required = true, inputWidth = 150

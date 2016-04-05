@@ -1,14 +1,4 @@
 @import "../mixins";
-@import "../const";
-
-.card {
-    background: #fff;
-    box-sizing: border-box;
-    margin: $defaultMargin;
-    padding: $defaultPadding;
-    border-radius: 3px;
-    box-shadow: $defaultShadow;
-}
 
 .AutoGrid-container {
     @include transition(left .3s ease, top .3s ease);

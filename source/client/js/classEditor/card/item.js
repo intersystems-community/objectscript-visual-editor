@@ -1,4 +1,4 @@
-import { block, insertAfter, clearSelection, prepend, detach } from "../../domUtils";
+import { block, insertAfter, clearSelection, prepend, detach, freeSelect } from "../../domUtils";
 import { updateGrid } from "../index";
 import { addChange } from "../changes";
 import { Toast } from "../../toast";
@@ -227,7 +227,7 @@ let MANIFEST = {
     }
 };
 
-function getPropertyEditor (propName, value, propManifest, savePath) {
+function getKeywordEditor (propName, value, propManifest, savePath) {
     let type = propManifest["type"] || "string",
         input;
     if (type === "boolean") {
@@ -250,13 +250,13 @@ function getPropertyEditor (propName, value, propManifest, savePath) {
     return input;
 }
 
-function getPropertyView ({ propManifest, propName, propData, savePath }) {
+function getKeywordView ({ propManifest, propName, propData, savePath }) {
     let propBlock = block(`div`, `property-block`),
         propNameBlock = block(`div`, `name-block`),
         propEdit = block(`div`, `value-block`);
     propNameBlock.textContent = propName;
     if (propManifest.required) propNameBlock.classList.add(`required`);
-    propEdit.appendChild(getPropertyEditor(propName, propData, propManifest, savePath));
+    propEdit.appendChild(getKeywordEditor(propName, propData, propManifest, savePath));
     propBlock.appendChild(propNameBlock);
     propBlock.appendChild(propEdit);
     propBlock.PROPERTY_NAME = propName;
@@ -293,7 +293,7 @@ function createView (classData, classBlockName, classBlockPropName) {
         let propManifest = (MANIFEST[isClass ? "Class" : classBlockName] || {})[propName] || {};
         if (propManifest.ignore || propManifest.default === data[propName]) continue;
         if (typeof data[propName] === "object") continue;
-        container.appendChild(getPropertyView({
+        container.appendChild(getKeywordView({
             propManifest, propName, propData: data[propName], savePath
         }));
     }
@@ -318,12 +318,16 @@ export function enableItem ({headerElement, classData, classBlockName, classBloc
 
     headerElement.addEventListener(`click`, () => {
         if (!container) {
+
             container = isClass
                 ? createView(classData)
                 : createView(classData, classBlockName, classBlockPropName);
             controls = block(`div`, `controls`);
+
             let add = block(`select`, `interactive normal icon add hidden-select`),
                 del = block(`div`, `interactive normal icon delete`);
+
+            freeSelect(add);
             controls.appendChild(add);
             controls.appendChild(del);
 
@@ -349,7 +353,7 @@ export function enableItem ({headerElement, classData, classBlockName, classBloc
                 let propName = (e.target || e.srcElement).value,
                     propManifest =
                         (MANIFEST[isClass ? "Class" : classBlockName] || {})[propName] || {};
-                container.appendChild(getPropertyView({
+                container.appendChild(getKeywordView({
                     propManifest: propManifest,
                     propName: propName,
                     propData: propManifest.default || "",

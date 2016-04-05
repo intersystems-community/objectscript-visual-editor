@@ -109,6 +109,15 @@ input[type=text] {
     float: right;
 }
 
+.card {
+    background: #fff;
+    box-sizing: border-box;
+    margin: $defaultMargin;
+    padding: $defaultPadding;
+    border-radius: 3px;
+    box-shadow: $defaultShadow;
+}
+
 .page {
 
     > .header {
@@ -169,6 +178,7 @@ input[type=text] {
             }
 
             #saveIndicator {
+                display: none;
                 float: right;
             }
 
