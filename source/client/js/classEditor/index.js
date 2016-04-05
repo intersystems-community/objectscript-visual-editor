@@ -83,7 +83,7 @@ let backButton = onInit(() => {
                 let fullName = `${ PATH ? PATH + "." : "" }${ name }`,
                     setup = {
                         _type: type,
-                        name: name,
+                        _name: name,
                         Name: fullName,
                         Properties: {},
                         Methods: {},
@@ -93,9 +93,9 @@ let backButton = onInit(() => {
                     };
                 
                 if (type === "class") {
-                    setup["ClassType"] = "registered";
+                    setup["_compiledClassType"] = "registered";
                 } else {
-                    setup["fullName"] = fullName;
+                    setup["_fullName"] = fullName;
                 }
                 
                 grid.applyChild(getClassElement(setup));
@@ -191,7 +191,8 @@ function orderData (data) {
     sortable.sort(([p1, d1], [p2, d2]) => {
         if (d1["_type"] === "package" && d2["_type"] !== "package") return -1;
         if (d2["_type"] === "package" && d1["_type"] !== "package") return 1;
-        if (d1["ClassType"] !== d2["ClassType"]) return d1["ClassType"] > d2["ClassType"] ? 1 : -1;
+        if (d1["_compiledClassType"] !== d2["_compiledClassType"])
+            return d1["_compiledClassType"] > d2["_compiledClassType"] ? 1 : -1;
         if (p1[0] === "%" && p2[0] !== "%") return -1;
         if (p2[0] === "%" && p1[0] !== "%") return 1;
         if (p1[0] === "%" && p2[0] === "%") return p1.substr(1) > p2.substr(1) ? 1 : -1;

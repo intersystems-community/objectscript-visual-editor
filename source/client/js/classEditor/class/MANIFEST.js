@@ -7,6 +7,167 @@ export default {
         Abstract: {
             default: 0,
             type: "boolean"
+        },
+        ClassDefinitionError: {
+            default: 0,
+            type: "boolean"
+        },
+        ClassType: {
+            default: "",
+            type: "select",
+            values: [ "datatype", "index", "persistent", "serial", "stream", "view" ]
+        },
+        ClassVersion: {
+            ignore: true,
+            default: 25,
+            type: "number"
+        },
+        ClientDataType: {
+            default: "VARCHAR",
+            type: "select",
+            values: [
+                "BIGINT", "BINARY", "BINARYSTREAM", "BOOLEAN", "CHARACTERSTREAM", "CURRENCY",
+                "DATE", "DECIMAL", "DOUBLE", "FDATE", "FTIMESTAMP", "HANDLE", "INTEGER", "LIST",
+                "LONGVARCHAR", "NUMERIC", "STATUS", "TIME", "TIMESTAMP", "VARCHAR"
+            ]
+        },
+        DdlAllowed: {
+            default: 0,
+            type: "boolean"
+        },
+        Deployed: {
+            default: 0,
+            type: "boolean"
+        },
+        Deprecated: {
+            default: 0,
+            type: "boolean"
+        },
+        Dynamic: {
+            default: 0,
+            type: "boolean"
+        },
+        Final: {
+            default: 0,
+            type: "boolean"
+        },
+        Hidden: {
+            default: 0,
+            type: "boolean"
+        },
+        Inheritance: {
+            default: "left",
+            type: "select",
+            values: [ "left", "right" ]
+        },
+        Language: {
+            default: "cache",
+            type: "select",
+            values: [ "cache", "basic", "java", "javascript", "mvbasic", "tsql" ]
+        },
+        LegacyInstanceContext: {
+            default: 0,
+            type: "boolean"
+        },
+        ModificationLevel: {
+            ignore: true,
+            default: 9,
+            type: "number"
+        },
+        Modified: {
+            ignore: true,
+            default: 3,
+            type: "number"
+        },
+        Name: {
+            type: "string",
+            required: true,
+            ignore: true // name cannot be change as it is an IdKey index field.
+            // to change the name user must create a new class with the same parameters.
+        },
+        NoContext : {
+            default: 0,
+            type: "boolean"
+        },
+        NoExtent : {
+            default: 0,
+            type: "boolean"
+        },
+        OdbcType: {
+            default: "VARCHAR",
+            type: "select",
+            values: [
+                "BIGINT", "BIT", "DATE", "DOUBLE", "INTEGER", "LONGVARBINARY", "LONGVARCHAR",
+                "NUMERIC", "RESULTSET", "SMALLINT", "STRUCT", "TIME", "TIMESTAMP", "TINYINT",
+                "VARBINARY", "VARCHAR"
+            ]
+        },
+        ProcedureBlock : {
+            default: 0,
+            type: "boolean"
+        },
+        SoapBindingStyle : {
+            default: "document",
+            type: "select",
+            values: [ "document", "rpc" ]
+        },
+        SoapBodyUse: {
+            default: "literal",
+            type: "select",
+            values: [ "literal", "encoded" ]
+        },
+        SqlCategory: {
+            default: "STRING",
+            type: "select",
+            values: [
+                "DATE", "DOUBLE", "FMDATE", "FMTIMESTAMP", "INTEGER", "MVDATE", "NAME", "NUMERIC",
+                "STRING", "TIME", "TIMESTAMP"
+            ],
+            requires: {
+                property: "ClassType",
+                value: "DataType"
+            }
+        },
+        SqlRowIdPrivate: {
+            default: 0,
+            type: "boolean"
+        },
+        System: {
+            default: 0,
+            type: "boolean"
+        },
+        TimeChanged: {
+            ignore: true
+        },
+        TimeCreated: {
+            ignore: true
+        },
+        _type: {
+            ignore: true
+        },
+        _name: {
+            ignore: true
+        },
+        _compiledClassType: {
+            ignore: true
+        },
+        _fullName: {
+            ignore: true
+        },
+        _isDataType: {
+            ignore: true
+        },
+        _isOdbcType: {
+            ignore: true
+        },
+        _isSoapBindingStyle: {
+            ignore: true
+        },
+        _isSoapBodyUse: {
+            ignore: true
+        },
+        _isSqlCategory: {
+            ignore: true
         }
     },
     Parameters: {

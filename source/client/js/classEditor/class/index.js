@@ -14,7 +14,9 @@ export function getClassElement (data) {
         card = block(`div`, `card ${ type }`),
         head = block(`div`, `head`),
         controls = block(`div`, `controls`),
-        headIcon = block(`div`, `cardIcon ${ data["ClassType"] || "" }`),
+        headIcon = block(`div`, `cardIcon ${
+            data["_compiledClassType"] || data["ClassType"] || ""
+        }`),
         header = block(`div`, `header`);
 
     if (type === "class") // float priority
@@ -23,10 +25,10 @@ export function getClassElement (data) {
     card.appendChild(head);
 
     if (type === "package") {
-        header.textContent = data["name"];
+        header.textContent = data["_name"];
         head.appendChild(header);
         card.addEventListener("click", () => {
-            loadLevel(data["fullName"]);
+            loadLevel(data["_fullName"]);
         });
         return card;
     }

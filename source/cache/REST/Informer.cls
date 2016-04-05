@@ -50,11 +50,11 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
     set oIndices = ##class(%ZEN.proxyObject).%New()
     set oXDatas = ##class(%ZEN.proxyObject).%New()
 
-    set oClass.isDataType = class.ClientDataTypeIsDefined()
-    set oClass.isOdbcType = class.OdbcTypeIsDefined()
-    set oClass.isSoapBindingStyle = class.SoapBindingStyleIsDefined()
-    set oClass.isSoapBodyUse = class.SoapBodyUseIsDefined()
-    set oClass.isSqlCategory = class.SqlCategoryIsDefined()
+    set $PROPERTY(oClass, "_isDataType") = class.ClientDataTypeIsDefined()
+    set $PROPERTY(oClass, "_isOdbcType") = class.OdbcTypeIsDefined()
+    set $PROPERTY(oClass, "_isSoapBindingStyle") = class.SoapBindingStyleIsDefined()
+    set $PROPERTY(oClass, "_isSoapBodyUse") = class.SoapBodyUseIsDefined()
+    set $PROPERTY(oClass, "_isSqlCategory") = class.SqlCategoryIsDefined()
 
     set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.ClassDefinition")
     for j=1:1:props.Properties.Count() {
@@ -66,9 +66,9 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
     if (oClass.TimeChanged) { set oClass.TimeChanged = $zdatetime(oClass.TimeChanged) }
     if (oClass.TimeCreated) { set oClass.TimeCreated = $zdatetime(oClass.TimeCreated) }
     if ((cClass '= "") && (cClass.ClassType '= "")) {
-        set oClass.ClassType = cClass.ClassType // set class type from all inherited classes
-    } elseif (oClass.ClassType = "") {
-        set oClass.ClassType = "registered" // todo: improve class type detection - parse parents?
+        set $PROPERTY(oClass, "_compiledClassType") = cClass.ClassType
+    } else {
+        set $PROPERTY(oClass, "_compiledClassType") = "registered" // default
     }
 
     set oClass.Parameters = oParameters
@@ -171,15 +171,15 @@ ClassMethod List() As %Status
             set folders(folderName) = 1
             set oFolder = ##class(%ZEN.proxyObject).%New()
             set $PROPERTY(oFolder, "_type") = "package"
-            set $PROPERTY(oFolder, "fullName") = baseLevel _ folderName
-            set $PROPERTY(oFolder, "name") = folderName
+            set $PROPERTY(oFolder, "_fullName") = baseLevel _ folderName
+            set $PROPERTY(oFolder, "_name") = folderName
             set $PROPERTY(data, folderName) = oFolder
         } elseif ($LENGTH(clsName, ".") = $LENGTH(baseLevel, ".")) {
             set className = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             set oClass = ..GetClassData(clsName)
             set $PROPERTY(oClass, "_type") = "class"
-            set $PROPERTY(oClass, "fullName") = clsName
-            set $PROPERTY(oClass, "name") = className
+            set $PROPERTY(oClass, "_fullName") = clsName
+            set $PROPERTY(oClass, "_name") = className
             set $PROPERTY(data, className) = oClass
         } else {
             continue

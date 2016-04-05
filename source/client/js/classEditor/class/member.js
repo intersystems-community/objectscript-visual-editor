@@ -203,7 +203,7 @@ export function getMemberBlock ({
         pTypeText = type ? block(`span`) : null,
         pType = type ? block(`span`, `type`) : null;
 
-    pName.textContent = prop["name"] || prop["Name"];
+    pName.textContent = prop["_name"] || prop["Name"];
     item.appendChild(getMemberIconsBlock(isClass, prop));
     text.appendChild(pName);
     if (type) {
