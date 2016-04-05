@@ -127,6 +127,7 @@ function enableMember ({
 
                 if (isClass && MEMBER_SECTIONS.indexOf(propName) !== -1) {
                     classBlockElement.appendChild(getMemberSection(propName, classData));
+                    updateGrid();
                     return;
                 }
 
@@ -136,6 +137,8 @@ function enableMember ({
                     propData: propManifest.default || "",
                     savePath: savePath
                 }));
+
+                updateGrid();
 
             });
 
