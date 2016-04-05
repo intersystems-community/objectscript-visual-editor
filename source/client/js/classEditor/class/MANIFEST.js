@@ -137,6 +137,50 @@ export default {
             default: ""
         }
     },
+    Indices: {
+        Deprecated: {
+            default: 0,
+            type: "boolean"
+        },
+        Description: {
+            ignore: true,
+            default: ""
+        },
+        Extent: {
+            default: 0,
+            type: "boolean"
+        },
+        IdKey: {
+            default: 0,
+            type: "boolean"
+        },
+        Internal: {
+            default: 0,
+            type: "boolean"
+        },
+        Name: {
+            type: "string",
+            required: true,
+            ignore: true // name cannot be change as it is an IdKey index field.
+            // to change the name user must create a new property with the same parameters.
+        },
+        PrimaryKey: {
+            default: 0,
+            type: "boolean"
+        },
+        Properties: {
+            required: true,
+            default: "",
+            type: "string"
+        },
+        SequenceNumber: {
+            ignore: true
+        },
+        Unique: {
+            default: 0,
+            type: "boolean"
+        }
+    },
     Methods: {
         Abstract: {
             default: 0,
@@ -226,6 +270,83 @@ export default {
         ZenMethod: {
             default: 0,
             type: "boolean"
+        }
+    },
+    Queries: {
+        Description: {
+            ignore: true,
+            default: ""
+        },
+        Deprecated: {
+            default: 0,
+            type: "boolean"
+        },
+        Final: {
+            default: 0,
+            type: "boolean"
+        },
+        Internal: {
+            default: 0,
+            type: "boolean"
+        },
+        Name: {
+            type: "string",
+            required: true,
+            ignore: true // name cannot be change as it is an IdKey index field.
+            // to change the name user must create a new property with the same parameters.
+        },
+        NotInheritable: {
+            default: 0,
+            type: "boolean"
+        },
+        Private: {
+            default: 0,
+            type: "boolean"
+        },
+        SequenceNumber: {
+            ignore: true
+        },
+        SqlProc: {
+            default: 0,
+            type: "boolean"
+        },
+        SqlView: {
+            default: 0,
+            type: "boolean"
+        },
+        WebMethod: {
+            default: 0,
+            type: "boolean"
+        }
+    },
+    XDatas: {
+        Data: {
+            ignore: true, // xData data edit has special controls
+            default: ""
+        },
+        Deprecated: {
+            default: 0,
+            type: "boolean"
+        },
+        Description: {
+            ignore: true,
+            default: ""
+        },
+        Internal: {
+            default: 0,
+            type: "boolean"
+        },
+        MimeType: {
+            type: "string"
+        },
+        Name: {
+            type: "string",
+            required: true,
+            ignore: true // name cannot be change as it is an IdKey index field.
+            // to change the name user must create a new property with the same parameters.
+        },
+        SequenceNumber: {
+            ignore: true
         }
     }
 };

@@ -116,7 +116,7 @@ ClassMethod Save() As %Status
         $$$logError(..SaveClassMember("Property", classDef, $PROPERTY(classData, "Properties")))
         $$$logError(..SaveClassMember("Index", classDef, $PROPERTY(classData, "Indices")))
         $$$logError(..SaveClassMember("Method", classDef, $PROPERTY(classData, "Methods")))
-        //$$$logError(..SaveClassMember("Query", classDef, $PROPERTY(classData, "Queries")))
+        $$$logError(..SaveClassMember("Query", classDef, $PROPERTY(classData, "Queries")))
         $$$logError(..SaveClassMember("XData", classDef, $PROPERTY(classData, "XDatas")))
 
         if ($$$hasErrors) { $$$nextClass }
