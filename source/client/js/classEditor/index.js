@@ -1,7 +1,7 @@
 import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
 import { getClassElement } from "./class";
-import { block, awaitInlineInput, freeSelect, waitApplyProperty } from "../domUtils";
+import { block, awaitInlineInput, freeSelect } from "../domUtils";
 import { saveChanges } from "./changes";
 import { Toast } from "../toast";
 import { addChange } from "./changes";
@@ -74,7 +74,10 @@ let backButton = onInit(() => {
             
             awaitInlineInput(addClassPackageButton, {
                 placeholder: `Enter ${ type } name...`
-            }, (name) => {
+            }, (cancelled, name) => {
+                
+                if (cancelled)
+                    return;
                 
                 let fullName = `${ PATH ? PATH + "." : "" }${ name }`,
                     setup = {

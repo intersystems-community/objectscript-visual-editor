@@ -9,12 +9,24 @@ function getMemberControls (body, classData, classBlockName) {
 
     controls.appendChild(add);
     add.addEventListener(`click`, () => {
-        awaitInlineInput(add, { placeholder: classBlockName }, (propName) => {
+        controls.style.opacity = 1;
+        awaitInlineInput(add, { placeholder: classBlockName }, (cancelled, propName) => {
+
+            controls.style.opacity = "";
+            
+            if (cancelled)
+                return;
+            
             let path = [classData[`Name`], classBlockName, propName];
+
             addChange(path.concat(`$add`), true);
             addChange(path.concat(`Name`), propName);
+
             classData[classBlockName][propName] = { Name: propName };
             body.appendChild(getMemberBlock(classData, classBlockName, propName));
+
+            
+
         });
     });
 

@@ -3,7 +3,7 @@ import { updateGrid } from "../index";
 import { addChange } from "../changes";
 import { Toast } from "../../toast";
 import { getKeywordView } from "./keyword";
-import MANIFEST from "./manifest";
+import MANIFEST from "./MANIFEST";
 
 /**
  * Creates and returns interactive class block property editor.

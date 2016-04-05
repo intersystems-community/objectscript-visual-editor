@@ -72,7 +72,7 @@ export function freeSelect (selectElement) {
  * @param {string} placeholder
  * @param {boolean} required - If it is required for input not to be empty.
  * @param {number} inputWidth
- * @param {function} handler - Function that handler
+ * @param {function} handler - Function that handles input or abort.
  */
 export function awaitInlineInput (anchorElement, {
     placeholder, required = true, inputWidth = 150
@@ -112,7 +112,9 @@ export function awaitInlineInput (anchorElement, {
         input.removeEventListener(`blur`, abort);
 
         if (val !== null)
-            handler(val);
+            handler(false, val);
+        else
+            handler(true, "");
 
     }
 
@@ -129,8 +131,10 @@ export function awaitInlineInput (anchorElement, {
 
     function keyDown (e) {
 
-        if (e.keyCode === 13)
+        if (e.keyCode === 13) // ENTER
             end(input.value);
+        else if (e.keyCode === 27) // ESC
+            end(null);
 
     }
 
@@ -155,3 +159,10 @@ export function awaitInlineInput (anchorElement, {
     }, 1);
     
 }
+
+/**
+ * Handler that provides a way to handle input or input cancel.
+ * @callback inputCallback
+ * @param {boolean} cancelled
+ * @param {string} input
+ */
