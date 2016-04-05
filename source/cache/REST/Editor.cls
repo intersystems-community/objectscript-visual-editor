@@ -7,11 +7,37 @@ XData UrlMap
 {
 <Routes>
    <Route Url="/save" Method="POST" Call="Save"/>
+   <Route Url="/test" Method="POST" Call="Test"/>
 </Routes>
 }
 
+/// Saves keywords of class members and a class itself.
+ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %ZEN.proxyObject) As %String [ Private ]
+{
+    set errors = ""
+    #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
+    set propDefinition =
+        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberKind_"Definition").Properties
+
+    set pName = $order(assignObj.%data(""))
+    while (pName '= "") {
+        if (pName = "$add") { set pName = $order(assignObj.%data(pName)) continue }
+        if (propDefinition.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName) > 0) {
+            if (('$IsObject($PROPERTY(assignObj, pName)))) {
+                set $PROPERTY(definitionObj, pName) = $PROPERTY(assignObj, pName)
+            }
+        } else {
+            $$$logError("Unable to set """_pName_""" property of """_memberKind_""" in "_definitionObj.Name)
+        }
+        set pName = $order(assignObj.%data(pName))
+    }
+    $$$logError($System.Status.GetErrorText(definitionObj.%Save()))
+
+    return errors
+}
+
 /// Saves properties of class properties.
-ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String
+ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String [ Private ]
 {
     set errors = ""
 
@@ -24,8 +50,6 @@ ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.Class
     #define nextProperty set memberName = $order(properties(memberName)) continue
     #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
     #define hasErrors errors '= ""
-    set propDefs =
-        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberKind_"Definition").Properties
 
     set memberName = $order(properties(""))
     while (memberName '= "") {
@@ -39,24 +63,14 @@ ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.Class
             set pDef = $System.OBJ.OpenId("%Dictionary."_memberKind_"Definition", classDef.Name_"||"_memberName)
         }
         if (pDef = "") {
-            $$$logError(memberKind_" "_memberName_" not found in "_className)
+            $$$logError("Member """_memberKind_""" named """_memberName_""" not found in "_classDef.Name)
             $$$nextProperty
         }
 
         if ($data(props.%data("$delete"))) {
             set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
         } else { // iterate over properties defined in props and save
-            set pName = $order(props.%data(""))
-            while (pName '= "") {
-                if (pName = "$add") { set pName = $order(props.%data(pName)) continue }
-                if (propDefs.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName) > 0) {
-                    set $PROPERTY(pDef, pName) = $PROPERTY(props, pName)
-                } else {
-                    $$$logError("Unable to set """_pName_""" property of """_memberName_""" in class "_classDef.Name)
-                }
-                set pName = $order(props.%data(pName))
-            }
-            $$$logError($System.Status.GetErrorText(pDef.%Save()))
+            do ..SaveKeywords(memberKind, pDef, props)
         }
 
         $$$nextProperty
@@ -118,6 +132,7 @@ ClassMethod Save() As %Status
         $$$logError(..SaveClassMember("Method", classDef, $PROPERTY(classData, "Methods")))
         $$$logError(..SaveClassMember("Query", classDef, $PROPERTY(classData, "Queries")))
         $$$logError(..SaveClassMember("XData", classDef, $PROPERTY(classData, "XDatas")))
+        $$$logError(..SaveKeywords("Class", classDef, classData))
 
         if ($$$hasErrors) { $$$nextClass }
 
@@ -137,6 +152,12 @@ ClassMethod Save() As %Status
     do response.%ToJSON(, "o")
     return $$$OK
 
+}
+
+ClassMethod Test() As %Status
+{
+    write %request.Content
+    return $$$OK
 }
 
 /// This method is a handler that is executed before each request.

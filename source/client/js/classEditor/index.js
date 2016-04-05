@@ -61,7 +61,7 @@ let backButton = onInit(() => {
                     changeIsMade(false);
                     new Toast(Toast.TYPE_DONE, `Saved!`);
                 } else {
-                    new Toast(Toast.TYPE_ERROR, res["error"]);
+                    new Toast(Toast.TYPE_ERROR, res["error"], Toast.TIME_LONG);
                 }
             });
         });

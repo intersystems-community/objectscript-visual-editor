@@ -136,6 +136,10 @@ export default {
             default: 0,
             type: "boolean"
         },
+        Super: {
+            type: "string",
+            default: ""
+        },
         TimeChanged: {
             ignore: true
         },

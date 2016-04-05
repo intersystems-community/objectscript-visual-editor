@@ -2,7 +2,7 @@
   "name": "cache-visual-editor",
   "printableName": "Cache Visual Editor",
   "packageName": "VisualEditor",
-  "version": "0.5.19",
+  "version": "0.6.0",
   "description": "Visual class editor for InterSystems Caché",
   "main": "index.js",
   "keywords": [

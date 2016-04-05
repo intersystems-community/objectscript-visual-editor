@@ -15,10 +15,11 @@ function load (url, data, callback) {
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            let data = {};
+            let data = { error: `Unable to parse server response: ` };
             try {
                 data = JSON.parse(xhr.responseText);
             } catch (e) {
+                data.error += xhr.responseText;
                 console.error(e, url, "Unable to parse:", { data: xhr.responseText });
             }
             return callback(data);
