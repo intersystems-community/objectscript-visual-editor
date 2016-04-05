@@ -149,8 +149,10 @@ function enableMember ({
                     addChange(savePath.concat(`$delete`), true);
                     detach(headerElement);
                     detach(container);
-                    if (classBlockElement)
+                    if (classBlockElement) {
                         detach(classBlockElement);
+                        updateGrid();
+                    }
                 }
             });
         }

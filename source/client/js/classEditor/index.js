@@ -21,6 +21,7 @@ let grid = onInit(() => grid = new AutoGrid(document.querySelector("#classBuilde
  * Function which updates current grid.
  */
 export function updateGrid () {
+    window.autoGrid = grid;
     grid.updateGrid();
 }
 

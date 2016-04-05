@@ -50,7 +50,7 @@ AutoGrid.prototype.clear = function () {
 };
 
 /**
- * This function disables AutoGrid.
+ * This function disables AutoGrid automatic layout.
  */
 AutoGrid.prototype.disable = function () {
 
@@ -106,10 +106,12 @@ AutoGrid.prototype.updateGrid = function () {
     }
 
     for (i = 0; i < this.children.length; i++) {
+
         let block = this.children[i];
         let colIndex = getNextColumnIndex(),
             left = colIndex * columnWidth + "px",
             top = columnHeights[colIndex] + "px";
+
         if (!block.container.parentNode) {
             block.container.style.left = left;
             block.container.style.top = top;
@@ -132,9 +134,16 @@ AutoGrid.prototype.updateGrid = function () {
             this.updateSizes();
             return;
         }
+
     }
 
     this.container.style.height = columnHeights.reduce((a, b) => Math.max(a, b)) + "px";
+
+    // Yet another check required in case the height of the block is reduced and scrollbar
+    // disappears.
+    if (this.width !== this.container.offsetWidth) {
+        this.updateSizes();
+    }
 
 };
 

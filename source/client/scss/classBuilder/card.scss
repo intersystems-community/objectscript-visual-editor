@@ -10,7 +10,7 @@ $headerIconSize: $medium;
 
     &.package {
 
-        background: #fff;
+        background: $colorFront;
         cursor: pointer;
 
         > .head {
@@ -39,7 +39,7 @@ $headerIconSize: $medium;
 
             > .head {
                 > .cardIcon {
-                    background: white;
+                    background: $colorFront;
                 }
             }
 
@@ -274,10 +274,6 @@ $headerIconSize: $medium;
                 cursor: default;
                 border-radius: $defaultPadding/2;
                 @include transition($defaultTransition);
-
-                &:hover {
-                    //background-color: $colorP1;
-                }
 
                 .name-block {
 

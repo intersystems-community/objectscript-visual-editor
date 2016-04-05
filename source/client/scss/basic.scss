@@ -110,7 +110,7 @@ input[type=text] {
 }
 
 .card {
-    background: #fff;
+    background: $colorFront;
     box-sizing: border-box;
     margin: $defaultMargin;
     padding: $defaultPadding;
@@ -128,7 +128,7 @@ input[type=text] {
         right: 0;
         z-index: 100;
         height: $big;
-        background: white;
+        background: $colorFront;
         box-shadow: $defaultShadow;
         padding: $defaultPadding;
         box-sizing: border-box;
@@ -177,9 +177,14 @@ input[type=text] {
 
             }
 
+            > .controls {
+                position: relative;
+                z-index: 2; /* This fixes select's element overflow z-index wrong behavior */
+                background: $colorFront;
+            }
+
             #saveIndicator {
                 display: none;
-                float: right;
             }
 
         }
