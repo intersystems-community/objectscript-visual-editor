@@ -394,6 +394,9 @@ export default {
             default: 0,
             type: "boolean"
         },
+        Implementation: {
+            ignore: true
+        },
         Name: {
             type: "string",
             required: true,

@@ -47,7 +47,7 @@ ClassMethod RegisterWebApplication(name As %String, spec) As %Status
 }
 
 /// This method removes web application by app name.
-ClassMethod DeleteWebApplication(name As %String)
+ClassMethod DeleteWebApplication(name As %String) As %Status
 {
     $$$log("Moving to %SYS.")
     new $Namespace
@@ -68,7 +68,7 @@ ClassMethod DeleteWebApplication(name As %String)
 }
 
 /// This method is invoked when a class is compiled.
-ClassMethod CreateProjection(cls As %String, ByRef params) As %Status
+ClassMethod CreateProjection() As %Status
 {
     do ..Init()
     #define log(%s) set installLog = installLog _ $case(installLog = "", 1: "", :$C(10)) _ %s write !, %s
@@ -92,7 +92,7 @@ ClassMethod CreateProjection(cls As %String, ByRef params) As %Status
 }
 
 /// This method is invoked when a class is 'uncompiled'.
-ClassMethod RemoveProjection(cls As %String, ByRef params, recompile As %Boolean) As %Status
+ClassMethod RemoveProjection() As %Status
 {
     do ..Init()
     #define log(%s) set installLog = installLog _ $case(installLog = "", 1: "", :$C(10)) _ %s write !, %s

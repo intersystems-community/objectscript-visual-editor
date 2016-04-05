@@ -32,7 +32,7 @@ ClassMethod Init() As %Status
     set data.namespace = $Namespace
     set data.namespaces = ..getAllNamespacesList()
     do data.%ToJSON(, "o")
-    quit $$$OK
+    return $$$OK
 }
 
 /// This method returns all available data about the class.
@@ -59,9 +59,9 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
     set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.ClassDefinition")
     for j=1:1:props.Properties.Count() {
         set pname = props.Properties.GetAt(j).Name
-        set:((pname '= "parent")
-             && ('props.Properties.GetAt(j).Private)
-             && ('$IsObject($PROPERTY(class, pname)))) $PROPERTY(oClass, pname) = $PROPERTY(class, pname)
+        if ((pname '= "parent") && ('props.Properties.GetAt(j).Private) && ('$IsObject($PROPERTY(class, pname)))) {
+             set $PROPERTY(oClass, pname) = $PROPERTY(class, pname)
+        }
     }
     if (oClass.TimeChanged) { set oClass.TimeChanged = $zdatetime(oClass.TimeChanged) }
     if (oClass.TimeCreated) { set oClass.TimeCreated = $zdatetime(oClass.TimeCreated) }
@@ -102,7 +102,7 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
         set met = class.Methods.GetAt(i)
         for j=1:1:props.Properties.Count() {
             set pname = props.Properties.GetAt(j).Name
-            set:((pname '= "parent") && (pname '= "Implementation")) $PROPERTY(oMeth, pname) = $PROPERTY(met, pname)
+            set:(pname '= "parent") $PROPERTY(oMeth, pname) = $PROPERTY(met, pname)
         }
         do oMethods.%DispatchSetProperty(met.Name, oMeth)
     }
