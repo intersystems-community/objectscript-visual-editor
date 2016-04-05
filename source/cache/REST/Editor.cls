@@ -11,7 +11,7 @@ XData UrlMap
 }
 
 /// Saves properties of class properties.
-ClassMethod SaveClassMember(memberName As %String, classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String
+ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String
 {
     set errors = ""
 
@@ -21,25 +21,25 @@ ClassMethod SaveClassMember(memberName As %String, classDef As %Dictionary.Class
         return ""
     }
 
-    #define nextProperty set propertyName = $order(properties(propertyName)) continue
+    #define nextProperty set memberName = $order(properties(memberName)) continue
     #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
     #define hasErrors errors '= ""
     set propDefs =
-        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.PropertyDefinition").Properties
+        ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberKind_"Definition").Properties
 
-    set propertyName = $order(properties(""))
-    while (propertyName '= "") {
+    set memberName = $order(properties(""))
+    while (memberName '= "") {
 
-        set props = properties(propertyName)
+        set props = properties(memberName)
 
         if ($data(props.%data("$add"))) {
-            set pDef = ##class(%Dictionary.PropertyDefinition).%New()
+            set pDef = $System.OBJ.New("%Dictionary."_memberKind_"Definition")
             set pDef.parent = classDef
         } else {
-            set pDef = ##class(%Dictionary.PropertyDefinition).%OpenId(classDef.Name_"||"_propertyName)
+            set pDef = $System.OBJ.OpenId("%Dictionary."_memberKind_"Definition", classDef.Name_"||"_memberName)
         }
         if (pDef = "") {
-            $$$logError("Property " _ propertyName _ " not found in " _ className)
+            $$$logError(memberKind_" "_memberName_" not found in "_className)
             $$$nextProperty
         }
 
@@ -49,10 +49,10 @@ ClassMethod SaveClassMember(memberName As %String, classDef As %Dictionary.Class
             set pName = $order(props.%data(""))
             while (pName '= "") {
                 if (pName = "$add") { set pName = $order(props.%data(pName)) continue }
-                if (propDefs.FindObjectId("%Dictionary.PropertyDefinition||"_pName) > 0) {
+                if (propDefs.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName) > 0) {
                     set $PROPERTY(pDef, pName) = $PROPERTY(props, pName)
                 } else {
-                    $$$logError("Unable to set """_pName_""" property of """_propertyName_""" in class "_classDef.Name)
+                    $$$logError("Unable to set """_pName_""" property of """_memberName_""" in class "_classDef.Name)
                 }
                 set pName = $order(props.%data(pName))
             }
@@ -112,7 +112,12 @@ ClassMethod Save() As %Status
             if ($$$hasErrors) { $$$nextClass }
         }
 
-        $$$logError(..SaveClassMember("Properties", classDef, classData.Properties))
+        $$$logError(..SaveClassMember("Parameter", classDef, $PROPERTY(classData, "Parameters")))
+        $$$logError(..SaveClassMember("Property", classDef, $PROPERTY(classData, "Properties")))
+        $$$logError(..SaveClassMember("Index", classDef, $PROPERTY(classData, "Indices")))
+        $$$logError(..SaveClassMember("Method", classDef, $PROPERTY(classData, "Methods")))
+        //$$$logError(..SaveClassMember("Query", classDef, $PROPERTY(classData, "Queries")))
+        $$$logError(..SaveClassMember("XData", classDef, $PROPERTY(classData, "XDatas")))
 
         if ($$$hasErrors) { $$$nextClass }
 

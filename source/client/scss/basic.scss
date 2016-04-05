@@ -70,7 +70,7 @@ input[type=text] {
     @include transition($defaultTransition);
 
     &:hover {
-        box-shadow: inset 0px -6px 5px -4px rgba($colorP3, .7);
+        box-shadow: inset 0px -6px 0 -4px rgba($colorP3, .7);
     }
 
     &:focus {

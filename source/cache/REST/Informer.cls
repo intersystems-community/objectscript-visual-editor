@@ -41,7 +41,7 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
     set class = ##class(%Dictionary.ClassDefinition).%OpenId(className)
     set cClass = ##class(%Dictionary.CompiledClass).%OpenId(className)
     set oClass = ##class(%ZEN.proxyObject).%New()
-    if ((class = "") || (cClass = "")) return oClass
+    if (class = "") { return oClass }
 
     set oParameters = ##class(%ZEN.proxyObject).%New()
     set oProperties = ##class(%ZEN.proxyObject).%New()
@@ -65,10 +65,10 @@ ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
     }
     if (oClass.TimeChanged) { set oClass.TimeChanged = $zdatetime(oClass.TimeChanged) }
     if (oClass.TimeCreated) { set oClass.TimeCreated = $zdatetime(oClass.TimeCreated) }
-    if ((cClass.ClassType '= "")) {
+    if ((cClass '= "") && (cClass.ClassType '= "")) {
         set oClass.ClassType = cClass.ClassType // set class type from all inherited classes
-    } else {
-        set oClass.ClassType = "registered"
+    } elseif (oClass.ClassType = "") {
+        set oClass.ClassType = "registered" // todo: improve class type detection - parse parents?
     }
 
     set oClass.Parameters = oParameters

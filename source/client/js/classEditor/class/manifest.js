@@ -22,6 +22,10 @@ export default {
             default: 0,
             type: "boolean"
         },
+        Description: {
+            ignore: true,
+            default: ""
+        },
         Expression: {
             default: "",
             type: "string",
