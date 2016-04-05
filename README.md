@@ -5,13 +5,13 @@ literally without touching any code.
 
 ### Preview
 
-![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/13891951/f52ed7e6-ed5c-11e5-9636-6a9aac876325.png)
+![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/14295116/efcc9774-fb7c-11e5-86bd-219864fe5634.png)
 
-![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/13891950/f52d5574-ed5c-11e5-8377-e9ca1940cd52.png)
+![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/14295117/efcf2da4-fb7c-11e5-861f-e9f1231ec909.png)
 
 ### Installation
 
-Find the latest release [here](https://github.com/ZitRos/cache-visual-editor/releases) and import
+Download the latest release from [here](https://github.com/ZitRos/cache-visual-editor/releases) and import
 XML file into Caché by one of the next ways:
 
 1. Just drag XML file over Studio window;
