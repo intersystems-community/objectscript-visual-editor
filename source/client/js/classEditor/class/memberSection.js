@@ -2,6 +2,15 @@ import { block, awaitInlineInput } from "../../domUtils";
 import { addChange } from "./../changes";
 import { getMemberBlock } from "./member";
 
+export const MEMBER_SECTIONS = [
+    "Parameters",
+    "Properties",
+    "Indices",
+    "Methods",
+    "Queries",
+    "XDatas"
+];
+
 function getMemberControls (body, classData, classBlockName) {
 
     let controls = block(`div`, `controls`),
@@ -25,8 +34,6 @@ function getMemberControls (body, classData, classBlockName) {
             classData[classBlockName][propName] = { Name: propName };
             body.appendChild(getMemberBlock(classData, classBlockName, propName));
 
-            
-
         });
     });
 
@@ -43,7 +50,9 @@ function getMemberControls (body, classData, classBlockName) {
 export function getMemberSection (classBlockName, classData) {
 
     let section = block(`div`, `section`), body;
-    //for (let classBlockPropName in classData[classBlockName]) {
+
+    section.SECTION_NAME = classBlockName;
+
     let header = block(`div`, `header`),
         span = block(`span`, `title`);
     body = block(`div`, `body`);
@@ -52,11 +61,10 @@ export function getMemberSection (classBlockName, classData) {
     span.textContent = classBlockName;
     section.appendChild(header);
     section.appendChild(body);
-    //break;
-    //}
     for (let classBlockPropName in classData[classBlockName]) {
         body.appendChild(getMemberBlock(classData, classBlockName, classBlockPropName));
     }
+    
     return section;
 
 }

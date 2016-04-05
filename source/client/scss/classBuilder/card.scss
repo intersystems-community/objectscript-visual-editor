@@ -137,6 +137,12 @@ $headerIconWidth: 32px;
 
             }
 
+            > select.icon {
+
+                padding-top: $normal;
+
+            }
+
         }
 
         &:hover > .controls {
