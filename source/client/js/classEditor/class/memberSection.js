@@ -32,7 +32,9 @@ function getMemberControls (body, classData, classBlockName) {
             addChange(path.concat(`Name`), propName);
 
             classData[classBlockName][propName] = { Name: propName };
-            body.appendChild(getMemberBlock(classData, classBlockName, propName));
+            body.appendChild(getMemberBlock({
+                classData, classBlockName, classBlockPropName: propName
+            }));
 
         });
     });
@@ -62,7 +64,7 @@ export function getMemberSection (classBlockName, classData) {
     section.appendChild(header);
     section.appendChild(body);
     for (let classBlockPropName in classData[classBlockName]) {
-        body.appendChild(getMemberBlock(classData, classBlockName, classBlockPropName));
+        body.appendChild(getMemberBlock({classData, classBlockName, classBlockPropName}));
     }
     
     return section;

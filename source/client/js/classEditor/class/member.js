@@ -4,6 +4,7 @@ import { addChange } from "../changes";
 import { Toast } from "../../toast";
 import { getKeywordView } from "./keyword";
 import MANIFEST from "./MANIFEST";
+import { MEMBER_SECTIONS, getMemberSection } from "./memberSection";
 
 /**
  * Creates and returns interactive class block property editor.
@@ -48,12 +49,16 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
 
 /**
  * Enables block item interactivity.
+ * This method combines behaviors for class and class members.
  * @param {HTMLElement} headerElement
  * @param {*} classData
  * @param [classBlockName]
  * @param [classBlockPropName]
+ * @param [classBlockElement]
  */
-function enableMember ({headerElement, classData, classBlockName, classBlockPropName}) {
+function enableMember ({
+    headerElement, classData, classBlockName, classBlockPropName, classBlockElement
+}) {
     
     let isClass = !classBlockName,
         opened = false,
@@ -78,8 +83,26 @@ function enableMember ({headerElement, classData, classBlockName, classBlockProp
             controls.appendChild(del);
 
             add.addEventListener(`mousedown`, () => { // form the list of not present properties
+
                 while (add.firstChild)
                     add.removeChild(add.firstChild);
+
+                if (isClass) {
+                    MEMBER_SECTIONS.forEach(mName => {
+                        let end = false;
+                        [].slice.call(classBlockElement.childNodes).forEach(n => {
+                            if (n.SECTION_NAME === mName)
+                                end = true;
+                        });
+                        if (end)
+                            return;
+                        let opt = block(`option`);
+                        opt.textContent = mName;
+                        opt.value = mName;
+                        add.appendChild(opt);
+                    });
+                }
+
                 let propsManifest = MANIFEST[isClass ? "Class" : classBlockName] || {},
                     presentProps = {};
                 [].forEach.call(container.childNodes, (node) => {
@@ -93,18 +116,27 @@ function enableMember ({headerElement, classData, classBlockName, classBlockProp
                     opt.value = propName;
                     add.appendChild(opt);
                 }
+
             });
             add.addEventListener(`click`, e => e.stopPropagation());
             add.addEventListener(`change`, (e) => {
+
                 let propName = (e.target || e.srcElement).value,
                     propManifest =
                         (MANIFEST[isClass ? "Class" : classBlockName] || {})[propName] || {};
+
+                if (isClass && MEMBER_SECTIONS.indexOf(propName) !== -1) {
+                    classBlockElement.appendChild(getMemberSection(propName, classData));
+                    return;
+                }
+
                 container.appendChild(getKeywordView({
                     propManifest: propManifest,
                     propName: propName,
                     propData: propManifest.default || "",
                     savePath: savePath
-                }))
+                }));
+
             });
 
             let lastTimeDelClicked = 0;
@@ -117,6 +149,8 @@ function enableMember ({headerElement, classData, classBlockName, classBlockProp
                     addChange(savePath.concat(`$delete`), true);
                     detach(headerElement);
                     detach(container);
+                    if (classBlockElement)
+                        detach(classBlockElement);
                 }
             });
         }
@@ -133,22 +167,42 @@ function enableMember ({headerElement, classData, classBlockName, classBlockProp
 
 }
 
-export function getMemberBlock (classData, classBlockName, classBlockPropName) {
+function getMemberIconsBlock (isClass, memberData) {
 
-    let div = block(`div`, `item`),
-        prop = classData[classBlockName][classBlockPropName],
+    let iconsBlock = block(`div`, `icons`);
+
+    if (!isClass)
+        iconsBlock.appendChild(
+            block(`div`, `icon ${ memberData["Private"] ? "private" : "public" }`)
+        );
+
+    return iconsBlock;
+
+}
+
+/**
+ * @param classData
+ * @param [classBlockName]
+ * @param [classBlockPropName]
+ * @param {HTMLElement} classBlockElement
+ * @returns {HTMLElement}
+ */
+export function getMemberBlock ({
+    classData, classBlockName, classBlockPropName, classBlockElement
+}) {
+
+    let isClass = !classBlockName,
+        div = block(`div`, `item`),
+        prop = isClass ? classData : classData[classBlockName][classBlockPropName],
         item = block(`div`, `header`),
-        iconBlock = block(`div`, `icons`),
-        icon = block(`div`, `icon ${ prop["Private"] ? "private" : "public" }`),
         text = block(`span`, `label`),
         pName = block(`span`, `name`),
         type = prop["Type"] || prop["ReturnType"] || prop["MimeType"] || "",
         pTypeText = type ? block(`span`) : null,
         pType = type ? block(`span`, `type`) : null;
 
-    iconBlock.appendChild(icon);
-    item.appendChild(iconBlock);
-    pName.textContent = prop["Name"];
+    pName.textContent = prop["name"] || prop["Name"];
+    item.appendChild(getMemberIconsBlock(isClass, prop));
     text.appendChild(pName);
     if (type) {
         pTypeText.textContent = ": ";
@@ -157,7 +211,9 @@ export function getMemberBlock (classData, classBlockName, classBlockPropName) {
         text.appendChild(pType);
     }
     item.appendChild(text);
-    enableMember({headerElement: item, classData, classBlockName, classBlockPropName});
+    enableMember({
+        headerElement: item, classData, classBlockName, classBlockPropName, classBlockElement
+    });
     div.appendChild(item);
 
     return div;

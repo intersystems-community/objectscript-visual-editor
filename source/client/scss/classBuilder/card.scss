@@ -1,7 +1,7 @@
 @import "../const";
 @import "../mixins";
 
-$headerIconWidth: 32px;
+$headerIconSize: $medium;
 
 .card {
 
@@ -14,11 +14,22 @@ $headerIconWidth: 32px;
         cursor: pointer;
 
         > .head {
+
             > .cardIcon {
                 border: 1px solid black;
                 background: $colorP1;
                 @include transition($defaultTransition);
             }
+
+            > .header {
+                font-size: $normal;
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: $headerIconSize;
+            }
+
         }
 
         &:hover {
@@ -44,20 +55,20 @@ $headerIconWidth: 32px;
 
             position: relative;
             float: left;
-            width: $headerIconWidth;
-            height: $headerIconWidth;
+            width: $headerIconSize;
+            height: $headerIconSize;
             margin-right: $defaultMargin;
             box-sizing: border-box;
-            border-radius: $headerIconWidth/2;
+            border-radius: $headerIconSize/2;
 
             &:before {
                 position: absolute;
                 left: 0;
                 top: 0;
-                line-height: $headerIconWidth;
-                width: $headerIconWidth;
+                line-height: $headerIconSize;
+                width: $headerIconSize;
                 text-align: center;
-                font-size: $headerIconWidth/1.5;
+                font-size: $headerIconSize/1.5;
                 content: ""
             }
 
@@ -112,41 +123,17 @@ $headerIconWidth: 32px;
 
         }
 
-        > .header {
+        .header {
 
-            margin-left: $defaultMargin + $headerIconWidth;
-            font-size: 24px;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-        }
-
-        > .controls {
-
-            float: right;
-            display: inline-block;
-            opacity: 0;
-            @include transition($defaultTransition);
-
-            > .icon {
-
-                margin: 0 2px 0 0;
-                vertical-align: top;
-
+            > .label {
+                font-size: $normal;
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: $headerIconSize;
             }
 
-            > select.icon {
-
-                padding-top: $normal;
-
-            }
-
-        }
-
-        &:hover > .controls {
-            opacity: 1;
         }
 
     }
@@ -161,6 +148,7 @@ $headerIconWidth: 32px;
             color: gray;
             font-weight: bold;
             text-decoration: underline;
+            overflow: hidden;
             @include transition($defaultTransition);
 
             > .controls {
@@ -207,120 +195,122 @@ $headerIconWidth: 32px;
 
         > .body {
 
-            > .item {
 
-                > .header {
 
-                    position: relative;
+        }
+
+    }
+
+    .item {
+
+        > .header {
+
+            position: relative;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            @include transition($defaultTransition);
+
+            > .icons {
+                display: inline-block;
+            }
+
+            > .controls {
+
+                float: right;
+                display: inline-block;
+
+                > .icon {
+
+                    margin: 0 2px 0 0;
+                    vertical-align: top;
+
+                }
+
+                > .icon.add {
+
+                    padding-top: $normal;
+
+                }
+
+            }
+
+            &:hover {
+
+                padding-left: $defaultTransitionPadding;
+                background: $colorP1;
+                border-radius: $defaultPadding/2;
+
+                .name {
+                    text-decoration: underline;
+                }
+
+            }
+
+            .type {
+
+                @include transition($defaultTransition);
+
+                &:hover {
+                    color: $colorP2;
+                }
+
+            }
+
+        }
+
+        > .detailed {
+
+            .comment {
+                color: gray;
+                font-size: x-small;
+            }
+
+            .property-block {
+
+                position: relative;
+                font-size: $fontLittle;
+                cursor: default;
+                border-radius: $defaultPadding/2;
+                @include transition($defaultTransition);
+
+                &:hover {
+                    //background-color: $colorP1;
+                }
+
+                .name-block {
+
+                    box-sizing: border-box;
+                    padding-left: $defaultPadding/2;
+                    float: left;
+                    width: 50%;
                     overflow: hidden;
-                    white-space: pre;
                     text-overflow: ellipsis;
-                    cursor: pointer;
-                    @include transition($defaultTransition);
 
-                    > .icons {
-                        display: inline-block;
-                    }
-
-                    > .controls {
-
-                        float: right;
-                        display: inline-block;
-
-                        > .icon {
-
-                            margin: 0 2px 0 0;
-                            vertical-align: top;
-
-                        }
-
-                        > .icon.add {
-
-                            padding-top: $normal;
-
-                        }
-
-                    }
-
-                    &:hover {
-
-                        padding-left: $defaultTransitionPadding;
-                        background: $colorP1;
-                        border-radius: $defaultPadding/2;
-
-                        .name {
-                            text-decoration: underline;
-                        }
-
-                    }
-
-                    .type {
-
-                        @include transition($defaultTransition);
-
-                        &:hover {
-                            color: $colorP2;
-                        }
-
+                    &.required {
+                        text-decoration: underline;
                     }
 
                 }
 
-                > .detailed {
+                .value-block {
 
-                    .comment {
-                        color: gray;
-                        font-size: x-small;
-                    }
+                    position: relative;
+                    margin-left: 50%;
+                    width: 50%;
+                    text-align: right;
 
-                    .property-block {
+                    input {
 
-                        position: relative;
-                        font-size: $fontLittle;
-                        cursor: default;
-                        border-radius: $defaultPadding/2;
-                        @include transition($defaultTransition);
+                        vertical-align: middle;
+                        background: none;
+                        margin: 0 auto;
+                        box-sizing: border-box;
+                        font: inherit;
 
-                        &:hover {
-                            //background-color: $colorP1;
-                        }
-
-                        .name-block {
-
-                            box-sizing: border-box;
-                            padding-left: $defaultPadding/2;
-                            float: left;
-                            width: 50%;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-
-                            &.required {
-                                text-decoration: underline;
-                            }
-
-                        }
-
-                        .value-block {
-
-                            position: relative;
-                            margin-left: 50%;
-                            width: 50%;
-                            text-align: right;
-
-                            input {
-
-                                vertical-align: middle;
-                                background: none;
-                                margin: 0 auto;
-                                box-sizing: border-box;
-                                font: inherit;
-
-                                &[type=text] {
-                                    width: 100%;
-                                }
-
-                            }
-
+                        &[type=text] {
+                            width: 100%;
                         }
 
                     }

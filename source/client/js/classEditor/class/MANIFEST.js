@@ -4,7 +4,10 @@
  */
 export default {
     Class: {
-
+        Abstract: {
+            default: 0,
+            type: "boolean"
+        }
     },
     Parameters: {
         Abstract: {
