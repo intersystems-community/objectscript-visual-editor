@@ -1,3 +1,8 @@
+/**
+ * This module holds functions that control changes made to classes. To register the new change,
+ * @see addChange
+ */
+
 import { save } from "../server";
 import { changeIsMade } from "./index";
 
@@ -29,8 +34,8 @@ function filterChanges () {
 
 /**
  * Adds a change to pending changes.
- * @param path - ["ClassName", "properties", "PropName", "ParamName"]
- * @param value
+ * @param path - ["ClassName", "properties", "PropName", "Private"]
+ * @param value - 1
  */
 export function addChange (path = [], value) {
     let obj = changes,

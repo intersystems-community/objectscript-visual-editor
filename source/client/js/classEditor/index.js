@@ -1,6 +1,6 @@
 import { getList } from "../server";
 import { AutoGrid } from "../autoGrid";
-import { getCardElement } from "./card";
+import { getClassElement } from "./class";
 import { block, awaitInlineInput, freeSelect, waitApplyProperty } from "../domUtils";
 import { saveChanges } from "./changes";
 import { Toast } from "../toast";
@@ -94,7 +94,7 @@ let backButton = onInit(() => {
                     setup["fullName"] = fullName;
                 }
                 
-                grid.applyChild(getCardElement(setup));
+                grid.applyChild(getClassElement(setup));
                 
                 if (type !== "package")
                     addChange([fullName, "$add"], true);
@@ -222,7 +222,7 @@ export function loadLevel (level) {
             backButton.style.display = "";
         data = orderData(data);
         for (let obj in data) {
-            grid.applyChild(getCardElement(data[obj]));
+            grid.applyChild(getClassElement(data[obj]));
         }
     });
 

@@ -11,7 +11,7 @@ XData UrlMap
 }
 
 /// Saves properties of class properties.
-ClassMethod SaveProperties(classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String
+ClassMethod SaveClassMember(memberName As %String, classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String
 {
     set errors = ""
 
@@ -66,8 +66,8 @@ ClassMethod SaveProperties(classDef As %Dictionary.ClassDefinition, prps As %ZEN
     return errors
 }
 
-/// GET parameter "ns" get parameter - namespace to modify classes in.
-/// POST JSON body is like
+/// GET parameter "ns" - namespace to modify classes in.
+/// POST JSON body is like:
 /// { "TestPack.TestClass": { "properties": { "TestInt": { "Description": "Test desc!" } } } }
 ClassMethod Save() As %Status
 {
@@ -112,7 +112,7 @@ ClassMethod Save() As %Status
             if ($$$hasErrors) { $$$nextClass }
         }
 
-        $$$logError(..SaveProperties(classDef, classData.Properties))
+        $$$logError(..SaveClassMember("Properties", classDef, classData.Properties))
 
         if ($$$hasErrors) { $$$nextClass }
 
