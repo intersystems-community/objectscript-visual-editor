@@ -43,6 +43,10 @@ export default {
             default: 0,
             type: "boolean"
         },
+        Description: {
+            ignore: true,
+            default: ""
+        },
         Dynamic: {
             default: 0,
             type: "boolean"
