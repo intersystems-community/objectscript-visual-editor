@@ -1,18 +1,16 @@
-import { block } from "../../domUtils";
+import { block, toggle } from "../../domUtils";
 import { addChange } from "../changes";
 
 function getKeywordEditElement (propName, value, propManifest, savePath) {
     let type = propManifest["type"] || "string",
         input;
     if (type === "boolean") {
-        input = block(`input`, `toggle`);
-        input.type = "checkbox";
-        input.checked = !!value;
-        input.addEventListener(`change`, () => addChange(
+        input = toggle(!!value);
+        input.checkbox.addEventListener(`change`, () => addChange(
             savePath.concat(propName),
-            input.checked ? 1 : 0
+            input.checkbox.checked ? 1 : 0
         ));
-    } else { // string type
+    } else if (type === "string") { // string type
         input = block(`input`);
         input.type = "text";
         input.value = value;
@@ -20,6 +18,34 @@ function getKeywordEditElement (propName, value, propManifest, savePath) {
             savePath.concat(propName),
             input.value
         ));
+    } else if (type === "select") selBlock: {
+
+        let options = propManifest["options"];
+
+        if (!(options instanceof Array)) {
+            input = block(`div`, `errorMessage`, `No "options" specified for type "select".`);
+            break selBlock;
+        }
+
+        input = block(`select`);
+        options.forEach(opt => {
+            let el = block(`option`),
+                cbValue = typeof opt === "object" && opt["value"] ? opt["value"] : opt;
+            el.textContent = typeof opt === "object" && opt["label"] ? opt["label"] : opt;
+            el.value = cbValue;
+            input.appendChild(el);
+            if (cbValue == value)
+                input.value = cbValue;
+        });
+
+        input.addEventListener(`change`, () => addChange(
+            savePath.concat(propName),
+            input.value
+        ));
+
+    } else {
+        input = block(`div`, `errorMessage`);
+        input.textContent = `Unknown type "${ type }"`;
     }
     return input;
 }

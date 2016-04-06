@@ -15,47 +15,105 @@ html, body {
     color: lightgray;
 }
 
-input[type=checkbox].toggle {
+.errorMessage {
+    color: $colorP2;
+}
+
+.central {
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+
+    > div {
+
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+
+        > div {
+            display: inline-block;
+        }
+
+    }
+
+}
+
+select {
+
+    vertical-align: top;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font: inherit;
+    outline: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    @include transition($defaultTransition);
+
+    &::-ms-expand {
+        display: none;
+    }
+
+    &:hover {
+        color: $colorP2;
+    }
+
+}
+
+.toggle {
 
     position: relative;
     width: 30px;
     height: 16px;
     display: inline-block;
-    visibility: hidden;
-    cursor: pointer;
+    vertical-align: top;
 
-    &:before, &:after {
-        visibility: visible;
-        content: "";
-        position: absolute;
-        @include transition($defaultTransition);
+    > input[type=checkbox] {
+        visibility: hidden;
     }
 
-    &:before {
+    > input[type=checkbox] + label {
+
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        left: 0;
+        top: 0;
         width: 100%;
         height: 100%;
         background: $colorP2;
         border-radius: 8px;
-        box-shadow: 1px 1px 1px rgba(0,0,0,0.3) inset;
-    }
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3) inset;
+        @include transition($defaultTransition);
 
-    &:after {
-        top: 1px;
-        left: 1px;
-        width: 14px;
-        height: 14px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 0 1px rgba(0,0,0,0.3);
-    }
-
-    &:checked {
-        &:before {
-            background: $colorP3;
+        &:after {
+            position: absolute;
+            content: "";
+            top: 1px;
+            left: 1px;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+            @include transition($defaultTransition);
         }
+
+    }
+
+    > input[type=checkbox]:checked + label {
+
+        background: $colorP3;
+
         &:after {
             left: 15px;
         }
+
     }
 
 }
@@ -120,13 +178,13 @@ input[type=text] {
 
 .page {
 
-    > .header {
+    > .header, .footer {
 
         position: fixed;
-        top: 0;
+        &.header { top: 0; }
         left: 0;
         right: 0;
-        z-index: 100;
+        z-index: $zIndexTop;
         height: $big;
         background: $colorFront;
         box-shadow: $defaultShadow;
@@ -155,23 +213,7 @@ input[type=text] {
 
                 .topNamespace {
 
-                    background: none;
-                    border: none;
-                    font: inherit;
-                    outline: 0;
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    appearance: none;
-                    cursor: pointer;
-                    @include transition($defaultTransition);
-
-                    &::-ms-expand {
-                        display: none;
-                    }
-
-                    &:hover {
-                        color: $colorP2;
-                    }
+                    vertical-align: baseline;
 
                 }
 
@@ -191,8 +233,49 @@ input[type=text] {
 
     }
 
+    > .footer {
+
+        bottom: 0;
+        @include transition($defaultTransition);
+
+        &.expanded {
+
+            bottom: $bottomBarHeight;
+
+            & + #footer-terminal {
+                height: $bottomBarHeight;
+            }
+
+            & ~ .body {
+                margin-bottom: calc(#{$bottomBarHeight} + #{$big});
+            }
+
+        }
+
+    }
+
+    #footer-terminal {
+
+        position: fixed;
+        overflow: hidden;
+        height: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: $colorFront;
+        z-index: $zIndexTop;
+        @include transition($defaultTransition);
+
+        > iframe {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+
+    }
+
     > .body {
-        margin: $defaultMargin+$big $defaultMargin $defaultMargin $defaultMargin;
+        margin: $defaultMargin+$big $defaultMargin $defaultMargin+$big $defaultMargin;
     }
 
 }

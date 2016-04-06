@@ -5,6 +5,8 @@ literally without touching any code.
 
 ### Preview
 
+![Screenshot 0](https://cloud.githubusercontent.com/assets/4989256/14316622/be325704-fc0c-11e5-93f0-a7cc0b9116f6.png)
+
 ![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/14295116/efcc9774-fb7c-11e5-86bd-219864fe5634.png)
 
 ![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/14295117/efcf2da4-fb7c-11e5-861f-e9f1231ec909.png)

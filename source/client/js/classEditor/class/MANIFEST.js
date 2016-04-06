@@ -15,7 +15,7 @@ export default {
         ClassType: {
             default: "",
             type: "select",
-            values: [ "datatype", "index", "persistent", "serial", "stream", "view" ]
+            options: [ "datatype", "index", "persistent", "serial", "stream", "view" ]
         },
         ClassVersion: {
             ignore: true,
@@ -25,7 +25,7 @@ export default {
         ClientDataType: {
             default: "VARCHAR",
             type: "select",
-            values: [
+            options: [
                 "BIGINT", "BINARY", "BINARYSTREAM", "BOOLEAN", "CHARACTERSTREAM", "CURRENCY",
                 "DATE", "DECIMAL", "DOUBLE", "FDATE", "FTIMESTAMP", "HANDLE", "INTEGER", "LIST",
                 "LONGVARCHAR", "NUMERIC", "STATUS", "TIME", "TIMESTAMP", "VARCHAR"
@@ -62,12 +62,12 @@ export default {
         Inheritance: {
             default: "left",
             type: "select",
-            values: [ "left", "right" ]
+            options: [ "left", "right" ]
         },
         Language: {
             default: "cache",
             type: "select",
-            values: [ "cache", "basic", "java", "javascript", "mvbasic", "tsql" ]
+            options: [ "cache", "basic", "java", "javascript", "mvbasic", "tsql" ]
         },
         LegacyInstanceContext: {
             default: 0,
@@ -100,7 +100,7 @@ export default {
         OdbcType: {
             default: "VARCHAR",
             type: "select",
-            values: [
+            options: [
                 "BIGINT", "BIT", "DATE", "DOUBLE", "INTEGER", "LONGVARBINARY", "LONGVARCHAR",
                 "NUMERIC", "RESULTSET", "SMALLINT", "STRUCT", "TIME", "TIMESTAMP", "TINYINT",
                 "VARBINARY", "VARCHAR"
@@ -113,17 +113,17 @@ export default {
         SoapBindingStyle : {
             default: "document",
             type: "select",
-            values: [ "document", "rpc" ]
+            options: [ "document", "rpc" ]
         },
         SoapBodyUse: {
             default: "literal",
             type: "select",
-            values: [ "literal", "encoded" ]
+            options: [ "literal", "encoded" ]
         },
         SqlCategory: {
             default: "STRING",
             type: "select",
-            values: [
+            options: [
                 "DATE", "DOUBLE", "FMDATE", "FMTIMESTAMP", "INTEGER", "MVDATE", "NAME", "NUMERIC",
                 "STRING", "TIME", "TIMESTAMP"
             ],

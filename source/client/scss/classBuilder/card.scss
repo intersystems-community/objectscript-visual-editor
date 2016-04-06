@@ -275,6 +275,10 @@ $headerIconSize: $medium;
                 border-radius: $defaultPadding/2;
                 @include transition($defaultTransition);
 
+                + .property-block {
+                    margin-top: 2px;
+                }
+
                 .name-block {
 
                     box-sizing: border-box;
@@ -297,9 +301,10 @@ $headerIconSize: $medium;
                     width: 50%;
                     text-align: right;
 
-                    input {
+                    > input, select {
 
-                        vertical-align: middle;
+                        padding: 0;
+                        vertical-align: top;
                         background: none;
                         margin: 0 auto;
                         box-sizing: border-box;
@@ -309,6 +314,12 @@ $headerIconSize: $medium;
                             width: 100%;
                         }
 
+                    }
+
+                    > select {
+                        border: none;
+                        outline: none;
+                        width: 100%;
                     }
 
                 }

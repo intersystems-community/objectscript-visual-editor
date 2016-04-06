@@ -5,6 +5,7 @@ import { block, awaitInlineInput, freeSelect } from "../domUtils";
 import { saveChanges } from "./changes";
 import { Toast } from "../toast";
 import { addChange } from "./changes";
+import { init as initTerminal } from "./modules/terminal";
 
 var PATH = "",
     INITIALIZED = false,
@@ -29,7 +30,10 @@ export function updateGrid () {
  * Behaviors for elements on page.
  * @type {HTMLElement}
  */
-let backButton = onInit(() => {
+let footer = onInit(() => {
+        footer = document.querySelector(`#footer`);
+    }),
+    backButton = onInit(() => {
         backButton = document.querySelector("#backButton");
         backButton.addEventListener("click", () => {
             if (PATH === "") return;
@@ -105,6 +109,22 @@ let backButton = onInit(() => {
                 
             });
         });
+    }),
+    terminalButton = onInit(() => {
+        
+        let firstPress = true;
+        
+        terminalButton = document.querySelector(`#terminalButton`);
+        terminalButton.addEventListener(`click`, () => {
+            if (firstPress) {
+                firstPress = false;
+                initTerminal(document.querySelector(`#footer-terminal`), NAMESPACE);
+            }
+            footer.classList.toggle("expanded");
+            updateGrid();
+            document.querySelector("#footer-terminal iframe").focus();
+        });
+        
     });
 
 /**

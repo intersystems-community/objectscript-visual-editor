@@ -41,6 +41,26 @@ export function clearSelection () {
 }
 
 /**
+ * @param {boolean=false} [checked]
+ * @returns {Element}
+ */
+export function toggle (checked = false) {
+    let id = `checkbox-${ Math.random().toString().slice(2) }`,
+        box = block(`span`, `toggle`),
+        label = block(`label`),
+        checkbox = block(`input`);
+    checkbox.setAttribute(`type`, `checkbox`);
+    checkbox.setAttribute(`id`, id);
+    label.setAttribute(`for`, id);
+    if (checked)
+        checkbox.setAttribute(`checked`, "true");
+    box.appendChild(checkbox);
+    box.appendChild(label);
+    box.checkbox = checkbox;
+    return box;
+}
+
+/**
  * This function removes child taking animation into account.
  * @param {HTMLElement} element
  * @param {string} property
