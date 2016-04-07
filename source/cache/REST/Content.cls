@@ -23,15 +23,4 @@ ClassMethod PrintContent(XDataName As %String = "") As %Status
 	return $$$OK
 }
 
-/// This method returns MIME type of XData.
-ClassMethod GetMimeType(XDataName As %String = "") As %String
-{
-	set xdata = ##class(%Dictionary.CompiledXData).%OpenId($ClassName()_"||"_XDataName)
-	if (xdata = "") {
-		return "text/plain"
-	} else {
-		return xdata.MimeType
-	}
-}
-
 }

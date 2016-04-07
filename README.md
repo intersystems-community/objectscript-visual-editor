@@ -11,6 +11,9 @@ literally without touching any code.
 
 ![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/14295117/efcf2da4-fb7c-11e5-861f-e9f1231ec909.png)
 
+### Caché Support
+Caché Visual Editor is supported by Caché **version 2016.1 and higher**. 
+
 ### Installation
 
 Download the latest release from [here](https://github.com/ZitRos/cache-visual-editor/releases) and import
@@ -53,7 +56,7 @@ Take your ready to import sources in `build/cache` folder.
 
 **To simplify** development on Windows (scripts for other platforms are welcome),
 make the copy of `import.bat` file and edit the path to your Caché instance there.
-Then you can just use one command `import` (etc) to deploy the project from source to Caché.
+Then you can just use one command `import` to deploy the project from source to Caché.
 
 ##### Building and testing
 

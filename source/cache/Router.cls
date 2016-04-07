@@ -19,7 +19,7 @@ ClassMethod PrintData(DataName as %String = "") As %Status [ Private ]
 {
     set cTime = ##class(VisualEditor.REST.StaticContent).#CompileTime
 	set %response.CharSet = "utf-8"
-	set %response.ContentType = ##class(VisualEditor.REST.StaticContent).GetMimeType(DataName)
+	set %response.ContentType = "text/"_DataName // make sure that mime type matches
 	do %response.SetHeader("Last-Modified", cTime)
 	if (%request.GetCgiEnv("HTTP_IF_MODIFIED_SINCE") = cTime) {
         set %response.Status = "304 Not Modified"
@@ -36,19 +36,19 @@ ClassMethod PrintData(DataName as %String = "") As %Status [ Private ]
 /// This method outputs HTML.
 ClassMethod Index() As %Status
 {
-	return ..PrintData("HTML")
+	return ..PrintData("html")
 }
 
 /// This method outputs JavaScript.
 ClassMethod Js() As %Status
 {
-	return ..PrintData("JS")
+	return ..PrintData("javascript")
 }
 
 /// This method outputs CSS.
 ClassMethod Css() As %Status
 {
-	return ..PrintData("CSS")
+	return ..PrintData("css")
 }
 
 }
