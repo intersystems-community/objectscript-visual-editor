@@ -27,16 +27,17 @@ After this, open the next web-application: `http://[host]/VisualEditor/`
 
 ### Development
 
+##### Pre-requirements
+
 To participate in development of this application, you have [NodeJS](https://nodejs.org) and **Caché 
-2016.2+** to be installed (due to UDL import support). Or, of course, you can copy & paste sources into
-Studio, but this would take a lot of time.
+2016.2+** to be installed (due to UDL import support).
 
 The development process of this application **lies completely outside Caché**. It includes
-structured file tree under `source` directory, and each of that files can be edited in your
-favorite source editor.
+structured file tree under `source` directory, where each file can be edited in your favorite text
+editor.
 
-When the source is ready you have to install all project dependencies by running this command from
-the project's root:
+When the source is ready, at first, you have to install all the project dependencies by running this
+command from the project's root:
 
 ```bash
 npm install
@@ -53,3 +54,11 @@ Take your ready to import sources in `build/cache` folder.
 **To simplify** development on Windows (scripts for other platforms are welcome),
 make the copy of `import.bat` file and edit the path to your Caché instance there.
 Then you can just use one command `import` (etc) to deploy the project from source to Caché.
+
+##### Building and testing
+
+After setting `import.bat` up, **just by one command** `import` you get the next:
+
+1. Project is built by gulp;
+2. VisualEditor package is imported into Caché;
+3. The XML file containing ready-to-deploy package is exported to `build` directory. 

@@ -11,6 +11,8 @@ Parameter DispatchClass = "VisualEditor.Router";
 
 Parameter RESTAppName = "/<!-- @echo config.webApplicationName -->";
 
+Parameter VERSION = "<!-- @echo package.version -->";
+
 ClassMethod Init()
 {
     set installLog = ""
