@@ -11,16 +11,16 @@ XData UrlMap
 }
 
 /// Returns all available namespaces for the current instance.
-ClassMethod getAllNamespacesList() As %ZEN.proxyObject
+ClassMethod getAllNamespacesList() As %Object
 {
-    set namespaces = ##class(%ZEN.proxyObject).%New()
+    set namespaces = {}
     set result = ##class(%ResultSet).%New("%SYS.Namespace:List")
     do result.Execute()
     while (result.Next()) {
-        set ns = ##class(%ZEN.proxyObject).%New()
+        set ns = {}
         set ns.remote = result.Get("Remote")
         set ns.status = result.Get("Status")
-        do namespaces.%DispatchSetProperty(result.Get("Nsp"), ns)
+        do namespaces.$set(result.Get("Nsp"), ns)
     }
     return namespaces
 }
@@ -28,120 +28,69 @@ ClassMethod getAllNamespacesList() As %ZEN.proxyObject
 ///
 ClassMethod Init() As %Status
 {
-    set data = ##class(%ZEN.proxyObject).%New()
+    set data = {}
     set data.namespace = $Namespace
     set data.namespaces = ..getAllNamespacesList()
-    do data.%ToJSON(, "o")
+    write data.$toJSON()
     return $$$OK
 }
 
+/// Returns the object containing member data.
+ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %String) As %Object [ Private ]
+{
+    set obj = {}
+    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberName_"Definition")
+    set propName = $case(memberName, "Parameter": "Parameters", "Property": "Properties",
+        "Index": "Indices", "Query": "Queries", "Method": "Methods", "XData": "XDatas", :"Duck")
+    for i=1:1:$PROPERTY(class, propName).Count() {
+        set op = {}
+        set p = $PROPERTY(class, propName).GetAt(i)
+        for j=1:1:props.Properties.Count() {
+            set pname = props.Properties.GetAt(j).Name
+            if ('$IsObject($PROPERTY(p, pname))) {
+                do op.$set(pname, $PROPERTY(p, pname))
+            }
+        }
+        do obj.$set(p.Name, op)
+    }
+    return obj
+}
+
 /// This method returns all available data about the class.
-ClassMethod GetClassData(className As %String) As %ZEN.proxyObject
+ClassMethod GetClassData(className As %String) As %Object
 {
     set class = ##class(%Dictionary.ClassDefinition).%OpenId(className)
     set cClass = ##class(%Dictionary.CompiledClass).%OpenId(className)
-    set oClass = ##class(%ZEN.proxyObject).%New()
+    set oClass = {}
     if (class = "") { return oClass }
 
-    set oParameters = ##class(%ZEN.proxyObject).%New()
-    set oProperties = ##class(%ZEN.proxyObject).%New()
-    set oMethods = ##class(%ZEN.proxyObject).%New()
-    set oQueries = ##class(%ZEN.proxyObject).%New()
-    set oIndices = ##class(%ZEN.proxyObject).%New()
-    set oXDatas = ##class(%ZEN.proxyObject).%New()
-
-    set $PROPERTY(oClass, "_isDataType") = class.ClientDataTypeIsDefined()
-    set $PROPERTY(oClass, "_isOdbcType") = class.OdbcTypeIsDefined()
-    set $PROPERTY(oClass, "_isSoapBindingStyle") = class.SoapBindingStyleIsDefined()
-    set $PROPERTY(oClass, "_isSoapBodyUse") = class.SoapBodyUseIsDefined()
-    set $PROPERTY(oClass, "_isSqlCategory") = class.SqlCategoryIsDefined()
+    do oClass.$set("_isDataType", class.ClientDataTypeIsDefined())
+    do oClass.$set("_isOdbcType", class.OdbcTypeIsDefined())
+    do oClass.$set("_isSoapBindingStyle", class.SoapBindingStyleIsDefined())
+    do oClass.$set("_isSoapBodyUse", class.SoapBodyUseIsDefined())
+    do oClass.$set("_isSqlCategory", class.SqlCategoryIsDefined())
 
     set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.ClassDefinition")
     for j=1:1:props.Properties.Count() {
         set pname = props.Properties.GetAt(j).Name
         if ((pname '= "parent") && ('props.Properties.GetAt(j).Private) && ('$IsObject($PROPERTY(class, pname)))) {
-             set $PROPERTY(oClass, pname) = $PROPERTY(class, pname)
+             do oClass.$set(pname, $PROPERTY(class, pname))
         }
     }
     if (oClass.TimeChanged) { set oClass.TimeChanged = $zdatetime(oClass.TimeChanged) }
     if (oClass.TimeCreated) { set oClass.TimeCreated = $zdatetime(oClass.TimeCreated) }
     if ((cClass '= "") && (cClass.ClassType '= "")) {
-        set $PROPERTY(oClass, "_compiledClassType") = cClass.ClassType
+        do oClass.$set("_compiledClassType", cClass.ClassType)
     } else {
-        set $PROPERTY(oClass, "_compiledClassType") = "registered" // default
+        do oClass.$set("_compiledClassType", "registered") // default
     }
 
-    set oClass.Parameters = oParameters
-    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.ParameterDefinition")
-    for i=1:1:class.Parameters.Count() {
-        set oPar = ##class(%ZEN.proxyObject).%New()
-        set p = class.Parameters.GetAt(i)
-        for j=1:1:props.Properties.Count() {
-            set pname = props.Properties.GetAt(j).Name
-            set:(pname '= "parent") $PROPERTY(oPar, pname) = $PROPERTY(p, pname)
-        }
-        do oParameters.%DispatchSetProperty(p.Name, oPar)
-    }
-
-    set oClass.Properties = oProperties
-    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.PropertyDefinition")
-    for i=1:1:class.Properties.Count() {
-        set oProp = ##class(%ZEN.proxyObject).%New()
-        set p = class.Properties.GetAt(i)
-        for j=1:1:props.Properties.Count() {
-            set pname = props.Properties.GetAt(j).Name
-            set:(pname '= "parent") $PROPERTY(oProp, pname) = $PROPERTY(p, pname)
-        }
-        do oProperties.%DispatchSetProperty(p.Name, oProp)
-    }
-
-    set oClass.Methods = oMethods
-    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.MethodDefinition")
-    for i=1:1:class.Methods.Count() {
-        set oMeth = ##class(%ZEN.proxyObject).%New()
-        set met = class.Methods.GetAt(i)
-        for j=1:1:props.Properties.Count() {
-            set pname = props.Properties.GetAt(j).Name
-            set:(pname '= "parent") $PROPERTY(oMeth, pname) = $PROPERTY(met, pname)
-        }
-        do oMethods.%DispatchSetProperty(met.Name, oMeth)
-    }
-
-    set oClass.Queries = oQueries
-    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.QueryDefinition")
-    for i=1:1:class.Queries.Count() {
-        set oProp = ##class(%ZEN.proxyObject).%New()
-        set q = class.Queries.GetAt(i)
-        for j=1:1:props.Properties.Count() {
-            set pname = props.Properties.GetAt(j).Name
-            set:(pname '= "parent") $PROPERTY(oProp, pname) = $PROPERTY(q, pname)
-        }
-        do oQueries.%DispatchSetProperty(q.Name, oProp)
-    }
-
-    set oClass.XDatas = oXDatas
-    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.XDataDefinition")
-    for i=1:1:class.XDatas.Count() {
-        set oProp = ##class(%ZEN.proxyObject).%New()
-        set xd = class.XDatas.GetAt(i)
-        for j=1:1:props.Properties.Count() {
-            set pname = props.Properties.GetAt(j).Name
-            set:((pname '= "parent") && (pname '= "Object")) $PROPERTY(oProp, pname) = $PROPERTY(xd, pname)
-        }
-        do oXDatas.%DispatchSetProperty(xd.Name, oProp)
-    }
-
-    set oClass.Indices = oIndices
-    set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.IndexDefinition")
-    for i=1:1:class.Indices.Count() {
-        set oProp = ##class(%ZEN.proxyObject).%New()
-        set ind = class.Indices.GetAt(i)
-        for j=1:1:props.Properties.Count() {
-            set pname = props.Properties.GetAt(j).Name
-            set:(pname '= "parent") $PROPERTY(oProp, pname) = $PROPERTY(ind, pname)
-        }
-        do oIndices.%DispatchSetProperty(ind.Name, oProp)
-    }
+    set oClass.Parameters = ..GetMemberData(class, "Parameter")
+    set oClass.Properties = ..GetMemberData(class, "Property")
+    set oClass.Indices = ..GetMemberData(class, "Index")
+    set oClass.Queries = ..GetMemberData(class, "Query")
+    set oClass.Methods = ..GetMemberData(class, "Method")
+    set oClass.XDatas = ..GetMemberData(class, "XData")
 
     return oClass
 }
@@ -157,7 +106,7 @@ ClassMethod List() As %Status
     set classes = ##class(%ResultSet).%New("%Dictionary.ClassDefinition:ClassIndex")
     do classes.Execute()
     #dim folders as %Numeric
-    set data = ##class(%ZEN.proxyObject).%New()
+    set data = {}
     set skipSystem = $case($Namespace = "%SYS", 1: "", :"%")
     while (classes.Next()) {
         set clsName = classes.Data("ClassName")
@@ -169,23 +118,23 @@ ClassMethod List() As %Status
             set folderName = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             if ($data(folders(folderName))) { continue }
             set folders(folderName) = 1
-            set oFolder = ##class(%ZEN.proxyObject).%New()
-            set $PROPERTY(oFolder, "_type") = "package"
-            set $PROPERTY(oFolder, "_fullName") = baseLevel _ folderName
-            set $PROPERTY(oFolder, "_name") = folderName
-            set $PROPERTY(data, folderName) = oFolder
+            set oFolder = {}
+            do oFolder.$set("_type", "package")
+            do oFolder.$set("_fullName", baseLevel _ folderName)
+            do oFolder.$set("_name", folderName)
+            do data.$set(folderName, oFolder)
         } elseif ($LENGTH(clsName, ".") = $LENGTH(baseLevel, ".")) {
             set className = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             set oClass = ..GetClassData(clsName)
-            set $PROPERTY(oClass, "_type") = "class"
-            set $PROPERTY(oClass, "_fullName") = clsName
-            set $PROPERTY(oClass, "_name") = className
-            set $PROPERTY(data, className) = oClass
+            do oClass.$set("_type", "class")
+            do oClass.$set("_fullName", clsName)
+            do oClass.$set("_name", className)
+            do data.$set(className, oClass)
         } else {
             continue
         }
     }
-    do data.%ToJSON(, "o")
+    write data.$toJSON()
 
     return $$$OK
 }

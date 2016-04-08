@@ -7,29 +7,27 @@ XData UrlMap
 {
 <Routes>
    <Route Url="/save" Method="POST" Call="Save"/>
-   <Route Url="/test" Method="POST" Call="Test"/>
 </Routes>
 }
 
 /// Saves keywords of class members and a class itself.
-ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %ZEN.proxyObject) As %String [ Private ]
+ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %Object) As %String [ Private ]
 {
     set errors = ""
     #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
     set propDefinition =
         ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberKind_"Definition").Properties
 
-    set pName = $order(assignObj.%data(""))
-    while (pName '= "") {
-        if (pName = "$add") { set pName = $order(assignObj.%data(pName)) continue }
+    set iterator = assignObj.$getIterator()
+    while (iterator.$getNext(.pName, .data)) {
+        if (pName = "$add") { continue }
         if (propDefinition.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName) > 0) {
-            if (('$IsObject($PROPERTY(assignObj, pName)))) {
-                set $PROPERTY(definitionObj, pName) = $PROPERTY(assignObj, pName)
+            if ('$IsObject(assignObj.$get(pName))) {
+                set $PROPERTY(definitionObj, pName) = assignObj.$get(pName)
             }
         } else {
             $$$logError("Unable to set """_pName_""" property of """_memberKind_""" in "_definitionObj.Name)
         }
-        set pName = $order(assignObj.%data(pName))
     }
     $$$logError($System.Status.GetErrorText(definitionObj.%Save()))
 
@@ -37,26 +35,20 @@ ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %ZEN
 }
 
 /// Saves properties of class properties.
-ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %ZEN.proxyObject) As %String [ Private ]
+ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %Object) As %String [ Private ]
 {
     set errors = ""
 
-    if ($ClassName(prps) = "%ZEN.proxyObject") {
-        do prps.%CopyToArray(.properties)
-    } else {
+    if (prps = "") {
         return ""
     }
 
-    #define nextProperty set memberName = $order(properties(memberName)) continue
     #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
-    #define hasErrors errors '= ""
 
-    set memberName = $order(properties(""))
-    while (memberName '= "") {
+    set iterator = prps.$getIterator()
+    while (iterator.$getNext(.memberName, .props)) {
 
-        set props = properties(memberName)
-
-        if ($data(props.%data("$add"))) {
+        if (props.$get("$add") '= "") {
             set pDef = $System.OBJ.New("%Dictionary."_memberKind_"Definition")
             set pDef.parent = classDef
         } else {
@@ -64,16 +56,15 @@ ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.Class
         }
         if (pDef = "") {
             $$$logError("Member """_memberKind_""" named """_memberName_""" not found in "_classDef.Name)
-            $$$nextProperty
+            continue
         }
 
-        if ($data(props.%data("$delete"))) {
+        if (props.$get("$delete") '= "") {
             set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
-        } else { // iterate over properties defined in props and save
-            do ..SaveKeywords(memberKind, pDef, props)
+            continue
         }
 
-        $$$nextProperty
+        do ..SaveKeywords(memberKind, pDef, props)
 
     }
 
@@ -85,28 +76,22 @@ ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.Class
 /// { "TestPack.TestClass": { "properties": { "TestInt": { "Description": "Test desc!" } } } }
 ClassMethod Save() As %Status
 {
-
     set ns = %request.Get("ns")
     if (##class(%SYS.Namespace).Exists(ns)) {
         znspace ns
     }
 
-    do %request.Content.%CopyToArray(.classes)
-    set response = ##class(%ZEN.proxyObject).%New()
+    set classes = %request.Content
+    set response = {}
     set response.error = ""
     set response.modified = 0
 
-    #define nextClass set className = $order(classes(className)) if (errors '= "") { set response.error = response.error _ errors } continue
-    #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
-    #define hasErrors errors '= ""
+    #define logError(%e) if (%e '= "") { set response.error = response.error _ %e _ $Char(10) }
 
-    set className = $order(classes(""))
-    while (className '= "") {
+    set iterator = classes.$getIterator()
+    while (iterator.$getNext(.className, .classData)) {
 
-        set errors = ""
-        set classData = classes(className)
-
-        if ($data(classData.%data("$add"))) {
+        if (classData.$get("$add") '= "") {
             set classDef = ##class(%Dictionary.ClassDefinition).%New()
             set classDef.Name = className
         } else {
@@ -114,49 +99,38 @@ ClassMethod Save() As %Status
         }
         if (classDef = "") {
             $$$logError("Class " _ className _ " does not exists.")
-            $$$nextClass
+            continue
         }
 
-        if ($data(classData.%data("$delete"))) {
+        if (classData.$get("$delete") '= "") {
             $$$logError($System.Status.GetErrorText(classDef.%Delete(classDef.%Oid())))
             set response.modified = response.modified + 1
-            $$$nextClass
-        } else {
-            $$$logError($System.Status.GetErrorText(classDef.%Save()))
-            if ($$$hasErrors) { $$$nextClass }
+            continue
         }
 
-        $$$logError(..SaveClassMember("Parameter", classDef, $PROPERTY(classData, "Parameters")))
-        $$$logError(..SaveClassMember("Property", classDef, $PROPERTY(classData, "Properties")))
-        $$$logError(..SaveClassMember("Index", classDef, $PROPERTY(classData, "Indices")))
-        $$$logError(..SaveClassMember("Method", classDef, $PROPERTY(classData, "Methods")))
-        $$$logError(..SaveClassMember("Query", classDef, $PROPERTY(classData, "Queries")))
-        $$$logError(..SaveClassMember("XData", classDef, $PROPERTY(classData, "XDatas")))
+        $$$logError(..SaveClassMember("Parameter", classDef, classData.$get("Parameters")))
+        $$$logError(..SaveClassMember("Property", classDef, classData.$get("Properties")))
+        $$$logError(..SaveClassMember("Index", classDef, classData.$get("Indices")))
+        $$$logError(..SaveClassMember("Method", classDef, classData.$get("Methods")))
+        $$$logError(..SaveClassMember("Query", classDef, classData.$get("Queries")))
+        $$$logError(..SaveClassMember("XData", classDef, classData.$get("XDatas")))
         $$$logError(..SaveKeywords("Class", classDef, classData))
 
-        if ($$$hasErrors) { $$$nextClass }
+        $$$logError($System.Status.GetErrorText(classDef.%Save()))
 
-        set st = $system.OBJ.Compile(className, "cuk-d", .errorLog)
+        do $system.OBJ.Compile(className, "cuk-d", .errorLog)
 
         if (errorLog '= 0) {
             $$$logError(errorLog(1))
-            $$$nextClass
+            continue
         }
 
         set response.modified = response.modified + 1
 
-        $$$nextClass
-
     }
 
-    do response.%ToJSON(, "o")
-    return $$$OK
+    write response.$toJSON()
 
-}
-
-ClassMethod Test() As %Status
-{
-    write %request.Content
     return $$$OK
 }
 
@@ -166,15 +140,9 @@ ClassMethod OnPreDispatch() As %Status
 	set %response.CharSet = "utf-8"
 	set %response.ContentType="application/json"
 
-    // Parsing POST request body
-    #dim obj As %ZEN.proxyObject
     return:'$isobject(%request.Content) $$$OK
-    set content = %request.Content.Read($$$MaxStringLength)
-    set content = $ZCVT(content, "I", "UTF8")
-    set st = ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(content, , .obj, 1)
-    return:$$$ISERR(st) st
-    return:'$IsObject(obj) $$$ERROR($$$GeneralError, "Unable to parse request body")
-    set %request.Content = obj
+
+    set %request.Content = ##class(%AbstractObject).$fromJSON(%request.Content)
 
     return $$$OK
 }

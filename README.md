@@ -12,7 +12,7 @@ literally without touching any code.
 ![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/14295117/efcf2da4-fb7c-11e5-861f-e9f1231ec909.png)
 
 ### Caché Support
-Caché Visual Editor is supported by Caché **version 2016.1 and higher**. 
+Caché Visual Editor is supported by **Caché version 2016.1 and higher**. 
 
 ### Installation
 

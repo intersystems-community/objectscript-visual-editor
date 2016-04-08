@@ -119,25 +119,23 @@ ClassMethod Stats() As %Status {
     set sid = $ZD($H,3)
     set key = "x8AlP"_$E(sid,1,1)_"tq"
 
-    set body = ##class(%ZEN.proxyObject).%New()
-    set body.cacheVersion = $ZVERSION
-    set body.version = "<!-- @echo package.version -->"
-    set body.success = 'errorOccurred
-    set body.sid = sid
+    set body = {
+        "cacheVersion": $ZVERSION,
+        "version": "<!-- @echo package.version -->",
+        "success": 'errorOccurred,
+        "sid": sid
+    }
     if (errorOccurred) { set body.log = installLog }
 
     set req = ##class(%Net.HttpRequest).%New()
     set req.ContentType = "application/json"
     set req.Server = "stats.zitros.tk"
-    do ##class(%ZEN.Auxiliary.jsonProvider).%WriteJSONStreamFromObject(.jsonStream, body)
-    do req.EntityBody.CopyFrom(jsonStream)
+    set stream = ##class(%Stream.TmpCharacter).%New()
+    do body.$toJSON(stream)
+    set req.EntityBody = stream
     $$$checkErr(req.Post("/?key="_key_"&sid="_sid))
 
-    set content = $case($isobject(req.HttpResponse.Data),
-        1: req.HttpResponse.Data.Read($$$MaxStringLength),
-        :req.HttpResponse.Data)
-    set content = $ZCVT(content, "I", "UTF8")
-    $$$checkErr(##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(content, , .obj, 1))
+    set obj = ##class(%AbstractObject).$fromJSON(req.HttpResponse.Data)
     if (obj.error '= "") {
         $$$checkErr($$$ERROR($$$GeneralError, "Unable to collect statistics: " _ obj.error))
     }
