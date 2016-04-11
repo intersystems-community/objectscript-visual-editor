@@ -116,13 +116,19 @@ let footer = onInit(() => {
         
         terminalButton = document.querySelector(`#terminalButton`);
         terminalButton.addEventListener(`click`, () => {
+
             if (firstPress) {
                 firstPress = false;
                 initTerminal(document.querySelector(`#footer-terminal`), NAMESPACE);
             }
+
             footer.classList.toggle("expanded");
             updateGrid();
-            document.querySelector("#footer-terminal iframe").focus();
+
+            let iFrame = document.querySelector("#footer-terminal iframe");
+            if (iFrame)
+                iFrame.focus();
+
         });
         
     });
