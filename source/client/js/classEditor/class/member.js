@@ -27,7 +27,9 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
     comment.setAttribute("contenteditable", "true");
     comment.addEventListener("input", () => {
         addChange(
-            [classData["Name"], classBlockName, classBlockPropName, "Description"],
+            isClass
+                ? [classData["Name"], "Description"]
+                : [classData["Name"], classBlockName, classBlockPropName, "Description"],
             comment.innerHTML.replace(/<br\s*\/?>/, "<br/>\n")
         );
     });
