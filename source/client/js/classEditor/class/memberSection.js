@@ -1,6 +1,7 @@
 import { block, awaitInlineInput } from "../../domUtils";
 import { addChange } from "./../changes";
 import { getMemberBlock } from "./member";
+import { updateGrid } from "./../index";
 
 export const MEMBER_SECTIONS = [
     "Parameters",
@@ -35,6 +36,8 @@ function getMemberControls (body, classData, classBlockName) {
             body.appendChild(getMemberBlock({
                 classData, classBlockName, classBlockPropName: propName
             }));
+
+            updateGrid();
 
         });
     });
