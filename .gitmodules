@@ -1,0 +1,3 @@
+[submodule "source/client/js/AutoGrid"]
+	path = source/client/js/AutoGrid
+	url = git@github.com:ZitRos/AutoGrid.git
