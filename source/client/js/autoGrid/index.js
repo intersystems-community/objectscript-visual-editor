@@ -15,15 +15,13 @@ export function AutoGrid (container) {
 
     this.container = container;
     this.width = container.offsetWidth;
-    this.columns = getColumnsNumber(this.width);
+    this.COLUMNS = getColumnsNumber(this.width);
 
     /**
      * This array holds sorted grid elements. Container is a wrapper for the element.
-     * @type {{ element: HTMLElement, container: HTMLElement }[]}
+     * @type {{ element: HTMLElement, container: HTMLElement, [width]: number=1 }[]}
      */
-    this.children = [
-
-    ];
+    this.children = [];
 
     let resizeTimer = 0; // not to perform resize too frequently
     this.windowResizeHandler = () => {
@@ -68,54 +66,115 @@ AutoGrid.prototype.childExists = function (element) {
 
 };
 
-AutoGrid.prototype.applyChild = function (element) {
+/**
+ * @param {HTMLElement} element
+ * @param {*} [options] - Additional options like { width: 2 }.
+ */
+AutoGrid.prototype.applyChild = function (element, options) {
 
     if (this.childExists(element)) return;
 
-    let container = document.createElement("div");
+    let container = document.createElement("div"),
+        obj = {
+            element: element,
+            container: container,
+            width: 1
+        };
+
     container.className = "AutoGrid-container";
     container.style.position = "absolute";
     container.appendChild(element);
-    this.children.push({
-        element: element,
-        container: container
-    });
+    Object.assign(obj, options || {});
+
+    this.children.push(obj);
 
     this.updateGrid();
 
 };
 
+/**
+ * @param {HTMLElement} element
+ * @param {*} options - Additional options like { width: 2 }.
+ * @returns {boolean} - Success of update (if the element is found).
+ */
+AutoGrid.prototype.updateChild = function (element, options) {
+
+    let updated = null;
+
+    this.children.forEach(c => {
+        if (c !== element)
+            return;
+        updated = c;
+    });
+
+    if (updated) {
+        Object.assign(updated, options);
+        this.updateGrid();
+    }
+
+    return !!updated;
+
+};
+
 AutoGrid.prototype.updateGrid = function () {
 
-    let i, columnWidth = Math.floor(this.width/this.columns),
+    let i, columnWidth = Math.floor(this.width / this.COLUMNS),
         columnHeights = (() => {
             let arr = [], i;
-            for (i = 0; i < this.columns; i++)
+            for (i = 0; i < this.COLUMNS; i++)
                 arr.push(0);
             return arr;
         })();
 
-    function getNextColumnIndex () {
-        let i, minCol = 0, minHeight = columnHeights[0];
-        for (i = 1; i < columnHeights.length; i++)
-            if (columnHeights[i] < minHeight) {
-                minCol = i;
-                minHeight = columnHeights[minCol];
+    /**
+     * WIDTH = 3
+     * C1 C2 C3 C4 C5
+     * ## ## ## ## ##
+     * ## ##    ##
+     * ##       ##
+     * (______) ##
+     *
+     * This function returns sorted array of column indices to fill the grid.
+     */
+    function getNextColumnIndices (colSpan) {
+        let iArr = Array.from({ length: columnHeights.length }, (v, k) => k).sort((i1, i2) => {
+                if (columnHeights[i1] === columnHeights[i2])
+                    return 0;
+                return columnHeights[i1] > columnHeights[i2] ? 1 : -1;
+            }), rArr;
+        for (let i = colSpan; i <= iArr.length; i++) {
+            rArr = iArr.slice(0, i).sort();
+            let c = 1, u;
+            for (u = 1; u < rArr.length; u++)
+                if (rArr[u - 1] + 1 === rArr[u]) {
+                    if (++c === colSpan) {
+                        u++;
+                        break;
+                    }
+                } else {
+                    c = 1;
+                }
+            if (c === colSpan) {
+                rArr = rArr.slice(u - colSpan, u);
+                break;
             }
-        return minCol;
+        }
+        return rArr ? rArr : Array.from({ length: columnHeights.length }, (v, k) => k);
     }
 
     for (i = 0; i < this.children.length; i++) {
 
         let block = this.children[i];
-        let colIndex = getNextColumnIndex(),
-            left = colIndex * columnWidth + "px",
-            top = columnHeights[colIndex] + "px";
+        let colSpan = Math.min(block.width || 1, this.COLUMNS),
+            colIndices = getNextColumnIndices(colSpan),
+            minTop = Math.max.apply(Math, colIndices.map(i => columnHeights[i])),
+            left = colIndices[0] * columnWidth + "px",
+            top = minTop + "px";
 
         if (!block.container.parentNode) {
             block.container.style.left = left;
             block.container.style.top = top;
-            block.container.style.width = columnWidth + "px";
+            block.container.style.width = columnWidth * colSpan + "px";
             this.container.appendChild(block.container);
         } else {
             if (block.container.style.left !== left)
@@ -123,9 +182,13 @@ AutoGrid.prototype.updateGrid = function () {
             if (block.container.style.top !== top)
                 block.container.style.top = top;
             if (block.container.style.width !== columnWidth + "px")
-                block.container.style.width = columnWidth + "px";
+                block.container.style.width = columnWidth * colSpan + "px";
         }
-        columnHeights[colIndex] += block.container.offsetHeight;
+
+        colIndices.forEach(index => {
+            columnHeights[index] = minTop + block.container.offsetHeight;
+        });
+
         // Adding/updating of nodes may cause scrollbar to appear. This changes the width of the
         // container. To prevent inset containers from flowing we need to recalculate sizes as
         // soon as we noticed size change. This won't take a lot of resources as not many cards
@@ -152,7 +215,7 @@ AutoGrid.prototype.updateSizes = function () {
     if (this.width === this.container.offsetWidth) return;
 
     this.width = this.container.offsetWidth;
-    this.columns = getColumnsNumber(this.width);
+    this.COLUMNS = getColumnsNumber(this.width);
 
     this.updateGrid();
 
