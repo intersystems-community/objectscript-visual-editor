@@ -1,5 +1,5 @@
 import { getList } from "../server";
-import { AutoGrid } from "../AutoGrid";
+import AutoGrid from "../AutoGrid";
 import { getClassElement } from "./class";
 import { block, awaitInlineInput, freeSelect } from "../domUtils";
 import { saveChanges } from "./changes";
