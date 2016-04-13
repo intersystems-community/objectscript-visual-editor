@@ -32,15 +32,21 @@ After this, open the next web-application: `http://[host]/VisualEditor/`
 
 ##### Pre-requirements
 
-To participate in development of this application, you have [NodeJS](https://nodejs.org) and **Caché 
-2016.2+** to be installed (due to UDL import support).
+To participate in development of this application, you need Git, [NodeJS](https://nodejs.org) and
+**Caché 2016.2+** to be installed (due to UDL import support).
 
 The development process of this application **lies completely outside Caché**. It includes
 structured file tree under `source` directory, where each file can be edited in your favorite text
 editor.
 
-When the source is ready, at first, you have to install all the project dependencies by running this
-command from the project's root:
+At first, clone the repository. It contains submodules, so use the `--recursive` flag when cloning:
+```bash
+git clone --recursive https://github.com/intersystems-ru/cache-visual-editor
+cd cache-visual-editor
+```
+
+Then you have to install all the project dependencies by running this command from the project's
+root:
 
 ```bash
 npm install
