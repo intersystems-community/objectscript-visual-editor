@@ -65,6 +65,14 @@ select {
 
 }
 
+button {
+    padding: 0;
+    background: #eee;
+    border: none;
+    font-family: inherit;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+}
+
 .toggle {
 
     position: relative;

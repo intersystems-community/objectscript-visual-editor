@@ -5,6 +5,7 @@ import { Toast } from "../../toast";
 import { getKeywordView } from "./keyword";
 import MANIFEST from "./MANIFEST";
 import { MEMBER_SECTIONS, getMemberSection } from "./memberSection";
+import { getCodeCaptionView } from "./code";
 
 /**
  * Creates and returns interactive class block property editor.
@@ -21,7 +22,8 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
         comment = block(`div`, `comment`),
         savePath = isClass
             ? [classData["Name"]]
-            : [classData["Name"], classBlockName, classBlockPropName];
+            : [classData["Name"], classBlockName, classBlockPropName],
+        codePropName;
 
     container.appendChild(comment);
     comment.setAttribute("contenteditable", "true");
@@ -33,17 +35,28 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
             comment.innerHTML.replace(/<br\s*\/?>/, "<br/>\n")
         );
     });
+    
     if (data["Description"])
         comment.innerHTML = data["Description"];
     comment.setAttribute("placeholder", "< Add comment >");
+    
     for (let propName in data) {
         let propManifest = (MANIFEST[isClass ? "Class" : classBlockName] || {})[propName] || {};
+        if (propManifest.isCode) codePropName = propName;
         if (propManifest.ignore || propManifest.default === data[propName]) continue;
         if (typeof data[propName] === "object") continue;
         container.appendChild(getKeywordView({
             propManifest, propName, propData: data[propName], savePath
         }));
     }
+
+    if (codePropName)
+        container.appendChild(getCodeCaptionView({
+            manifest: (MANIFEST[isClass ? "Class" : classBlockName] || {})[codePropName] || {},
+            name: codePropName,
+            data: data,
+            savePath
+        }));
 
     return container;
 

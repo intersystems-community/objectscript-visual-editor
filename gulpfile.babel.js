@@ -72,7 +72,9 @@ gulp.task("favicon", ["prepare"], () => {
 gulp.task("css", ["prepare"], () => {
     return gulp.src([`${source}/client/scss/index.scss`])
         .pipe(scss())
-        .pipe(cssnano())
+        .pipe(cssnano({
+            zindex: false
+        }))
         .pipe(gulp.dest(`${dest}/client/css`));
 });
 

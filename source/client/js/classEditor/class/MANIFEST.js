@@ -593,7 +593,8 @@ export default {
             type: "boolean"
         },
         Implementation: {
-            ignore: true
+            ignore: true,
+            isCode: true
         },
         Language: {
             default: "",

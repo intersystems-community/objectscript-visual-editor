@@ -267,9 +267,14 @@ $headerIconSize: $medium;
                 font-size: x-small;
             }
 
+            button.property-block {
+                width: 100%;
+            }
+
             .property-block {
 
                 position: relative;
+                display: block;
                 font-size: $fontLittle;
                 cursor: default;
                 border-radius: $defaultPadding/2;
