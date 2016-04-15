@@ -10,6 +10,13 @@ Toast.TIME_SHORT = 2000;
 Toast.TIME_NORMAL = 4000;
 Toast.TIME_LONG = 8000;
 
+let ORIGIN_TOP;
+
+export function configureToasts (options = {}) {
+    if (typeof options["topOrigin"] === "number")
+        ORIGIN_TOP = options["topOrigin"];
+}
+
 /**
  * On-screen toast message.
  * @param {string} type - Toast.TYPE_*
@@ -68,7 +75,7 @@ Toast.prototype.seek = function (delta) {
  */
 Toast.prototype.updateVisualPosition = function () {
 
-    this.element.style.bottom = this.position + "px";
+    this.element.style.bottom = -ORIGIN_TOP + this.position + "px";
 
 };
 

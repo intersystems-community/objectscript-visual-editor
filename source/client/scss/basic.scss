@@ -73,6 +73,12 @@ button {
     box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
 }
 
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: .5em;
+}
+
 .toggle {
 
     position: relative;
