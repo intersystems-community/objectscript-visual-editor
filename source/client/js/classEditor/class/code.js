@@ -1,7 +1,7 @@
 import { block, toggle } from "../../domUtils";
 import { addChange } from "../changes";
 import { Toast } from "../../toast";
-import AutoGrid from "../../AutoGrid";
+import { updateGrid } from "../index";
 
 /**
  * Returns if the method code has routines.
@@ -20,7 +20,7 @@ function switchToRoutineCode (code) {
     return code.replace(/^/, "\t").replace(/\n/g, "\n\t");
 }
 
-export function getCodeCaptionView ({ manifest, name, data, savePath }) {
+export function getCodeCaptionView ({ name, data, savePath }) {
     
     let div = block(`div`, `property-block`),
         header = block(`div`),
@@ -72,11 +72,15 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
         maxLines: Infinity
     });
 
-    editor.on(`change`, () => { saveChanges() });
+    editor.on(`change`, ({ start, end }) => {
+        if (start.row !== end.row)
+            setTimeout(() => updateGrid(), 25);
+        saveChanges();
+    });
 
     div.appendChild(block(`hr`));
     div.appendChild(header);
-    setTimeout(() => new AutoGrid(header), 1);
+    // setTimeout(() => new AutoGrid(header), 1);
     div.appendChild(editBlock);
     editor.resize();
 
