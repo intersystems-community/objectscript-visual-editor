@@ -7,7 +7,7 @@ Class VisualEditor.Installer Extends %Projection.AbstractProjection [ Not Proced
 
 Projection Reference As Installer;
 
-Parameter DispatchClass = "VisualEditor.Router";
+Parameter DispatchClass = "VisualEditor.REST.Router";
 
 Parameter RESTAppName = "/<!-- @echo config.webApplicationName -->";
 

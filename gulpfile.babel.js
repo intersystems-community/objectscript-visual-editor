@@ -48,10 +48,25 @@ gulp.task("js", ["prepare"], () => {
         //.pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(preprocess(context))
         .pipe(uglify({
-            max_line_len: 16000
+            output: {
+                max_line_len: 16000
+            }
         }))
         //.pipe(sourcemaps.write())
         .pipe(gulp.dest(`${dest}/client/js`));
+});
+
+gulp.task("js-lib", ["prepare"], () => {
+    return gulp.src([`${source}/client/js/lib/**/*.js`])
+        .pipe(uglify({
+            mangle: false,
+            compress: false,
+            preserveComments: "all",
+            output: {
+                max_line_len: 16000
+            }
+        }))
+        .pipe(gulp.dest(`${dest}/client/js/lib`));
 });
 
 gulp.task("html", ["prepare"], () => {
@@ -78,7 +93,7 @@ gulp.task("css", ["prepare"], () => {
         .pipe(gulp.dest(`${dest}/client/css`));
 });
 
-gulp.task("pre-cls", ["js", "html", "css", "favicon"], () => {
+gulp.task("pre-cls", ["js", "js-lib", "html", "css", "favicon"], () => {
     return gulp.src([`${source}/cache/**/*.cls`])
         .pipe(rename((f) => {
             f.basename = `${ pkg["packageName"] }.${ f.dirname === "." ? "" : f.dirname + "." }${

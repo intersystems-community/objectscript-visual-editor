@@ -1,4 +1,3 @@
-import "../../lib/ace";
 import { block } from "../../domUtils";
 import { addChange } from "../changes";
 
