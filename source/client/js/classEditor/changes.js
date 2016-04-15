@@ -39,8 +39,8 @@ function filterChanges () {
  */
 export function addChange (path = [], value) {
     let obj = changes,
-        prop = path.pop();
-    path.forEach((p) => obj = obj[p] || (() => obj[p] = {})() );
+        prop = path.slice(-1);
+    path.slice(0, -1).forEach((p) => obj = obj[p] || (() => obj[p] = {})() );
     obj[prop] = value;
     changeIsMade(filterChanges());
 }

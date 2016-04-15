@@ -10,19 +10,19 @@ import { getCodeCaptionView } from "./code";
 /**
  * Creates and returns interactive class block property editor.
  * @param classData
- * @param [classBlockName]
- * @param [classBlockPropName]
+ * @param [memberType]
+ * @param [classMemberName]
  * @returns {Element}
  */
-function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) {
+function getMemberDetailedBlock (classData, memberType, classMemberName) {
 
-    let isClass = !classBlockName,
-        data = isClass ? classData : classData[classBlockName][classBlockPropName],
+    let isClass = !memberType,
+        data = isClass ? classData : classData[memberType][classMemberName],
         container = block(`div`, `detailed`),
         comment = block(`div`, `comment`),
         savePath = isClass
             ? [classData["Name"]]
-            : [classData["Name"], classBlockName, classBlockPropName],
+            : [classData["Name"], memberType, classMemberName],
         codePropName;
 
     container.appendChild(comment);
@@ -31,7 +31,7 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
         addChange(
             isClass
                 ? [classData["Name"], "Description"]
-                : [classData["Name"], classBlockName, classBlockPropName, "Description"],
+                : [classData["Name"], memberType, classMemberName, "Description"],
             comment.innerHTML.replace(/<br\s*\/?>/, "<br/>\n")
         );
     });
@@ -41,7 +41,7 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
     comment.setAttribute("placeholder", "< Add comment >");
     
     for (let propName in data) {
-        let propManifest = (MANIFEST[isClass ? "Class" : classBlockName] || {})[propName] || {};
+        let propManifest = (MANIFEST[isClass ? "Class" : memberType] || {})[propName] || {};
         if (propManifest.isCode) codePropName = propName;
         if (propManifest.ignore || propManifest.default === data[propName]) continue;
         if (typeof data[propName] === "object") continue;
@@ -52,7 +52,7 @@ function getMemberDetailedBlock (classData, classBlockName, classBlockPropName) 
 
     if (codePropName)
         container.appendChild(getCodeCaptionView({
-            manifest: (MANIFEST[isClass ? "Class" : classBlockName] || {})[codePropName] || {},
+            manifest: (MANIFEST[isClass ? "Class" : memberType] || {})[codePropName] || {},
             name: codePropName,
             data: data,
             savePath

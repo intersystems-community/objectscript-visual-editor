@@ -6,11 +6,15 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
     let div = block(`div`, `property-block`),
         editBlock = block(`div`);
 
-    editBlock.textContent = data[name] || "";
+    editBlock.textContent = (data[name] || "").replace(/\r?\n$/, "");
 
     let editor = ace.edit(editBlock);
     editor.setOptions({
         maxLines: Infinity
+    });
+
+    editor.on(`change`, () => {
+        addChange(savePath.concat(name), editor.getValue());
     });
 
     div.appendChild(editBlock);

@@ -21,9 +21,14 @@ ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %Obj
     set iterator = assignObj.$getIterator()
     while (iterator.$getNext(.pName, .data)) {
         if (pName = "$add") { continue }
-        if (propDefinition.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName) > 0) {
-            if ('$IsObject(assignObj.$get(pName))) {
-                set $PROPERTY(definitionObj, pName) = assignObj.$get(pName)
+        set propPos = propDefinition.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName)
+        if (propPos > 0) {
+            set val = assignObj.$get(pName)
+            if ($IsObject(val)) { continue }
+            if (propDefinition.GetAt(propPos).Type = "%Stream.TmpCharacter") {
+	            #dim stream As %Stream.TmpCharacter = $PROPERTY(definitionObj, pName)
+	            do stream.Clear()
+	            do stream.Write(val)
             }
         } else {
             $$$logError("Unable to set """_pName_""" property of """_memberKind_""" in "_definitionObj.Name)
