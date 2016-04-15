@@ -47,8 +47,15 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
         set p = $PROPERTY(class, propName).GetAt(i)
         for j=1:1:props.Properties.Count() {
             set pname = props.Properties.GetAt(j).Name
-            if ('$IsObject($PROPERTY(p, pname))) {
-                do op.$set(pname, $PROPERTY(p, pname))
+            set val = $PROPERTY(p, pname)
+            if ('$IsObject(val)) {
+                do op.$set(pname, val)
+            } elseif ($ClassName(val) = "%Stream.TmpCharacter") {
+                set v = val.Read()
+                while ('val.AtEnd) {
+                    set v = v _ val.Read()
+                }
+                do op.$set(pname, v)
             }
         }
         do obj.$set(p.Name, op)
