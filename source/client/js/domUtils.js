@@ -5,7 +5,7 @@
  * @param {string} [textContent] - Optional content
  * @returns {Element}
  */
-export function block (element = "div", className,  textContent) {
+export function block (element = "div", className, textContent) {
     let el = document.createElement(element || "div");
     if (className) el.className = className;
     if (textContent) el.textContent = textContent;

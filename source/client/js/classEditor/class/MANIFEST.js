@@ -578,7 +578,9 @@ export default {
             }
         },
         FormalSpec: {
-            ignore: true // goes within code editor
+            ignore: true, // goes within code editor
+            default: "",
+            type: "string"
         },
         GenerateAfter: {
             type: "string",
@@ -594,7 +596,9 @@ export default {
         },
         Implementation: {
             ignore: true,
-            isCode: true
+            isCode: true,
+            returnTypeProperty: "ReturnType",
+            formalSpecProperty: "FormalSpec"
         },
         Language: {
             default: "",
@@ -643,7 +647,8 @@ export default {
         },
         ReturnType: {
             default: "",
-            type: "string"
+            type: "string",
+            ignore: true
         },
         ReturnTypeParams: {
             ignore: true,

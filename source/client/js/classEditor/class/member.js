@@ -46,13 +46,16 @@ function getMemberDetailedBlock (classData, memberType, classMemberName) {
         if (propManifest.ignore || propManifest.default === data[propName]) continue;
         if (typeof data[propName] === "object") continue;
         container.appendChild(getKeywordView({
-            propManifest, propName, propData: data[propName], savePath
+            propManifest,
+            propName,
+            propData: data[propName],
+            savePath: savePath.concat("propName")
         }));
     }
 
     if (codePropName)
         container.appendChild(getCodeCaptionView({
-            manifest: (MANIFEST[isClass ? "Class" : memberType] || {})[codePropName] || {},
+            manifest: MANIFEST[isClass ? "Class" : memberType] || {},
             name: codePropName,
             data: data,
             savePath
@@ -150,7 +153,7 @@ function enableMember ({
                     propManifest: propManifest,
                     propName: propName,
                     propData: propManifest.default || "",
-                    savePath: savePath
+                    savePath: savePath.concat(propName)
                 }));
 
                 updateGrid();
@@ -173,6 +176,7 @@ function enableMember ({
                 }
             });
         }
+
         if (opened = !opened) {
             insertAfter(container, headerElement);
             prepend(controls, headerElement);
@@ -181,6 +185,8 @@ function enableMember ({
             controls.parentNode.removeChild(controls);
             clearSelection();
         }
+        headerElement.classList.toggle("opened");
+
         updateGrid();
     });
 

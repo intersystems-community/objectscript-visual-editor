@@ -126,12 +126,14 @@ $headerIconSize: $medium;
         .header {
 
             > .label {
+
                 font-size: $normal;
                 font-weight: bold;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 line-height: $headerIconSize;
+
             }
 
         }
@@ -214,6 +216,15 @@ $headerIconSize: $medium;
 
             > .icons {
                 display: inline-block;
+            }
+
+            &.opened {
+
+                > .label > .name {
+                    font-weight: bold;
+                    text-decoration: underline;
+                }
+
             }
 
             > .controls {

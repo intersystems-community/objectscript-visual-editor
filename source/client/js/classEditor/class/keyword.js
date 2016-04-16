@@ -7,7 +7,7 @@ function getKeywordEditElement (propName, value, propManifest, savePath) {
     if (type === "boolean") {
         input = toggle(!!value);
         input.checkbox.addEventListener(`change`, () => addChange(
-            savePath.concat(propName),
+            savePath,
             input.checkbox.checked ? 1 : 0
         ));
     } else if (type === "string") { // string type
@@ -15,7 +15,7 @@ function getKeywordEditElement (propName, value, propManifest, savePath) {
         input.type = "text";
         input.value = value;
         input.addEventListener(`input`, () => addChange(
-            savePath.concat(propName),
+            savePath,
             input.value
         ));
     } else if (type === "select") selBlock: {
@@ -39,7 +39,7 @@ function getKeywordEditElement (propName, value, propManifest, savePath) {
         });
 
         input.addEventListener(`change`, () => addChange(
-            savePath.concat(propName),
+            savePath,
             input.value
         ));
 

@@ -2,6 +2,7 @@ import { block, toggle } from "../../domUtils";
 import { addChange } from "../changes";
 import { Toast } from "../../toast";
 import { updateGrid } from "../index";
+import { getKeywordView } from "./keyword";
 
 /**
  * Returns if the method code has routines.
@@ -20,12 +21,13 @@ function switchToRoutineCode (code) {
     return code.replace(/^/, "\t").replace(/\n/g, "\n\t");
 }
 
-export function getCodeCaptionView ({ name, data, savePath }) {
+export function getCodeCaptionView ({ manifest, name, data, savePath }) {
     
     let div = block(`div`, `property-block`),
         header = block(`div`),
         editBlock = block(`div`, `editor`),
-        code = (data[name] || "").replace(/\r?\n$/, ""),
+        code = (data[name] || "").replace(/\r?\n$/, ``),
+        returnTypeProp = (manifest[name] || {})["returnTypeProperty"] || ``,
         ROUTINE_SUPPORT = hasRoutineCode(code),
         useRoutinesToggle = toggle(ROUTINE_SUPPORT),
         useRoutinesBlock = block(`div`, `property-block`),
@@ -42,6 +44,13 @@ export function getCodeCaptionView ({ name, data, savePath }) {
     vb.appendChild(useRoutinesToggle);
     useRoutinesBlock.appendChild(nb);
     useRoutinesBlock.appendChild(vb);
+    if (returnTypeProp)
+        header.appendChild(getKeywordView({
+            propManifest: manifest[returnTypeProp],
+            propName: returnTypeProp,
+            propData: data["ReturnType"],
+            savePath: savePath.concat(returnTypeProp)
+        }));
     header.appendChild(useRoutinesBlock);
 
     useRoutinesToggle.checkbox.addEventListener("change", () => {
@@ -78,7 +87,9 @@ export function getCodeCaptionView ({ name, data, savePath }) {
         saveChanges();
     });
 
-    div.appendChild(block(`hr`));
+    let hr = block(`hr`);
+    hr.setAttribute(`title`, `Code Editor`);
+    div.appendChild(hr);
     div.appendChild(header);
     // setTimeout(() => new AutoGrid(header), 1);
     div.appendChild(editBlock);
