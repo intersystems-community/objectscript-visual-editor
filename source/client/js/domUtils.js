@@ -13,6 +13,49 @@ export function block (element = "div", className, textContent) {
 }
 
 /**
+ * @param {string} type
+ * @param {string} minWidth - CSS minWidth
+ * @param {string} maxWidth - CSS maxWidth
+ * @param {string} placeholder - placeholder of input.
+ * @param {string} value
+ * @param {string} className
+ * @returns {Element}
+ */
+export function autoSizeInput ({
+    type = "text", minWidth = "30px", maxWidth = "100%", placeholder, value, className
+}) {
+
+    let input = block(`input`, `auto${ className ? " " + className : "" }`);
+
+    function updateInput () {
+        let style = window.getComputedStyle(input),
+            ghost = document.createElement(`span`);
+        ghost.style.cssText = `box-sizing:content-box;display:inline-block;height:0;`
+            + `overflow:hidden;position:absolute;top:0;visibility:hidden;white-space:nowrap;`
+            + `font-family:${ style.fontFamily };font-size:${ style.fontSize };`
+            + `padding:${ style.padding }`;
+        ghost.textContent = input.value;
+        document.body.appendChild(ghost);
+        input.style.width = ghost.offsetWidth + 4 + "px";
+        document.body.removeChild(ghost);
+    }
+
+    input.setAttribute(`type`, type);
+    input.style.minWidth = minWidth;
+    input.style.maxWidth = maxWidth;
+    input.setAttribute(`placeholder`, placeholder);
+    input.style.width = minWidth;
+    if (value) {
+        input.value = value;
+        setTimeout(() => updateInput(), 1);
+    }
+    input.addEventListener(`input`, () => updateInput());
+
+    return input;
+
+}
+
+/**
  * Safely detach element from the DOM.
  * @param {HTMLElement} element
  */

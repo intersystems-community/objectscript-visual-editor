@@ -3,6 +3,7 @@ import { addChange } from "../changes";
 import { Toast } from "../../toast";
 import { updateGrid } from "../index";
 import { getKeywordView } from "./keyword";
+import { getFormalSpecEditor } from "./formalSpecEditor";
 
 /**
  * Returns if the method code has routines.
@@ -44,6 +45,10 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
     vb.appendChild(useRoutinesToggle);
     useRoutinesBlock.appendChild(nb);
     useRoutinesBlock.appendChild(vb);
+    header.appendChild(getFormalSpecEditor({
+        formalSpec: data[`FormalSpec`],
+        savePath: savePath.concat(`FormalSpec`)
+    }));
     if (returnTypeProp)
         header.appendChild(getKeywordView({
             propManifest: manifest[returnTypeProp],
