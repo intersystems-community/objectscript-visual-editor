@@ -29,6 +29,8 @@ ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %Obj
 	            #dim stream As %Stream.TmpCharacter = $PROPERTY(definitionObj, pName)
 	            do stream.Clear()
 	            do stream.Write(val)
+            } else {
+                set $PROPERTY(definitionObj, pName) = val
             }
         } else {
             $$$logError("Unable to set """_pName_""" property of """_memberKind_""" in "_definitionObj.Name)

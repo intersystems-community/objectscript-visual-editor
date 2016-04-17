@@ -49,7 +49,7 @@ function getMemberDetailedBlock (classData, memberType, classMemberName) {
             propManifest,
             propName,
             propData: data[propName],
-            savePath: savePath.concat("propName")
+            savePath: savePath.concat(propName)
         }));
     }
 
