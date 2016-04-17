@@ -141,7 +141,9 @@ ClassMethod List() As %Status
             continue
         }
     }
-    write data.$toJSON()
+
+    write "" // fixes the strange $toJSON() issue: it does not output content properly without this string
+    do data.$toJSON()
 
     return $$$OK
 }
