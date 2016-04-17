@@ -149,7 +149,12 @@ ClassMethod OnPreDispatch() As %Status
 
     return:'$isobject(%request.Content) $$$OK
 
-    set %request.Content = ##class(%AbstractObject).$fromJSON(%request.Content)
+    set content = ""
+    while ('%request.Content.AtEnd) {
+		set content = content _ $ZCVT(%request.Content.Read($$$MaxStringLength), "I", "UTF8")
+    }
+
+    set %request.Content = ##class(%AbstractObject).$fromJSON(content)
 
     return $$$OK
 }
