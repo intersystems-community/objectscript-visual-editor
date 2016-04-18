@@ -19,6 +19,8 @@ export function getClassElement (data) {
         }`),
         header = block(`div`, `header`);
 
+    data[`__visualClassElement`] = card;
+    
     if (type === "class") // float priority
         head.appendChild(controls);
     head.appendChild(headIcon);

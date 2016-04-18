@@ -6,6 +6,7 @@ import { getKeywordView } from "./keyword";
 import MANIFEST from "./MANIFEST";
 import { MEMBER_SECTIONS, getMemberSection } from "./memberSection";
 import { getCodeCaptionView } from "./code";
+import { updateGridElement } from "./../index";
 
 /**
  * Creates and returns interactive class block property editor.
@@ -84,6 +85,9 @@ function enableMember ({
         savePath = isClass
             ? [classData["Name"]]
             : [classData["Name"], classBlockName, classBlockPropName];
+
+    if (typeof classData[`__visualCodeBlocksOpened`] === "undefined")
+        classData[`__visualCodeBlocksOpened`] = 0;
 
     headerElement.addEventListener(`click`, () => {
         if (!container) {
@@ -186,6 +190,13 @@ function enableMember ({
             clearSelection();
         }
         headerElement.classList.toggle("opened");
+
+        if (classBlockName === "Methods") {
+            classData[`__visualCodeBlocksOpened`] += opened ? 1 : -1;
+            updateGridElement(classData[`__visualClassElement`], {
+                width: classData[`__visualCodeBlocksOpened`] > 0 ? 2 : 1
+            });
+        }
 
         updateGrid();
     });
