@@ -25,7 +25,7 @@ ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %Obj
         if (propPos > 0) {
             set val = assignObj.$get(pName)
             if ($IsObject(val)) { continue }
-            if (propDefinition.GetAt(propPos).Type = "%Stream.TmpCharacter") {
+            if ($$$classIsStream(propDefinition.GetAt(propPos).Type)) {
 	            #dim stream As %Stream.TmpCharacter = $PROPERTY(definitionObj, pName)
 	            do stream.Clear()
 	            do stream.Write(val)

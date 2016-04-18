@@ -50,7 +50,7 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
             set val = $PROPERTY(p, pname)
             if ('$IsObject(val)) {
                 do op.$set(pname, val)
-            } elseif ($ClassName(val) = "%Stream.TmpCharacter") {
+            } elseif ($$$classIsStream($ClassName(val))) {
                 set v = val.Read()
                 while ('val.AtEnd) {
                     set v = v _ val.Read()
