@@ -5,6 +5,7 @@ html, body {
     margin: 0;
     padding: 0;
     background: $colorBack;
+    color: $colorTextPrimary;
     font-family: Verdana, Geneva, sans-serif;
     font-size: 18px;
 }
@@ -17,6 +18,10 @@ html, body {
 
 .errorMessage {
     color: $colorP2;
+}
+
+span.secondary {
+    color: $colorTextSecondary;
 }
 
 .central {
@@ -82,7 +87,7 @@ hr {
 
     position: relative;
     border: none;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid $colorTextSecondary;
     margin: .5em;
 
     &:after {
@@ -93,7 +98,7 @@ hr {
         font-family: inherit;
         width: 100%;
         text-align: center;
-        color: #ccc;
+        color: $colorTextSecondary;
         text-shadow: 0 -1px 2px #fff, 0 1px 2px #fff;
     }
 

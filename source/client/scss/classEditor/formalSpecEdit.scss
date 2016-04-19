@@ -1,4 +1,15 @@
+@import "../mixins";
+@import "../const";
+
 .formalSpecEdit {
+
+    &:before {
+        content: "("
+    }
+
+    &:after {
+        content: ")";
+    }
 
     .argument {
 
@@ -6,10 +17,32 @@
 
         }
 
-        .typeSpan {
-            display: inline-block;
+        .asSpan, .defSpan {
+            white-space: pre;
+            color: $colorTextSecondary;
+        }
+
+        .parametersSpan {
+
+            &:before {
+                content: "(";
+            }
+
+            &:after {
+                content: ")";
+            }
+
+            .parameter + .parameter:before {
+                content: ", ";
+            }
+
         }
 
     }
+
+    .argument + .argument:before {
+        content: ", ";
+    }
+
 
 }

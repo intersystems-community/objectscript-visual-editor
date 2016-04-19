@@ -147,7 +147,7 @@ $headerIconSize: $medium;
         > .header {
 
             font-size: 18px;
-            color: gray;
+            color: $colorTextSecondary;
             font-weight: bold;
             text-decoration: underline;
             overflow: hidden;
@@ -336,6 +336,14 @@ $headerIconSize: $medium;
                         border: none;
                         outline: none;
                         width: 100%;
+                    }
+
+                }
+
+                .methodSignature {
+
+                    input {
+                        @include transition(none);
                     }
 
                 }

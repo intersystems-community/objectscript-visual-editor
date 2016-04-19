@@ -1,8 +1,7 @@
-import { block, toggle } from "../../domUtils";
+import { block, toggle, autoSizeInput } from "../../domUtils";
 import { addChange } from "../changes";
 import { Toast } from "../../toast";
 import { updateGrid } from "../index";
-import { getKeywordView } from "./keyword";
 import { getFormalSpecEditor } from "./formalSpecEditor";
 
 /**
@@ -34,6 +33,11 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
         useRoutinesBlock = block(`div`, `property-block`),
         nb = block(`div`, `name-block`),
         vb = block(`div`, `value-block`),
+        signatureElem = block(`div`, `methodSignature`),
+        typeInput = autoSizeInput({
+            placeholder: `Type`,
+            value: returnTypeProp ? data[returnTypeProp] : data[`returnType`] || ""
+        }),
         editor;
     
     function saveChanges () {
@@ -45,17 +49,19 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
     vb.appendChild(useRoutinesToggle);
     useRoutinesBlock.appendChild(nb);
     useRoutinesBlock.appendChild(vb);
-    header.appendChild(getFormalSpecEditor({
+    signatureElem.appendChild(block(`span`, `secondary`, `Takes `));
+    signatureElem.appendChild(getFormalSpecEditor({
         formalSpec: data[`FormalSpec`],
         savePath: savePath.concat(`FormalSpec`)
     }));
-    if (returnTypeProp)
-        header.appendChild(getKeywordView({
-            propManifest: manifest[returnTypeProp],
-            propName: returnTypeProp,
-            propData: data["ReturnType"],
-            savePath: savePath.concat(returnTypeProp)
-        }));
+    if (returnTypeProp) {
+        signatureElem.appendChild(block(`span`, `secondary`, ` Returns `));
+        signatureElem.appendChild(typeInput);
+        typeInput.addEventListener(`input`, () => {
+            addChange(savePath.concat(returnTypeProp), typeInput.value);
+        });
+    }
+    header.appendChild(signatureElem);
     header.appendChild(useRoutinesBlock);
 
     useRoutinesToggle.checkbox.addEventListener("change", () => {
@@ -93,7 +99,7 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
     });
 
     let hr = block(`hr`);
-    hr.setAttribute(`title`, `Code Editor`);
+    hr.setAttribute(`title`, `${ data["Name"] ? data["Name"] + " " : "" }Code Editor`);
     div.appendChild(hr);
     div.appendChild(header);
     // setTimeout(() => new AutoGrid(header), 1);
