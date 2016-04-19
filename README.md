@@ -6,7 +6,7 @@ literally without touching any code.
 Preview
 -------
 
-![Screenshot 0](https://cloud.githubusercontent.com/assets/4989256/14316622/be325704-fc0c-11e5-93f0-a7cc0b9116f6.png)
+![Screenshot 0](https://cloud.githubusercontent.com/assets/4989256/14657296/994c173e-0695-11e6-86b4-ab782eb4c68c.png)
 
 ![Screenshot 1](https://cloud.githubusercontent.com/assets/4989256/14295116/efcc9774-fb7c-11e5-86bd-219864fe5634.png)
 
