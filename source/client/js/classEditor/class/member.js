@@ -194,7 +194,7 @@ function enableMember ({
 
         if (classBlockName === "Methods" || classBlockName === "XDatas") {
             serviceData[`visualCodeBlocksOpened`] += opened ? 1 : -1;
-            updateGridElement(serviceData[`visualClassElement`], {
+            updateGridElement(serviceData[`cardElement`], {
                 width: serviceData[`cardWidth`] = serviceData[`visualCodeBlocksOpened`] > 0 ? 2 : 1
             });
         }

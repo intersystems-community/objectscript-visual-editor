@@ -71,6 +71,9 @@ ClassMethod GetClassData(className As %String) As %Object
     set oClass = {}
     if (class = "") { return oClass }
 
+    do oClass.$set("_type", "class")
+    do oClass.$set("_fullName", className)
+    do oClass.$set("_name", $PIECE(className, ".", *))
     do oClass.$set("_isDataType", class.ClientDataTypeIsDefined())
     do oClass.$set("_isOdbcType", class.OdbcTypeIsDefined())
     do oClass.$set("_isSoapBindingStyle", class.SoapBindingStyleIsDefined())
@@ -133,9 +136,6 @@ ClassMethod List() As %Status
         } elseif ($LENGTH(clsName, ".") = $LENGTH(baseLevel, ".")) {
             set className = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             set oClass = ..GetClassData(clsName)
-            do oClass.$set("_type", "class")
-            do oClass.$set("_fullName", clsName)
-            do oClass.$set("_name", className)
             do data.$set(className, oClass)
         } else {
             continue

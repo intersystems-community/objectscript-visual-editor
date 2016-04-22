@@ -20,7 +20,7 @@ export function getClassElement (data, serviceData = {}) {
         }`),
         header = block(`div`, `header`);
 
-    serviceData[`visualClassElement`] = card;
+    serviceData[`cardElement`] = card;
     serviceData[`cardWidth`] = 1;
     
     if (type === "class") // float priority

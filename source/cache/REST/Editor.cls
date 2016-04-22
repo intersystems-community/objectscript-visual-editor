@@ -91,7 +91,7 @@ ClassMethod Save() As %Status
     set classes = %request.Content
     set response = {}
     set response.error = ""
-    set response.modified = 0
+    set response.modified = {}
 
     #define logError(%e) if (%e '= "") { set response.error = response.error _ %e _ $Char(10) }
 
@@ -132,7 +132,10 @@ ClassMethod Save() As %Status
             continue
         }
 
-        set response.modified = response.modified + 1
+        do response.modified.$set(className, {
+            "success": 1,
+            "class": ##class(VisualEditor.REST.Informer).GetClassData(className)
+        })
 
     }
 

@@ -9,7 +9,8 @@ import { init as initTerminal } from "./modules/terminal";
 
 var PATH = "",
     INITIALIZED = false,
-    NAMESPACE = "";
+    NAMESPACE = "",
+    CLASSES_RENDERED = {}; // { className: serviceData }
 
 let initCallbacks = [];
 
@@ -65,12 +66,32 @@ let footer = onInit(() => {
         saveButton = document.querySelector("#saveIndicator");
         saveButton.addEventListener("click", () => {
             saveChanges(NAMESPACE, (res) => {
+
                 if (!res["error"]) {
                     changeIsMade(false);
                     new Toast(Toast.TYPE_DONE, `Saved!`);
                 } else {
                     new Toast(Toast.TYPE_ERROR, res["error"], Toast.TIME_LONG);
                 }
+
+                // // REPLACES CLASS ON SAVE (temporary commented as side effects appear)
+                // for (let className in res[`modified`] || {}) { // update modified classes
+                //     let renderedServiceData = CLASSES_RENDERED[className];
+                //     // [`cardElement`] is assigned during new class spawn.
+                //     if (
+                //         !(renderedServiceData || {})[`cardElement`]
+                //         || !res[`modified`][className][`success`]
+                //         || !res[`modified`][className][`class`]
+                //     )
+                //         continue;
+                //     let b, a;
+                //     grid.replaceChild(
+                //         b = renderedServiceData[`cardElement`],
+                //         a = applyClass(res[`modified`][className][`class`], renderedServiceData)
+                //     );
+                //     console.log("replacing", b, a);
+                // }
+
             });
         });
     }),
@@ -124,8 +145,8 @@ let footer = onInit(() => {
                 } else {
                     setup["_fullName"] = fullName;
                 }
-                
-                grid.applyChild(getClassElement(setup));
+
+                grid.applyChild(applyClass(setup));
                 
                 if (type !== "package")
                     addChange([fullName, "$add"], true);
@@ -257,6 +278,16 @@ function setTitle (text) {
 }
 
 /**
+ * Attaches new class to the body and returns it's element.
+ * @param classMetadata
+ * @param serviceData
+ */
+function applyClass (classMetadata, serviceData = {}) {
+    CLASSES_RENDERED[classMetadata[`_fullName`] || classMetadata[`Name`]] = serviceData;
+    return getClassElement(classMetadata, serviceData);
+}
+
+/**
  * Displays the classes and packages located on the current level.
  * @param {string} level - Class part.
  */
@@ -273,11 +304,12 @@ export function loadLevel (level) {
 
     getList(NAMESPACE, PATH, (data) => {
         grid.clear();
+        CLASSES_RENDERED = {};
         if (PATH !== "")
             backButton.style.display = "";
         data = orderData(data);
         for (let obj in data) {
-            grid.applyChild(getClassElement(data[obj]));
+            grid.applyChild(applyClass(data[obj]));
         }
     });
 

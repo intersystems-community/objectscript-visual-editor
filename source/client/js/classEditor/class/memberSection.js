@@ -12,7 +12,7 @@ export const MEMBER_SECTIONS = [
     "XDatas"
 ];
 
-function getMemberControls (body, classData, classBlockName) {
+function getMemberControls (body, classData, classBlockName, serviceData) {
 
     let controls = block(`div`, `controls`),
         add = block(`div`, `interactive normal icon add`);
@@ -34,7 +34,7 @@ function getMemberControls (body, classData, classBlockName) {
 
             classData[classBlockName][propName] = { Name: propName };
             body.appendChild(getMemberBlock({
-                classData, classBlockName, classBlockPropName: propName
+                classData, classBlockName, classBlockPropName: propName, serviceData
             }));
 
             updateGrid();
@@ -62,7 +62,7 @@ export function getMemberSection (classBlockName, classData, serviceData) {
     let header = block(`div`, `header`),
         span = block(`span`, `title`);
     body = block(`div`, `body`);
-    header.appendChild(getMemberControls(body, classData, classBlockName));
+    header.appendChild(getMemberControls(body, classData, classBlockName, serviceData));
     header.appendChild(span);
     span.textContent = classBlockName;
     section.appendChild(header);
