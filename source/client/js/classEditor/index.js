@@ -75,8 +75,27 @@ let footer = onInit(() => {
         });
     }),
     addClassPackageButton = onInit(() => {
+
         addClassPackageButton = document.querySelector("#addClass");
         freeSelect(addClassPackageButton);
+
+        addClassPackageButton.addEventListener(`mousedown`, () => {
+
+            while (addClassPackageButton.firstChild)
+                addClassPackageButton.removeChild(addClassPackageButton.firstChild);
+
+            let c = block(`option`, ``, `Package`);
+            c.setAttribute(`value`, `package`);
+            addClassPackageButton.appendChild(c);
+
+            if (PATH != ``) {
+                c = block(`option`, ``, `Class`);
+                c.setAttribute(`value`, `class`);
+                addClassPackageButton.appendChild(c);
+            }
+
+        });
+
         addClassPackageButton.addEventListener(`change`, () => {
             
             let type = addClassPackageButton["value"]; // "class" || "package"
@@ -113,6 +132,7 @@ let footer = onInit(() => {
                 
             });
         });
+
     }),
     terminalButton = onInit(() => {
         
