@@ -50,9 +50,10 @@ function getMemberControls (body, classData, classBlockName) {
  * Applies block markup according to class metadata.
  * @param {"Parameters"|"Properties"|"Methods"|"Queries"|"XDatas"|"Indices"} classBlockName
  * @param {*} classData - Class metadata.
+ * @param {*} [serviceData] - Object with additional properties passed through all the members.
  * @returns {Element}
  */
-export function getMemberSection (classBlockName, classData) {
+export function getMemberSection (classBlockName, classData, serviceData) {
 
     let section = block(`div`, `section`), body;
 
@@ -67,7 +68,9 @@ export function getMemberSection (classBlockName, classData) {
     section.appendChild(header);
     section.appendChild(body);
     for (let classBlockPropName in classData[classBlockName]) {
-        body.appendChild(getMemberBlock({classData, classBlockName, classBlockPropName}));
+        body.appendChild(getMemberBlock({
+            classData, classBlockName, classBlockPropName, serviceData
+        }));
     }
     
     return section;

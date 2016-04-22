@@ -74,9 +74,10 @@ function getMemberDetailedBlock (classData, memberType, classMemberName) {
  * @param [classBlockName]
  * @param [classBlockPropName]
  * @param [classBlockElement]
+ * @param {*} [serviceData] - Object with additional properties passed through all the members.
  */
 function enableMember ({
-    headerElement, classData, classBlockName, classBlockPropName, classBlockElement
+    headerElement, classData, classBlockName, classBlockPropName, classBlockElement, serviceData
 }) {
     
     let isClass = !classBlockName,
@@ -86,8 +87,8 @@ function enableMember ({
             ? [classData["Name"]]
             : [classData["Name"], classBlockName, classBlockPropName];
 
-    if (typeof classData[`__visualCodeBlocksOpened`] === "undefined")
-        classData[`__visualCodeBlocksOpened`] = 0;
+    if (typeof serviceData[`visualCodeBlocksOpened`] === "undefined")
+        serviceData[`visualCodeBlocksOpened`] = 0;
 
     headerElement.addEventListener(`click`, () => {
         if (!container) {
@@ -192,9 +193,9 @@ function enableMember ({
         headerElement.classList.toggle("opened");
 
         if (classBlockName === "Methods" || classBlockName === "XDatas") {
-            classData[`__visualCodeBlocksOpened`] += opened ? 1 : -1;
-            updateGridElement(classData[`__visualClassElement`], {
-                width: classData[`__visualCodeBlocksOpened`] > 0 ? 2 : 1
+            serviceData[`visualCodeBlocksOpened`] += opened ? 1 : -1;
+            updateGridElement(serviceData[`visualClassElement`], {
+                width: serviceData[`cardWidth`] = serviceData[`visualCodeBlocksOpened`] > 0 ? 2 : 1
             });
         }
 
@@ -221,10 +222,11 @@ function getMemberIconsBlock (isClass, memberData) {
  * @param [classBlockName]
  * @param [classBlockPropName]
  * @param {HTMLElement} classBlockElement
+ * @param {*} [serviceData] - Object with additional properties passed through all the members.
  * @returns {HTMLElement}
  */
 export function getMemberBlock ({
-    classData, classBlockName, classBlockPropName, classBlockElement
+    classData, classBlockName, classBlockPropName, classBlockElement, serviceData
 }) {
 
     let isClass = !classBlockName,
@@ -248,7 +250,8 @@ export function getMemberBlock ({
     }
     item.appendChild(text);
     enableMember({
-        headerElement: item, classData, classBlockName, classBlockPropName, classBlockElement
+        headerElement: item, classData, classBlockName, classBlockPropName, classBlockElement,
+        serviceData
     });
     div.appendChild(item);
 

@@ -6,9 +6,10 @@ import { getMemberBlock } from "./member";
 /**
  * This function returns card element that may be applied to the grid.
  * @param {*} data
+ * @param {*} [serviceData] - Object with additional properties passed through all the members.
  * @returns {HTMLElement}
  */
-export function getClassElement (data) {
+export function getClassElement (data, serviceData = {}) {
 
     let type = data["_type"],
         card = block(`div`, `card ${ type }`),
@@ -19,7 +20,8 @@ export function getClassElement (data) {
         }`),
         header = block(`div`, `header`);
 
-    data[`__visualClassElement`] = card;
+    serviceData[`visualClassElement`] = card;
+    serviceData[`cardWidth`] = 1;
     
     if (type === "class") // float priority
         head.appendChild(controls);
@@ -35,10 +37,10 @@ export function getClassElement (data) {
         return card;
     }
 
-    head.appendChild(getMemberBlock({ classData: data, classBlockElement: card }));
+    head.appendChild(getMemberBlock({ classData: data, classBlockElement: card, serviceData }));
     MEMBER_SECTIONS.forEach(mName => {
         if (data[mName] && Object.keys(data[mName]).length)
-            card.appendChild(getMemberSection(mName, data));
+            card.appendChild(getMemberSection(mName, data, serviceData));
     });
 
     return card;
