@@ -598,7 +598,8 @@ export default {
             ignore: true,
             isCode: true,
             returnTypeProperty: "ReturnType",
-            formalSpecProperty: "FormalSpec"
+            formalSpecProperty: "FormalSpec",
+            routineSwitchSupport: true
         },
         Language: {
             default: "",
@@ -800,7 +801,8 @@ export default {
     XDatas: {
         Data: {
             ignore: true, // xData data edit has special controls
-            default: ""
+            default: "",
+            isCode: true
         },
         Deprecated: {
             default: 0,

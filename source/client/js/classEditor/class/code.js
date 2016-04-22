@@ -21,13 +21,15 @@ function switchToRoutineCode (code) {
     return code.replace(/^/, "\t").replace(/\n/g, "\n\t");
 }
 
-export function getCodeCaptionView ({ manifest, name, data, savePath }) {
+export function getCodeCaptionView ({ memberManifest, codePropertyName, data, savePath }) {
     
     let div = block(`div`, `property-block`),
         header = block(`div`),
         editBlock = block(`div`, `editor`),
-        code = (data[name] || "").replace(/\r?\n$/, ``),
-        returnTypeProp = (manifest[name] || {})["returnTypeProperty"] || ``,
+        code = (data[codePropertyName] || "").replace(/\r?\n$/, ``),
+        keywordManifest = (memberManifest[codePropertyName] || {}),
+        returnTypeProp = keywordManifest["returnTypeProperty"] || ``,
+        formalSpecProperty = keywordManifest["formalSpecProperty"] || ``,
         ROUTINE_SUPPORT = hasRoutineCode(code),
         useRoutinesToggle = toggle(ROUTINE_SUPPORT),
         useRoutinesBlock = block(`div`, `property-block`),
@@ -42,27 +44,36 @@ export function getCodeCaptionView ({ manifest, name, data, savePath }) {
     
     function saveChanges () {
         let value = editor.getValue();
-        addChange(savePath.concat(name), ROUTINE_SUPPORT ? value : switchToRoutineCode(value));
+        addChange(
+            savePath.concat(codePropertyName),
+            ROUTINE_SUPPORT ? value : switchToRoutineCode(value)
+        );
     }
 
     nb.textContent = `Use Routines`;
     vb.appendChild(useRoutinesToggle);
     useRoutinesBlock.appendChild(nb);
     useRoutinesBlock.appendChild(vb);
-    signatureElem.appendChild(block(`span`, `secondary`, `Takes `));
-    signatureElem.appendChild(getFormalSpecEditor({
-        formalSpec: data[`FormalSpec`],
-        savePath: savePath.concat(`FormalSpec`)
-    }));
+    if (formalSpecProperty) {
+        signatureElem.appendChild(block(`span`, `secondary`, `Takes `));
+        signatureElem.appendChild(getFormalSpecEditor({
+            formalSpec: data[`FormalSpec`],
+            savePath: savePath.concat(`FormalSpec`)
+        }));
+    }
     if (returnTypeProp) {
-        signatureElem.appendChild(block(`span`, `secondary`, ` Returns `));
+        signatureElem.appendChild(
+            block(`span`, `secondary`, `${ formalSpecProperty ? " " : "" }Returns `)
+        );
         signatureElem.appendChild(typeInput);
         typeInput.addEventListener(`input`, () => {
             addChange(savePath.concat(returnTypeProp), typeInput.value);
         });
     }
     header.appendChild(signatureElem);
-    header.appendChild(useRoutinesBlock);
+
+    if (keywordManifest["routineSwitchSupport"])
+        header.appendChild(useRoutinesBlock);
 
     useRoutinesToggle.checkbox.addEventListener("change", () => {
         let value = editor.getValue(),

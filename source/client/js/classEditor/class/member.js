@@ -56,8 +56,8 @@ function getMemberDetailedBlock (classData, memberType, classMemberName) {
 
     if (codePropName)
         container.appendChild(getCodeCaptionView({
-            manifest: MANIFEST[isClass ? "Class" : memberType] || {},
-            name: codePropName,
+            memberManifest: MANIFEST[isClass ? "Class" : memberType] || {},
+            codePropertyName: codePropName,
             data: data,
             savePath
         }));
@@ -191,7 +191,7 @@ function enableMember ({
         }
         headerElement.classList.toggle("opened");
 
-        if (classBlockName === "Methods") {
+        if (classBlockName === "Methods" || classBlockName === "XDatas") {
             classData[`__visualCodeBlocksOpened`] += opened ? 1 : -1;
             updateGridElement(classData[`__visualClassElement`], {
                 width: classData[`__visualCodeBlocksOpened`] > 0 ? 2 : 1
