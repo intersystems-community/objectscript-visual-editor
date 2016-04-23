@@ -149,7 +149,9 @@ function enableMember ({
                         (MANIFEST[isClass ? "Class" : classBlockName] || {})[propName] || {};
 
                 if (isClass && MEMBER_SECTIONS.indexOf(propName) !== -1) {
-                    classBlockElement.appendChild(getMemberSection(propName, classData));
+                    classBlockElement.appendChild(
+                        getMemberSection(propName, classData, serviceData)
+                    );
                     updateGrid();
                     return;
                 }
