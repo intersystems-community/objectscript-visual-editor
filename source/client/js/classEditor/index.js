@@ -64,35 +64,13 @@ let footer = onInit(() => {
     }),
     saveButton = onInit(() => {
         saveButton = document.querySelector("#saveIndicator");
-        saveButton.addEventListener("click", () => {
-            saveChanges(NAMESPACE, (res) => {
-
-                if (!res["error"]) {
-                    changeIsMade(false);
-                    new Toast(Toast.TYPE_DONE, `Saved!`);
-                } else {
-                    new Toast(Toast.TYPE_ERROR, res["error"], Toast.TIME_LONG);
-                }
-
-                // // REPLACES CLASS ON SAVE (temporary commented as side effects appear)
-                // for (let className in res[`modified`] || {}) { // update modified classes
-                //     let renderedServiceData = CLASSES_RENDERED[className];
-                //     // [`cardElement`] is assigned during new class spawn.
-                //     if (
-                //         !(renderedServiceData || {})[`cardElement`]
-                //         || !res[`modified`][className][`success`]
-                //         || !res[`modified`][className][`class`]
-                //     )
-                //         continue;
-                //     let b, a;
-                //     grid.replaceChild(
-                //         b = renderedServiceData[`cardElement`],
-                //         a = applyClass(res[`modified`][className][`class`], renderedServiceData)
-                //     );
-                //     console.log("replacing", b, a);
-                // }
-
-            });
+        saveButton.addEventListener("click", () => saveButtonTrigger());
+        document.addEventListener(`keydown`, (e) => {
+            if (!((e.which === 115 || e.which === 83) && e.ctrlKey) && !(e.which === 19))
+                return true;
+            saveButtonTrigger();
+            e.preventDefault();
+            return false;
         });
     }),
     addClassPackageButton = onInit(() => {
@@ -177,6 +155,37 @@ let footer = onInit(() => {
         });
         
     });
+
+function saveButtonTrigger () {
+    saveChanges(NAMESPACE, (res) => {
+
+        if (!res["error"]) {
+            changeIsMade(false);
+            new Toast(Toast.TYPE_DONE, `Saved!`);
+        } else {
+            new Toast(Toast.TYPE_ERROR, res["error"], Toast.TIME_LONG);
+        }
+
+        // // REPLACES CLASS ON SAVE (temporary commented as side effects appear)
+        // for (let className in res[`modified`] || {}) { // update modified classes
+        //     let renderedServiceData = CLASSES_RENDERED[className];
+        //     // [`cardElement`] is assigned during new class spawn.
+        //     if (
+        //         !(renderedServiceData || {})[`cardElement`]
+        //         || !res[`modified`][className][`success`]
+        //         || !res[`modified`][className][`class`]
+        //     )
+        //         continue;
+        //     let b, a;
+        //     grid.replaceChild(
+        //         b = renderedServiceData[`cardElement`],
+        //         a = applyClass(res[`modified`][className][`class`], renderedServiceData)
+        //     );
+        //     console.log("replacing", b, a);
+        // }
+
+    });
+}
 
 /**
  * Get the location hash parameter value.
