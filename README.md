@@ -3,6 +3,20 @@
 A Web-based user interface for InterSystems Caché which allows to create and manage classes
 literally without touching any code.
 
+Features
+--------
+
++ Simple, intuitive and powerful visual class editing and exploring tool for both desktop and mobile devices;
++ Supports all basic class editing functionality:
+    + Adding/deleting classes, editing class keywords, comments, etc;
+    + Adding/deleting/altering class members: parameters, properties, methods, queries, xDatas, indices;
+    + **Convenient code editing** for methods and xDatas;
+    + Editing all class members keywords with inputs, drop-downs and suggestions;
+    + XData code highlight (COS highlight is coming!);
++ **Embedded web terminal** if [Caché web terminal](http://intersystems-ru.github.io/webterminal/) is installed in the system;
++ Smart class members grouping, folding and convenient interface, adaptive design;
++ More features are coming!
+
 Preview
 -------
 

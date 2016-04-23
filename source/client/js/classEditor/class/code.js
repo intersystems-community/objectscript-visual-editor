@@ -30,6 +30,7 @@ export function getCodeCaptionView ({ memberManifest, codePropertyName, data, sa
         keywordManifest = (memberManifest[codePropertyName] || {}),
         returnTypeProp = keywordManifest["returnTypeProperty"] || ``,
         formalSpecProperty = keywordManifest["formalSpecProperty"] || ``,
+        codeMode = keywordManifest[`codeMode`] || "",
         ROUTINE_SUPPORT = hasRoutineCode(code),
         useRoutinesToggle = toggle(ROUTINE_SUPPORT),
         useRoutinesBlock = block(`div`, `property-block`),
@@ -102,6 +103,14 @@ export function getCodeCaptionView ({ memberManifest, codePropertyName, data, sa
     editor.setOptions({
         maxLines: Infinity
     });
+    if (
+        codeMode
+        || data[`MimeType`] === `` // default is `text/xml`
+        || data[`MimeType`] === `text/xml`
+        || data[`MimeType`] === `text/html`
+    ) {
+        editor.getSession().setMode("ace/mode/xml");
+    }
 
     editor.on(`change`, ({ start, end }) => {
         if (start.row !== end.row)
