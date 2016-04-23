@@ -161,9 +161,9 @@ function saveButtonTrigger () {
 
         if (!res["error"]) {
             changeIsMade(false);
-            new Toast(Toast.TYPE_DONE, `Saved!`);
+            new Toast(`Saved!`, Toast.TYPE_DONE);
         } else {
-            new Toast(Toast.TYPE_ERROR, res["error"], Toast.TIME_LONG);
+            new Toast(res["error"], Toast.TYPE_ERROR, Toast.TIME_LONG);
         }
 
         // // REPLACES CLASS ON SAVE (temporary commented as side effects appear)

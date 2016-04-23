@@ -172,7 +172,7 @@ function enableMember ({
             del.addEventListener(`click`, () => {
                 let delta = (-lastTimeDelClicked + (lastTimeDelClicked = (new Date()).getTime()));
                 if (delta > 5000) { // > 5 sec - show message "click again to delete"
-                    new Toast(Toast.TYPE_INFO, `Click again to delete`);
+                    new Toast(`Click again to delete`, Toast.TYPE_INFO);
                 } else { // delete
                     addChange(savePath.concat(`$delete`), true);
                     detach(headerElement);

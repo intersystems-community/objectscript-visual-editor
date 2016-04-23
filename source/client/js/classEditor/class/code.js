@@ -84,7 +84,7 @@ export function getCodeCaptionView ({ memberManifest, codePropertyName, data, sa
             ROUTINE_SUPPORT = true;
         } else if (hasRoutineCode(value)) {
             useRoutinesToggle.checkbox.checked = true;
-            new Toast(Toast.TYPE_ERROR, `Code must not have routine definitions`);
+            new Toast(`Code must not have routine definitions`, Toast.TYPE_ERROR);
             return;
         } else {
             editor.setValue(switchToNoRoutineCode(value), curPos);

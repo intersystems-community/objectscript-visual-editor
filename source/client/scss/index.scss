@@ -5,7 +5,8 @@
 
 @import "domUtils";
 @import "icons";
-@import "toast/toast";
+@import "../js/Toast/default.scss";
+@import "toast";
 @import "basic";
 @import "autoGrid/cards";
 @import "classEditor/card";

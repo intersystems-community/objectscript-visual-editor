@@ -1,3 +1,6 @@
 [submodule "source/client/js/AutoGrid"]
 	path = source/client/js/AutoGrid
 	url = git@github.com:ZitRos/AutoGrid.git
+[submodule "source/client/js/Toast"]
+	path = source/client/js/Toast
+	url = https://github.com/ZitRos/Toast.git
