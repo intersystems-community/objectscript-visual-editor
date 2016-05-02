@@ -33,14 +33,14 @@ ClassMethod RegisterWebApplication(name As %String, spec) As %Status
             $$$log("WEB application """_name_""" is created.")
         } else {
             $$$log("Unable to create WEB-application """_name_"""!")
-            set st = $$$ERROR()
+            set st = $$$ERROR($$$GeneralError, "Unable to create WEB-application """_name_""".")
         }
     } else {
         $$$log("WEB-application """_name_""" already exists, checking it's DispatchClass...")
         do ##class(Security.Applications).Get(name, .props)
         if (props("DispatchClass") '= ..#DispatchClass) && (name = ..#RESTAppName) {
             $$$log("WARNING! WEB application """_name_""" exists but does not refer to " _ ..#DispatchClass _ ". Please, set correct dispatch class for this " _ "application or create the WEB-application manually.")
-            set st = $$$ERROR()
+            set st = $$$ERROR($$$GeneralError, "Dispatch class of web application """_name_""" does not refer to " _ ..#DispatchClass)
         } else {
             $$$log("WEB application """_name_""" already exists, so it should be ready to use.")
         }
@@ -94,7 +94,7 @@ ClassMethod CreateProjection() As %Status
 }
 
 /// This method is invoked when a class is 'uncompiled'.
-ClassMethod RemoveProjection() As %Status
+ClassMethod RemoveProjection(cls As %String, ByRef params, recompile As %Boolean) As %Status
 {
     do ..Init()
     #define log(%s) set installLog = installLog _ $case(installLog = "", 1: "", :$C(10)) _ %s write !, %s
@@ -102,7 +102,9 @@ ClassMethod RemoveProjection() As %Status
 
     $$$log("Uninstalling <!-- @echo package.printableName --> from " _ $Namespace)
 
-    do ..DeleteWebApplication(..#RESTAppName)
+    if ('recompile) {
+        do ..DeleteWebApplication(..#RESTAppName)
+    }
 
     $$$log("Uninstalling is complete!")
 

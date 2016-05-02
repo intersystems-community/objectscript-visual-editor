@@ -1,6 +1,6 @@
 /// [ <!-- @echo package.printableName --> v<!-- @echo package.version --> ]
 /// This is a REST WEB application entry point for <!-- @echo package.printableName --> WEB application.
-Class VisualEditor.REST.Router Extends VisualEditor.REST.Content [ CompileAfter = VisualEditor.REST.StaticContent ] {
+Class VisualEditor.REST.Router Extends VisualEditor.REST.Content [ CompileAfter = VisualEditor.REST.StaticLibJS ] {
 
 XData UrlMap
 {

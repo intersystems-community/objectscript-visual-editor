@@ -5,8 +5,8 @@
 :: Latest NodeJS & Caché 2016.1+ IS REQUIRED TO PROCEED
 @echo off
 
-:: CHANGE THIS PATH TO YOUR CACHÉ INSTALLATION PATH ON WINDOWS
-set CACHE_DIR=C:\Program Files\InterSystems\Cache20162
+:: CHANGE THIS PATH TO YOUR CACHÉ INSTALLATION PATH ON WINDOWS (folder that contains bin, CSP, mgr and other folders)
+set CACHE_DIR=C:\Program Files\InterSystems\Ensemble
 :: NAMESPACE TO IMPORT PACKAGE TO
 set NAMESPACE=SAMPLES
 
