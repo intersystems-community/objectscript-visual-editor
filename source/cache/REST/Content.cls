@@ -23,7 +23,7 @@ ClassMethod PrintXData(XDataName as %String = "") As %Status [ Private ]
         return $$$OK
     }
 
-    do ##class(VisualEditor.REST.StaticContent).PrintContent(xdata)
+    do ..PrintContent(xdata)
     return $$$OK
 }
 

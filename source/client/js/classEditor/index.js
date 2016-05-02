@@ -6,6 +6,7 @@ import { saveChanges } from "./changes";
 import { Toast } from "../toast";
 import { addChange } from "./changes";
 import { init as initTerminal } from "./modules/terminal";
+import { showLoader, hideLoader } from "./loader";
 
 var PATH = "",
     INITIALIZED = false,
@@ -311,15 +312,22 @@ export function loadLevel (level) {
 
     setURLHashParameter("level", PATH || undefined);
 
+    showLoader();
+
     getList(NAMESPACE, PATH, (data) => {
+
         grid.clear();
         CLASSES_RENDERED = {};
         if (PATH !== "")
             backButton.style.display = "";
+
         data = orderData(data);
         for (let obj in data) {
             grid.applyChild(applyClass(data[obj]));
         }
+
+        hideLoader();
+
     });
 
 }
