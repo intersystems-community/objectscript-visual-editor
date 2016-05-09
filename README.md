@@ -34,7 +34,7 @@ Caché Visual Editor is supported by **Caché version 2016.1 and higher**.
 Installation
 ------------
 
-Download the latest release from [here](https://github.com/ZitRos/cache-visual-editor/releases) and import
+Download the latest release from [here](https://github.com/intersystems-ru/cache-visual-editor/releases) and import
 XML file into Caché by one of the next ways:
 
 1. Just drag XML file over Studio window;
