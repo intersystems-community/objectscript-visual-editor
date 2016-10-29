@@ -115,34 +115,14 @@ ClassMethod RemoveProjection(cls As %String, ByRef params, recompile As %Boolean
 /// <!-- @echo package.printableName --> developer.
 ClassMethod Stats() As %Status {
     if ($get(installLog) = "") { return $$$OK }
-
-    #define checkErr(%e) if $$$ISERR(%e) { do $SYSTEM.Status.DisplayError(%e) return %e }
-
-    set sid = $ZD($H,3)
-    set key = "x8AlP"_$E(sid,1,1)_"tq"
-
-    set body = {
-        "cacheVersion": $ZVERSION,
-        "version": "<!-- @echo package.version -->",
-        "success": 'errorOccurred,
-        "sid": sid
-    }
-    if (errorOccurred) { set body.log = installLog }
-
     set req = ##class(%Net.HttpRequest).%New()
-    set req.ContentType = "application/json"
-    set req.Server = "stats.zitros.tk"
-    set stream = ##class(%Stream.TmpCharacter).%New()
-    do body.$toJSON(stream)
-    set req.EntityBody = stream
-    $$$checkErr(req.Post("/?key="_key_"&sid="_sid))
-
-    set obj = ##class(%AbstractObject).$fromJSON(req.HttpResponse.Data)
-    if (obj.error '= "") {
-        $$$checkErr($$$ERROR($$$GeneralError, "Unable to collect statistics: " _ obj.error))
-    }
-
-    return $$$OK
+    set req.Server = "www.google-analytics.com"
+    do req.EntityBody.Write("v=1&tid=<!-- @echo package.gaID -->&cid="_##class(%SYS.System).InstanceGUID()
+        _"&ds=web&an=WebTerminal&av="_..#VERSION
+        _"&t=event&aiid="_$ZCONVERT($zv, "O", "URL")_"&ec="_$ZCONVERT("install", "O", "URL")_"&ea="
+        _$case(errorOccurred=0, 1: "Success", : "Failure")_"&el="
+        _$ZCONVERT($case(errorOccurred=0, 1: "", : installLog), "O", "URL"))
+    return req.Post("/collect")
 }
 
 }

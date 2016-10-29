@@ -260,7 +260,7 @@ function updateHeaderNamespaceWidth (namespace) {
     t2.textContent = namespace;
     temp.appendChild(t2);
     topNamespace.parentNode.appendChild(temp);
-    topNamespace.style.width = temp.offsetWidth + "px";
+    topNamespace.style.width = temp.offsetWidth*1.1 + "px";
     topNamespace.parentNode.removeChild(temp);
 }
 
