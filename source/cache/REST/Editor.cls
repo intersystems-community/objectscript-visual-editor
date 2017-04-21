@@ -11,19 +11,19 @@ XData UrlMap
 }
 
 /// Saves keywords of class members and a class itself.
-ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %Object) As %String [ Private ]
+ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %DynamicObject) As %String [ Private ]
 {
     set errors = ""
     #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
     set propDefinition =
         ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberKind_"Definition").Properties
 
-    set iterator = assignObj.$getIterator()
-    while (iterator.$getNext(.pName, .data)) {
+    set iterator = assignObj.%GetIterator()
+    while (iterator.%GetNext(.pName, .data)) {
         if (pName = "$add") { continue }
         set propPos = propDefinition.FindObjectId("%Dictionary."_memberKind_"Definition||"_pName)
         if (propPos > 0) {
-            set val = assignObj.$get(pName)
+            set val = assignObj.%Get(pName)
             if ($IsObject(val)) { continue }
             if ($$$classIsStream(propDefinition.GetAt(propPos).Type)) {
 	            #dim stream As %Stream.TmpCharacter = $PROPERTY(definitionObj, pName)
@@ -42,7 +42,7 @@ ClassMethod SaveKeywords(memberKind As %String, definitionObj, assignObj As %Obj
 }
 
 /// Saves properties of class properties.
-ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %Object) As %String [ Private ]
+ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.ClassDefinition, prps As %DynamicObject) As %String [ Private ]
 {
     set errors = ""
 
@@ -52,10 +52,10 @@ ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.Class
 
     #define logError(%e) if (%e '= "") { set errors = errors _ %e _ $Char(10) }
 
-    set iterator = prps.$getIterator()
-    while (iterator.$getNext(.memberName, .props)) {
+    set iterator = prps.%GetIterator()
+    while (iterator.%GetNext(.memberName, .props)) {
 
-        if (props.$get("$add") '= "") {
+        if (props.%Get("$add") '= "") {
             set pDef = $System.OBJ.New("%Dictionary."_memberKind_"Definition")
             set pDef.parent = classDef
         } else {
@@ -66,7 +66,7 @@ ClassMethod SaveClassMember(memberKind As %String, classDef As %Dictionary.Class
             continue
         }
 
-        if (props.$get("$delete") '= "") {
+        if (props.%Get("$delete") '= "") {
             set error = $System.Status.GetErrorText(pDef.%Delete(pDef.%Oid()))
             continue
         }
@@ -95,10 +95,10 @@ ClassMethod Save() As %Status
 
     #define logError(%e) if (%e '= "") { set response.error = response.error _ %e _ $Char(10) }
 
-    set iterator = classes.$getIterator()
-    while (iterator.$getNext(.className, .classData)) {
+    set iterator = classes.%GetIterator()
+    while (iterator.%GetNext(.className, .classData)) {
 
-        if (classData.$get("$add") '= "") {
+        if (classData.%Get("$add") '= "") {
             set classDef = ##class(%Dictionary.ClassDefinition).%New()
             set classDef.Name = className
         } else {
@@ -109,18 +109,18 @@ ClassMethod Save() As %Status
             continue
         }
 
-        if (classData.$get("$delete") '= "") {
+        if (classData.%Get("$delete") '= "") {
             $$$logError($System.Status.GetErrorText(classDef.%Delete(classDef.%Oid())))
             set response.modified = response.modified + 1
             continue
         }
 
-        $$$logError(..SaveClassMember("Parameter", classDef, classData.$get("Parameters")))
-        $$$logError(..SaveClassMember("Property", classDef, classData.$get("Properties")))
-        $$$logError(..SaveClassMember("Index", classDef, classData.$get("Indices")))
-        $$$logError(..SaveClassMember("Method", classDef, classData.$get("Methods")))
-        $$$logError(..SaveClassMember("Query", classDef, classData.$get("Queries")))
-        $$$logError(..SaveClassMember("XData", classDef, classData.$get("XDatas")))
+        $$$logError(..SaveClassMember("Parameter", classDef, classData.%Get("Parameters")))
+        $$$logError(..SaveClassMember("Property", classDef, classData.%Get("Properties")))
+        $$$logError(..SaveClassMember("Index", classDef, classData.%Get("Indices")))
+        $$$logError(..SaveClassMember("Method", classDef, classData.%Get("Methods")))
+        $$$logError(..SaveClassMember("Query", classDef, classData.%Get("Queries")))
+        $$$logError(..SaveClassMember("XData", classDef, classData.%Get("XDatas")))
         $$$logError(..SaveKeywords("Class", classDef, classData))
 
         $$$logError($System.Status.GetErrorText(classDef.%Save()))
@@ -132,14 +132,14 @@ ClassMethod Save() As %Status
             continue
         }
 
-        do response.modified.$set(className, {
-            "success": 1,
-            "class": ##class(VisualEditor.REST.Informer).GetClassData(className)
+        do response.modified.%Set(className, {
+            "success": (1),
+            "class": (##class(VisualEditor.REST.Informer).GetClassData(className))
         })
 
     }
 
-    write response.$toJSON()
+    write response.%ToJSON()
 
     return $$$OK
 }
@@ -157,7 +157,7 @@ ClassMethod OnPreDispatch() As %Status
 		set content = content _ $ZCVT(%request.Content.Read($$$MaxStringLength), "I", "UTF8")
     }
 
-    set %request.Content = ##class(%AbstractObject).$fromJSON(content)
+    set %request.Content = {}.%FromJSON(content)
 
     return $$$OK
 }

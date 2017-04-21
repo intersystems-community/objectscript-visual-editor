@@ -11,7 +11,7 @@ XData UrlMap
 }
 
 /// Returns all available namespaces for the current instance.
-ClassMethod getAllNamespacesList() As %Object
+ClassMethod getAllNamespacesList() As %DynamicObject
 {
     set namespaces = {}
     set result = ##class(%ResultSet).%New("%SYS.Namespace:List")
@@ -20,7 +20,7 @@ ClassMethod getAllNamespacesList() As %Object
         set ns = {}
         set ns.remote = result.Get("Remote")
         set ns.status = result.Get("Status")
-        do namespaces.$set(result.Get("Nsp"), ns)
+        do namespaces.%Set(result.Get("Nsp"), ns)
     }
     return namespaces
 }
@@ -31,12 +31,12 @@ ClassMethod Init() As %Status
     set data = {}
     set data.namespace = $Namespace
     set data.namespaces = ..getAllNamespacesList()
-    write data.$toJSON()
+    write data.%ToJSON()
     return $$$OK
 }
 
 /// Returns the object containing member data.
-ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %String) As %Object [ Private ]
+ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %String) As %DynamicObject [ Private ]
 {
     set obj = {}
     set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary."_memberName_"Definition")
@@ -49,50 +49,50 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
             set pname = props.Properties.GetAt(j).Name
             set val = $PROPERTY(p, pname)
             if ('$IsObject(val)) {
-                do op.$set(pname, val)
+                do op.%Set(pname, val)
             } elseif ($$$classIsStream($ClassName(val))) {
                 set v = val.Read()
                 while ('val.AtEnd) {
                     set v = v _ val.Read()
                 }
-                do op.$set(pname, v)
+                do op.%Set(pname, v)
             }
         }
-        do obj.$set(p.Name, op)
+        do obj.%Set(p.Name, op)
     }
     return obj
 }
 
 /// This method returns all available data about the class.
-ClassMethod GetClassData(className As %String) As %Object
+ClassMethod GetClassData(className As %String) As %DynamicObject
 {
     set class = ##class(%Dictionary.ClassDefinition).%OpenId(className)
     set cClass = ##class(%Dictionary.CompiledClass).%OpenId(className)
     set oClass = {}
     if (class = "") { return oClass }
 
-    do oClass.$set("_type", "class")
-    do oClass.$set("_fullName", className)
-    do oClass.$set("_name", $PIECE(className, ".", *))
-    do oClass.$set("_isDataType", class.ClientDataTypeIsDefined())
-    do oClass.$set("_isOdbcType", class.OdbcTypeIsDefined())
-    do oClass.$set("_isSoapBindingStyle", class.SoapBindingStyleIsDefined())
-    do oClass.$set("_isSoapBodyUse", class.SoapBodyUseIsDefined())
-    do oClass.$set("_isSqlCategory", class.SqlCategoryIsDefined())
+    do oClass.%Set("_type", "class")
+    do oClass.%Set("_fullName", className)
+    do oClass.%Set("_name", $PIECE(className, ".", *))
+    do oClass.%Set("_isDataType", class.ClientDataTypeIsDefined())
+    do oClass.%Set("_isOdbcType", class.OdbcTypeIsDefined())
+    do oClass.%Set("_isSoapBindingStyle", class.SoapBindingStyleIsDefined())
+    do oClass.%Set("_isSoapBodyUse", class.SoapBodyUseIsDefined())
+    do oClass.%Set("_isSqlCategory", class.SqlCategoryIsDefined())
 
     set props = ##class(%Dictionary.ClassDefinition).%OpenId("%Dictionary.ClassDefinition")
     for j=1:1:props.Properties.Count() {
         set pname = props.Properties.GetAt(j).Name
         if ((pname '= "parent") && ('props.Properties.GetAt(j).Private) && ('$IsObject($PROPERTY(class, pname)))) {
-             do oClass.$set(pname, $PROPERTY(class, pname))
+             do oClass.%Set(pname, $PROPERTY(class, pname))
         }
     }
     if (oClass.TimeChanged) { set oClass.TimeChanged = $zdatetime(oClass.TimeChanged) }
     if (oClass.TimeCreated) { set oClass.TimeCreated = $zdatetime(oClass.TimeCreated) }
     if ((cClass '= "") && (cClass.ClassType '= "")) {
-        do oClass.$set("_compiledClassType", cClass.ClassType)
+        do oClass.%Set("_compiledClassType", cClass.ClassType)
     } else {
-        do oClass.$set("_compiledClassType", "registered") // default
+        do oClass.%Set("_compiledClassType", "registered") // default
     }
 
     set oClass.Parameters = ..GetMemberData(class, "Parameter")
@@ -129,21 +129,21 @@ ClassMethod List() As %Status
             if ($data(folders(folderName))) { continue }
             set folders(folderName) = 1
             set oFolder = {}
-            do oFolder.$set("_type", "package")
-            do oFolder.$set("_fullName", baseLevel _ folderName)
-            do oFolder.$set("_name", folderName)
-            do data.$set(folderName, oFolder)
+            do oFolder.%Set("_type", "package")
+            do oFolder.%Set("_fullName", baseLevel _ folderName)
+            do oFolder.%Set("_name", folderName)
+            do data.%Set(folderName, oFolder)
         } elseif ($LENGTH(clsName, ".") = $LENGTH(baseLevel, ".")) {
             set className = $PIECE(clsName, ".", $LENGTH(baseLevel, "."))
             set oClass = ..GetClassData(clsName)
-            do data.$set(className, oClass)
+            do data.%Set(className, oClass)
         } else {
             continue
         }
     }
 
     write "" // fixes the strange $toJSON() issue: it does not output content properly without this string
-    do data.$toJSON()
+    do data.%ToJSON()
 
     return $$$OK
 }

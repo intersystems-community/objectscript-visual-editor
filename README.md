@@ -91,6 +91,6 @@ Then you can just use one command `import` to deploy the project from source to 
 
 After setting `import.bat` up, **just by one command** `import` you get the next:
 
-1. Project is built by gulp;
+1. Project is built by Gulp;
 2. VisualEditor package is imported into Caché;
 3. The XML file containing ready-to-deploy package is exported to `build` directory. 

@@ -2,13 +2,13 @@
 :: exporting the XML the project. Replace the path below to your Caché installation and build & import application to
 :: Caché using only one command.
 
-:: Latest NodeJS & Caché 2016.1+ IS REQUIRED TO PROCEED
+:: Latest NodeJS & Caché 2017.1+ IS REQUIRED TO PROCEED
 @echo off
 
 :: CHANGE THIS PATH TO YOUR CACHÉ INSTALLATION PATH ON WINDOWS (folder that contains bin, CSP, mgr and other folders)
 set CACHE_DIR=C:\Program Files\InterSystems\Ensemble
 :: NAMESPACE TO IMPORT PACKAGE TO
-set NAMESPACE=SAMPLES
+set NAMESPACE=USER
 
 :: Build and import application to Caché
 echo Building the project...
