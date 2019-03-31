@@ -1,4 +1,4 @@
-# Caché Visual Editor <sup>(alpha)</sup>
+# ObjectScript Visual Editor <sup>(beta)</sup>
 
 A Web-based user interface for InterSystems Caché which allows to create and manage classes
 literally without touching any code.
@@ -6,16 +6,16 @@ literally without touching any code.
 Features
 --------
 
-+ Simple, intuitive and powerful visual class editing and exploring tool for both desktop and mobile devices;
++ Simple, intuitive, **web-based** visual class editing tool for both desktop and touchscreen devices;
 + Supports all basic class editing functionality:
     + Adding/deleting classes, editing class keywords, comments, etc;
     + Adding/deleting/altering class members: parameters, properties, methods, queries, xDatas, indices;
     + **Convenient code editing** for methods and xDatas;
     + Editing all class members keywords with inputs, drop-downs and suggestions;
-    + XData code highlight (COS highlight is coming!);
+    + XData code highlight (ObjectScript highlighting is coming!);
 + **Embedded web terminal** if [Caché web terminal](http://intersystems-ru.github.io/webterminal/) is installed in the system;
 + Smart class members grouping, folding and convenient interface, adaptive design;
-+ More features are coming!
++ More features!
 
 Preview
 -------
@@ -37,9 +37,9 @@ Installation
 Download the latest release from [here](https://github.com/intersystems-ru/cache-visual-editor/releases) and import
 XML file into Caché by one of the next ways:
 
-1. Just drag XML file over Studio window;
-2. Go to the Management Portal -> System Explorer -> Classes -> Import and select the XML file;
-3. Execute `do $system.OBJ.Load("C:\path\to\file\FileToImport.xml","ck")` in terminal.
+- Just drag'n'drop the XML file on the Studio window;
+- **OR** Go to the Management Portal -> System Explorer -> Classes -> Import and select the XML file;
+- **OR** Execute `do $system.OBJ.Load("C:\path\to\file\FileToImport.xml","ck")` in terminal.
 
 Then check the installation output, it should say "Installation is complete!".
 
