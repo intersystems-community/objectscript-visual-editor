@@ -13,7 +13,7 @@ Features
     + **Convenient code editing** for methods and xDatas;
     + Editing all class members keywords with inputs, drop-downs and suggestions;
     + XData code highlight (ObjectScript highlighting is coming!);
-+ **Embedded web terminal** if [Web Terminal](http://intersystems-ru.github.io/webterminal/) is installed in the system;
++ **Embedded web terminal** if [Web Terminal](https://intersystems-community.github.io/webterminal/) is installed in the system;
 + Smart class members grouping, folding and convenient interface, adaptive design;
 + More features!
 
@@ -34,7 +34,7 @@ ObjectScript Visual Editor is supported by **InterSystems' products of version 2
 Installation
 ------------
 
-Download the latest release from [here](https://github.com/intersystems-ru/objectscript-visual-editor/releases) and import
+Download the latest release from [here](https://github.com/intersystems-community/objectscript-visual-editor/releases) and import
 XML file into IRIS/Caché/etc by one of the next ways:
 
 - Just drag'n'drop the XML file on the Studio window;
@@ -60,7 +60,7 @@ editor.
 
 At first, clone the repository. It contains submodules, so use the `--recursive` flag when cloning:
 ```bash
-git clone --recursive https://github.com/intersystems-ru/objectscript-visual-editor
+git clone --recursive https://github.com/intersystems-community/objectscript-visual-editor
 cd objectscript-visual-editor
 ```
 
