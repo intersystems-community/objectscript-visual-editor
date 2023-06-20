@@ -7,7 +7,7 @@
       <Description>A Web-based user interface for InterSystems products (IRIS, Caché, Ensemble, HealthShare, etc) which allows to create and manage classes literally without touching any code.</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>build</SourcesRoot>
-      <Resource Name="VisualEditor.Installer.CLS" />
+      <!--<Resource Name="VisualEditor.Installer.CLS" />-->
       <Resource Name="VisualEditor.REST.PKG" />
       <Invoke Class="%SYSTEM.OBJ" Method="Load" CheckStatus="true">
        <Arg>/opt/irisapp/build/xml/VisualEditor-v0.10.1.xml</Arg>
