@@ -47,6 +47,7 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
         set p = $PROPERTY(class, propName).GetAt(i)
         for j=1:1:props.Properties.Count() {
             set pname = props.Properties.GetAt(j).Name
+	    try {
             set val = $PROPERTY(p, pname)
             if ('$IsObject(val)) {
                 do op.%Set(pname, val)
@@ -57,6 +58,7 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
                 }
                 do op.%Set(pname, v)
             }
+	    } catch e {}
         }
         do obj.%Set(p.Name, op)
     }
