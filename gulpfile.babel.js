@@ -94,7 +94,7 @@ gulp.task("css", ["prepare"], () => {
 });
 
 gulp.task("pre-cls", ["js", "js-lib", "html", "css", "favicon"], () => {
-    return gulp.src([`${source}/cache/**/*.cls`])
+    return gulp.src([`${source}/VisualEditor/**/*.cls`])
         .pipe(rename((f) => {
             f.basename = `${ pkg["packageName"] }.${ f.dirname === "." ? "" : f.dirname + "." }${
                 f.basename
