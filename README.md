@@ -3,22 +3,20 @@
 A Web-based user interface for InterSystems products (IRIS, Caché, Ensemble, HealthShare, etc) which allows to create and manage classes
 literally without touching any code.
 
-Features
---------
+## Features
 
-+ Simple, intuitive, **web-based** visual class editing tool for both desktop and touchscreen devices;
-+ Supports all basic class editing functionality:
-    + Adding/deleting classes, editing class keywords, comments, etc;
-    + Adding/deleting/altering class members: parameters, properties, methods, queries, xDatas, indices;
-    + **Convenient code editing** for methods and xDatas;
-    + Editing all class members keywords with inputs, drop-downs and suggestions;
-    + XData code highlight (ObjectScript highlighting is coming!);
-+ **Embedded web terminal** if [Web Terminal](https://intersystems-community.github.io/webterminal/) is installed in the system;
-+ Smart class members grouping, folding and convenient interface, adaptive design;
-+ More features!
+- Simple, intuitive, **web-based** visual class editing tool for both desktop and touchscreen devices;
+- Supports all basic class editing functionality:
+  - Adding/deleting classes, editing class keywords, comments, etc;
+  - Adding/deleting/altering class members: parameters, properties, methods, queries, xDatas, indices;
+  - **Convenient code editing** for methods and xDatas;
+  - Editing all class members keywords with inputs, drop-downs and suggestions;
+  - XData code highlight (ObjectScript highlighting is coming!);
+- **Embedded web terminal** if [Web Terminal](https://intersystems-community.github.io/webterminal/) is installed in the system;
+- Smart class members grouping, folding and convenient interface, adaptive design;
+- More features!
 
-Preview
--------
+## Preview
 
 ![Screenshot 0](https://cloud.githubusercontent.com/assets/4989256/14657296/994c173e-0695-11e6-86b4-ab782eb4c68c.png)
 
@@ -26,13 +24,11 @@ Preview
 
 ![Screenshot 2](https://cloud.githubusercontent.com/assets/4989256/14295117/efcf2da4-fb7c-11e5-861f-e9f1231ec909.png)
 
-InterSystems Products Support
------------------------------
+## InterSystems Products Support
 
-ObjectScript Visual Editor is supported by **InterSystems' products of version 2016.1 and higher**. 
+ObjectScript Visual Editor is supported by **InterSystems' products of version 2016.1 and higher**.
 
-Installation
-------------
+## Installation
 
 Download the latest release from [here](https://github.com/intersystems-community/objectscript-visual-editor/releases) and import
 XML file into IRIS/Caché/etc by one of the next ways:
@@ -46,8 +42,26 @@ Then check the installation output, it should say "Installation is complete!".
 After this, open the next web-application: `http://[host]/VisualEditor/`
 (slash at the end is required).
 
-Development
------------
+## Development
+
+- NodeJS v10
+- Python v2
+
+```bash
+$ git clone --recurse-submodules git@github.com:intersystems-community/objectscript-visual-editor.git
+...
+$ cd objectscript-visual-editor
+$ python --version
+Python 2.7.18
+$ nvm use 10
+Now using node v10.24.1 (npm v6.14.12)
+$ npm install
+...
+$ npm run gulp
+...
+```
+
+For ZPM, `build` directory is transformed to use relative class paths.
 
 #### Pre-requirements
 
@@ -59,6 +73,7 @@ structured file tree under `source` directory, where each file can be edited in 
 editor.
 
 At first, clone the repository. It contains submodules, so use the `--recursive` flag when cloning:
+
 ```bash
 git clone --recursive https://github.com/intersystems-community/objectscript-visual-editor
 cd objectscript-visual-editor
@@ -93,4 +108,4 @@ After setting `import.bat` up, **just by one command** `import` you get the next
 
 1. Project is built by Gulp;
 2. VisualEditor package is imported into IRIS/Caché;
-3. The XML file containing ready-to-deploy package is exported to `build` directory. 
+3. The XML file containing ready-to-deploy package is exported to `build` directory.
