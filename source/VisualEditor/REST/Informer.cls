@@ -44,10 +44,10 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
         "Index": "Indices", "Query": "Queries", "Method": "Methods", "XData": "XDatas", :"Duck")
     for i=1:1:$PROPERTY(class, propName).Count() {
         set op = {}
+        try {
         set p = $PROPERTY(class, propName).GetAt(i)
         for j=1:1:props.Properties.Count() {
             set pname = props.Properties.GetAt(j).Name
-	    try {
             set val = $PROPERTY(p, pname)
             if ('$IsObject(val)) {
                 do op.%Set(pname, val)
@@ -58,7 +58,7 @@ ClassMethod GetMemberData(class As %Dictionary.ClassDefinition, memberName As %S
                 }
                 do op.%Set(pname, v)
             }
-            } catch e {}
+        } catch e {}
         }
         do obj.%Set(p.Name, op)
     }

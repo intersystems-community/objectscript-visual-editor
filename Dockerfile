@@ -1,4 +1,8 @@
-ARG IMAGE=intersystemsdc/iris-ml-community:latest as build
+#ARG IMAGE=intersystemsdc/iris-ml-community:latest as build
+ARG IMAGE=intersystemsdc/iris-community:latest
+#ARG IMAGE=intersystemsdc/iris-community:2023.1.0.226.0-zpm
+#ARG IMAGE=intersystemsdc/iris-community:2022.3.0.606.0-zpm
+#ARG IMAGE=intersystemsdc/iris-community:2022.1.1.374.0-zpm
 FROM $IMAGE
 
 USER root   
