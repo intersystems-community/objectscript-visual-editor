@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+  <Document name="objectscript-visual-editor.ZPM">
+    <Module>
+      <Name>objectscript-visual-editor</Name>
+      <Version>1.0.1</Version>
+      <Description>A Web-based user interface for InterSystems products (IRIS, Caché, Ensemble, HealthShare, etc) which allows to create and manage classes literally without touching any code.</Description>
+      <Packaging>module</Packaging>
+      <SourcesRoot>source</SourcesRoot>
+      <FileCopy Name="build/" Target="${mgrdir}.modules/VisualEditor/"/>
+      <Resource Name="VisualEditor.REST.Editor.cls" />
+      <Invoke Class="%SYSTEM.OBJ" Method="Load" CheckStatus="true">
+       <Arg>${mgrdir}.modules/VisualEditor/VisualEditor-v0.10.1.xml</Arg>
+       <Arg>ck</Arg>
+      </Invoke>
+    </Module>
+</Document>
+</Export>
